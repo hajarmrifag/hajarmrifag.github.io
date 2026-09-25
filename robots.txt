@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hajarmrifag.github.io/sitemap.xml

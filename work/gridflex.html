@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GridFlex — Engineering case study · Hajar Mrifag</title>
+    <meta
+      name="description"
+      content="A React and FastAPI energy simulator: architecture decisions, a 31.9× local pipeline speedup, scientific validation and deployment trade-offs."
+    />
+    <meta name="theme-color" content="#f5f3ed" />
+    <link
+      rel="canonical"
+      href="https://hajarmrifag.github.io/work/gridflex.html"
+    />
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="../benchmark.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="wordmark" href="../" aria-label="Hajar Mrifag, home"
+        >hm<span>.</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../#work">Work</a><a href="../#approach">Approach</a
+        ><a href="../#about">About</a
+        ><a class="nav-contact" href="../#contact">Get in touch ↗</a>
+      </nav>
+    </header>
+    <main id="main" class="wrap">
+      <section class="case-hero">
+        <a class="back-link" href="../#work">← Selected work</a>
+        <p class="eyebrow">Case study / 01 · Personal project</p>
+        <h1>GridFlex<span class="name-period">.</span></h1>
+        <p class="case-lead">
+          From a simulation script to an interactive energy workspace, with
+          performance and correctness measured together.
+        </p>
+        <div class="case-links">
+          <a class="button dark" href="https://gridflex.onrender.com/"
+            >Open live application ↗</a
+          ><a
+            class="text-link"
+            href="https://github.com/hajarmrifag/gridflex-ai"
+            >Explore the repository ↗</a
+          >
+        </div>
+        <dl class="case-meta">
+          <div>
+            <dt>Scope</dt>
+            <dd>
+              Frontend, API, simulation engine<br />Testing and deployment
+            </dd>
+          </div>
+          <div>
+            <dt>Stack</dt>
+            <dd>React / TypeScript / FastAPI<br />NumPy / SciPy / Docker</dd>
+          </div>
+          <div>
+            <dt>Release</dt>
+            <dd>0.2.0 · September 2026</dd>
+          </div>
+          <div>
+            <dt>Context</dt>
+            <dd>Historical public profiles<br />Research simulation</dd>
+          </div>
+        </dl>
+      </section>
+      <div class="case-shot">
+        <img
+          src="../assets/gridflex.png"
+          alt="GridFlex workspace with hourly residual load, energy metrics and configurable battery storage"
+          width="3420"
+          height="1964"
+          fetchpriority="high"
+        />
+      </div>
+      <div class="case-body">
+        <section class="case-section">
+          <p class="eyebrow">01 / The problem</p>
+          <div>
+            <h2>Make the system explainable.</h2>
+            <p>
+              Renewable generation and electricity demand do not always arrive
+              at the same time. Storage and flexible demand can help, but the
+              result depends on the shape of the profile and the physical
+              constraints.
+            </p>
+            <p>
+              GridFlex makes those relationships inspectable: change a scenario,
+              follow each hour of dispatch, compare configurations and see how a
+              simple rule differs from perfect foresight.
+            </p>
+            <p>
+              The two public profiles cover Tétouan and Germany. Tétouan demand
+              is measured, while its renewable generation is estimated from
+              local weather. Synthetic profiles support repeatable tests.
+            </p>
+          </div>
+        </section>
+        <section class="case-section">
+          <p class="eyebrow">02 / Architecture</p>
+          <div>
+            <h2>One model. Separate responsibilities.</h2>
+            <div
+              class="architecture"
+              aria-label="React workspace sends validated requests to FastAPI, which runs the scientific engine"
+            >
+              <div>
+                React + TypeScript<small>Controls, charts, replay</small>
+              </div>
+              <span aria-hidden="true">→</span>
+              <div>FastAPI<small>Validation, bounds, caching</small></div>
+              <span aria-hidden="true">→</span>
+              <div>Scientific engine<small>Dispatch, forecasts, LP</small></div>
+            </div>
+            <p>
+              The frontend presents results; it does not reimplement the
+              equations. The API validates finite inputs and bounded horizons,
+              then calls reusable scientific functions. The original Streamlit
+              interface uses the same engine.
+            </p>
+            <p>
+              Request cancellation prevents stale browser results. Server
+              computations have separate limits: two active compute slots,
+              bounded caches and solver timeouts. Aborting a request does not
+              pretend to cancel work already running on the server.
+            </p>
+            <p class="source-note">
+              <a
+                href="https://github.com/hajarmrifag/gridflex-ai/blob/main/docs/architecture.md"
+                >Read the architecture and operating limits ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="case-section">
+          <p class="eyebrow">03 / Performance</p>
+          <div>
+            <h2>Optimize the measured bottleneck.</h2>
+            <p>
+              Daily demand shifting repeatedly wrote into pandas dataframes.
+              Moving the calculation to positional NumPy arrays removed that
+              overhead while preserving the numeric output in the recorded
+              benchmark cases.
+            </p>
+            <div class="benchmark">
+              <div class="benchmark-top">
+                <strong>Shift + battery pipeline</strong>
+                <div
+                  class="horizon-controls"
+                  role="group"
+                  aria-label="Benchmark horizon"
+                >
+                  <button type="button" data-days="30" aria-pressed="false">
+                    30 days</button
+                  ><button type="button" data-days="60" aria-pressed="true">
+                    60 days</button
+                  ><button type="button" data-days="365" aria-pressed="false">
+                    365 days
+                  </button>
+                </div>
+              </div>
+              <div class="benchmark-label">
+                <span>Before</span><span id="before-time">71.731 ms</span>
+              </div>
+              <div class="bar-track" aria-hidden="true"><span></span></div>
+              <div class="benchmark-label">
+                <span>After</span><span id="after-time">2.246 ms</span>
+              </div>
+              <div class="bar-track after" aria-hidden="true">
+                <span id="after-bar" style="width: 3.13%"></span>
+              </div>
+              <p
+                class="benchmark-result"
+                id="benchmark-result"
+                aria-live="polite"
+              >
+                31.9× faster · 60-day profile
+              </p>
+              <p class="benchmark-note">
+                Median of seven timed runs after warm-up. Same process, same
+                seeded input. Zero numeric difference in these cases.
+              </p>
+            </div>
+            <p class="source-note">
+              These measurements cover two engine operations, not HTTP or
+              whole-application latency. Recorded on macOS arm64 with Python
+              3.14.7, NumPy 2.5.3 and pandas 2.3.3. The public app accepts up to
+              60 days; the annual case tests engine scaling.
+              <a
+                href="https://github.com/hajarmrifag/gridflex-ai/blob/main/benchmarks/README.md"
+                >Methodology and raw timings ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="case-section">
+          <p class="eyebrow">04 / Correctness</p>
+          <div>
+            <h2>A faster answer still has to be right.</h2>
+            <div class="decision-list">
+              <details open>
+                <summary>
+                  Keep energy conserved <span aria-hidden="true">+</span>
+                </summary>
+                <div>
+                  <p>
+                    Demand shifting must preserve daily energy, including 23-
+                    and 25-hour daylight-saving days. Equal residual-load
+                    quartiles remain unchanged so donor and receiver sets cannot
+                    overlap.
+                  </p>
+                  <a
+                    class="text-link"
+                    href="https://github.com/hajarmrifag/gridflex-ai/blob/main/tests/test_validation.py"
+                    >Inspect invariant tests ↗</a
+                  >
+                </div>
+              </details>
+              <details>
+                <summary>
+                  Separate optimization objectives
+                  <span aria-hidden="true">+</span>
+                </summary>
+                <div>
+                  <p>
+                    A weighted cycling penalty can quietly worsen peak demand.
+                    The optimizer instead solves peak import first, then
+                    minimizes throughput within an explicit tolerance of the
+                    optimum. Terminal state of charge and grid charging are
+                    separate options.
+                  </p>
+                  <a
+                    class="text-link"
+                    href="https://github.com/hajarmrifag/gridflex-ai/blob/main/src/optimizer.py"
+                    >Inspect the two-stage solver ↗</a
+                  >
+                </div>
+              </details>
+              <details>
+                <summary>
+                  Disclose imperfect data <span aria-hidden="true">+</span>
+                </summary>
+                <div>
+                  <p>
+                    The German sample has a missing day. Application loaders opt
+                    into interpolation and disclose affected hours. Forecast
+                    evaluation excludes imputed targets and observations whose
+                    lag features depend on them.
+                  </p>
+                  <a
+                    class="text-link"
+                    href="https://github.com/hajarmrifag/gridflex-ai/blob/main/data/README.md"
+                    >Inspect data provenance ↗</a
+                  >
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+        <section class="case-section">
+          <p class="eyebrow">05 / Delivery</p>
+          <div>
+            <h2>Test the journey, then ship it.</h2>
+            <p>
+              Release 0.2.0 passed
+              <strong>91 engine/API tests and five browser journeys</strong>. CI
+              covers Python 3.11 and 3.12, production frontend builds and
+              container smoke tests. Browser checks exercise scenario
+              configuration, saved state, exports and mobile navigation.
+            </p>
+            <p>
+              A multi-stage Docker build serves the frontend and API from one
+              origin as a non-root user. Python dependencies are pinned with
+              hashes. The Render service follows passing CI checks on the
+              protected main branch.
+            </p>
+            <div class="callout">
+              <p>
+                <strong>Deliberate boundary:</strong> this is a single-process
+                research service. It has no private data uploads or user
+                accounts. The historical experiment and perfect-foresight
+                optimizer are not an operational grid controller.
+              </p>
+            </div>
+            <p>
+              For a larger multi-user workload, the next change would be bounded
+              background jobs, shared results and per-user quotas. Those add
+              complexity that the current public demonstration does not need.
+            </p>
+            <p class="source-note">
+              <a href="https://github.com/hajarmrifag/gridflex-ai/actions"
+                >Inspect CI runs ↗</a
+              >
+              ·
+              <a
+                href="https://github.com/hajarmrifag/gridflex-ai/blob/main/docs/methodology.md"
+                >Model assumptions ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="case-section">
+          <p class="eyebrow">06 / Try it</p>
+          <div>
+            <h2>A two-minute walkthrough.</h2>
+            <ol>
+              <li>Open the app and inspect the default Tétouan profile.</li>
+              <li>
+                Use <strong>Scenario lab</strong> to compare 20
+                storage/flexibility combinations, then apply one.
+              </li>
+              <li>
+                Open <strong>Dispatch replay</strong> and inspect what the
+                battery does at the peak hour.
+              </li>
+              <li>
+                Compare against the <strong>Optimizer</strong>. Enable
+                terminal-charge restoration and inspect the changed constraint.
+              </li>
+            </ol>
+            <p class="source-note">
+              The free demonstration may need time to wake after inactivity.
+              Saved scenarios stay in the current browser.
+            </p>
+            <div class="case-links">
+              <a class="button dark" href="https://gridflex.onrender.com/"
+                >Try GridFlex ↗</a
+              >
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="case-end">
+        <a class="text-link" href="../#work">← More selected work</a
+        ><a
+          class="text-link"
+          href="https://www.linkedin.com/in/hajar-mrifag-a7903334b"
+          >Talk about the engineering ↗</a
+        >
+      </div>
+    </main>
+    <footer class="wrap">
+      <a class="wordmark" href="../">hm<span>.</span></a>
+      <p>Hajar Mrifag · 2026</p>
+      <a href="https://github.com/hajarmrifag">GitHub ↗</a>
+    </footer>
+  </body>
+</html>
