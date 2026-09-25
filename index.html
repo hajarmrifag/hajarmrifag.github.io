@@ -7,7 +7,7 @@
       name="description"
       content="Hajar Mrifag — final-year software engineering student at Sichuan University. Explore deployed applications, backend systems and measured performance work."
     />
-    <meta name="theme-color" content="#f5f3ed" />
+    <meta name="theme-color" content="#11140f" />
     <meta
       property="og:title"
       content="Hajar Mrifag — Software engineering portfolio"
@@ -19,422 +19,957 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://hajarmrifag.github.io/" />
     <link rel="canonical" href="https://hajarmrifag.github.io/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="portfolio.css" />
+    <script src="portfolio.js" defer></script>
+    <script type="module" src="playgrounds.js"></script>
+    <link rel="stylesheet" href="playgrounds.css" />
     <title>Hajar Mrifag — Software engineering portfolio</title>
   </head>
-  <body>
+  <body class="portfolio">
     <a class="skip" href="#main">Skip to content</a>
-    <header class="site-header wrap">
-      <a class="wordmark" href="./" aria-label="Hajar Mrifag, home"
-        >hm<span>.</span></a
+    <div class="reading-progress" aria-hidden="true"></div>
+    <header class="studio-header wrap">
+      <a class="identity" href="./" aria-label="Hajar Mrifag, home"
+        ><span class="header-name">Hajar <em>Mrifag.</em></span></a
       >
       <nav aria-label="Main navigation">
-        <a href="#work">Work</a><a href="#approach">Approach</a
-        ><a href="#about">About</a
-        ><a class="nav-contact" href="#contact"
-          >Get in touch <span aria-hidden="true">↗</span></a
-        >
+        <a href="#work">Work <sup>04</sup></a
+        ><a href="#approach">Mindset</a><a href="#about">About</a>
       </nav>
+      <button
+        class="command-trigger"
+        data-open-command
+        aria-label="Open quick navigation"
+      >
+        <span>Explore</span><kbd>⌘ K</kbd>
+      </button>
     </header>
     <main id="main">
-      <section class="hero wrap" aria-labelledby="intro">
-        <div class="hero-top">
+      <section class="studio-hero wrap" aria-labelledby="intro">
+        <div class="hero-kicker">
           <p class="eyebrow">
-            <span class="status-dot" aria-hidden="true"></span> Software
-            engineering · Class of 2027
+            <span class="status-dot"></span> OPEN TO OPPORTUNITIES · CLASS OF
+            2027
           </p>
-          <span class="edition">Portfolio / 2026</span>
+          <span class="edition">CHENGDU, CN <span data-clock></span></span>
         </div>
-        <h1 id="intro">
-          Hajar <br /><span>Mr</span><i>i</i><span>fag</span
-          ><span class="name-period">.</span>
-        </h1>
-        <div class="hero-bottom">
-          <div>
-            <p class="intro">
-              I build across the stack.<br />Then I look closely at how it
-              behaves.
+        <div class="hero-stage">
+          <div class="hero-type">
+            <p class="hero-prelude">A curious mind. An engineer’s instinct.</p>
+            <h1 id="intro" aria-label="Hajar Mrifag">
+              Hajar<br /><span>Mr<i>i</i>fag</span><b>.</b>
+            </h1>
+            <p class="hero-line">
+              Turning complex problems<br />into things that <em>work.</em>
             </p>
-            <p class="hero-description">
-              Final-year software engineering student at Sichuan University. My
-              work spans product interfaces, backend services and performance
-              engineering.
-            </p>
-            <div class="hero-actions">
-              <a class="button dark" href="#work"
-                >Explore selected work <span aria-hidden="true">↓</span></a
-              ><a class="text-link" href="https://github.com/hajarmrifag"
-                >GitHub <span aria-hidden="true">↗</span></a
-              >
-            </div>
           </div>
-          <div class="hero-note">
-            <span class="asterisk" aria-hidden="true">✳</span>
-            <p>
-              Based in Chengdu, China.<br />Looking for software engineering<br />opportunities
-              after graduation.
-            </p>
-            <a href="https://www.linkedin.com/in/hajar-mrifag-a7903334b"
-              >Let’s connect <span aria-hidden="true">↗</span></a
-            >
-          </div>
-        </div>
-      </section>
-
-      <section id="work" class="work wrap" aria-labelledby="work-heading">
-        <div class="section-heading">
-          <p class="eyebrow">01 / Selected work</p>
-          <h2 id="work-heading">
-            Built. Tested.<br /><em>Open to inspection.</em>
-          </h2>
-          <p>
-            Four projects, four different engineering problems.<br />Explore the
-            product, the code, or the decisions behind it.
-          </p>
-        </div>
-
-        <article class="featured project">
-          <div class="project-heading">
-            <div>
-              <p class="eyebrow">
-                01 · Full-stack product / Scientific computing
-              </p>
-              <h3>
-                GridFlex<span class="live-label"
-                  ><span class="status-dot" aria-hidden="true"></span> Deployed
-                  demo</span
+          <div class="workbench-slot" id="playground">
+            <div class="workbench" data-workbench>
+              <div class="workbench-heading">
+                <span class="eyebrow">THE ENGINEERING / HANDS ON</span
+                ><button
+                  data-expand-lab
+                  aria-label="Expand engineering playground"
                 >
-              </h3>
-            </div>
-            <a
-              class="round-link"
-              href="work/gridflex.html"
-              aria-label="Read the GridFlex case study"
-              >↗</a
-            >
-          </div>
-          <a
-            class="project-image"
-            href="work/gridflex.html"
-            aria-label="Read the GridFlex case study"
-            ><img
-              src="assets/gridflex.png"
-              alt="GridFlex overview showing residual grid load, battery controls and energy metrics for Tétouan"
-              width="3420"
-              height="1964"
-              decoding="async"
-              fetchpriority="high"
-          /></a>
-          <div class="featured-bottom">
-            <div>
-              <h4>
-                How much can storage and flexible demand change a power system?
-              </h4>
-              <p>
-                A deployed simulation workspace with hourly dispatch replay,
-                20-case scenario comparison and a perfect-foresight optimization
-                benchmark.
-              </p>
-              <ul class="tags" aria-label="Technologies">
-                <li>React / TypeScript</li>
-                <li>FastAPI</li>
-                <li>NumPy / SciPy</li>
-                <li>Docker</li>
-              </ul>
-            </div>
-            <div class="evidence">
-              <div>
-                <strong>31.9×</strong
-                ><span
-                  >faster shift + battery pipeline<br />60-day local
-                  benchmark</span
-                >
+                  Expand ↗
+                </button>
               </div>
-              <div>
-                <strong>91 + 5</strong
-                ><span
-                  >Python tests + browser journeys<br />at the 0.2.0
-                  release</span
-                >
-              </div>
-              <a class="text-link" href="work/gridflex.html"
-                >Read the engineering case study
-                <span aria-hidden="true">↗</span></a
+              <div
+                class="lab-tabs"
+                role="tablist"
+                aria-label="Project experiments"
               >
-            </div>
-          </div>
-          <div class="project-links">
-            <a href="https://gridflex.onrender.com/"
-              >Open application <span aria-hidden="true">↗</span></a
-            ><a href="https://github.com/hajarmrifag/gridflex-ai"
-              >Explore source <span aria-hidden="true">↗</span></a
-            ><span>Free hosting may take a moment to wake.</span>
-          </div>
-        </article>
-
-        <div class="project-grid">
-          <article class="project compact">
-            <p class="eyebrow">02 · Backend / Application security</p>
-            <h3>Aegis Claims</h3>
-            <p class="project-summary">
-              An insurance claims workflow with authorization, document handling
-              and an audit history.
-            </p>
-            <div
-              class="workflow"
-              aria-label="Claim workflow: submission, authorized review, audit history"
-            >
-              <span>Submit</span><b aria-hidden="true">→</b><span>Review</span
-              ><b aria-hidden="true">→</b><span>Audit</span>
-            </div>
-            <p>
-              The API enforces role-based transitions and validates uploaded
-              file signatures. React handles forms and remote state; PostgreSQL
-              persists the workflow.
-            </p>
-            <details>
-              <summary>
-                Engineering decisions <span aria-hidden="true">+</span>
-              </summary>
-              <div>
-                <p>
-                  <strong>The interface is not a security boundary.</strong>
-                  Authorization lives in the ASP.NET Core API, with separate
-                  domain, application and infrastructure layers.
+                <button
+                  role="tab"
+                  id="tab-claims"
+                  aria-controls="panel-claims"
+                  aria-selected="true"
+                  data-lab="claims"
+                >
+                  Claims</button
+                ><button
+                  role="tab"
+                  id="tab-cuda"
+                  aria-controls="panel-cuda"
+                  aria-selected="false"
+                  tabindex="-1"
+                  data-lab="cuda"
+                >
+                  CUDA</button
+                ><button
+                  role="tab"
+                  id="tab-banking"
+                  aria-controls="panel-banking"
+                  aria-selected="false"
+                  tabindex="-1"
+                  data-lab="banking"
+                >
+                  Banking</button
+                ><button
+                  role="tab"
+                  id="tab-gridflex"
+                  aria-controls="panel-gridflex"
+                  aria-selected="false"
+                  tabindex="-1"
+                  data-lab="gridflex"
+                >
+                  GridFlex
+                </button>
+              </div>
+              <section
+                id="panel-claims"
+                role="tabpanel"
+                aria-labelledby="tab-claims"
+                class="lab-panel"
+              >
+                <p class="lab-subtitle">A button is not a permission.</p>
+                <h2>Try to approve a claim.</h2>
+                <p class="lab-description">
+                  Start as an Adjuster. Then switch to Manager and try again.
                 </p>
-                <p>
-                  <strong>Make limitations explicit.</strong> The public demo
-                  uses ephemeral file storage. The repository includes an Azure
-                  Blob provider for durable storage, plus a threat model and
-                  security assessment.
+                <div class="claim-record">
+                  <div>
+                    <span class="lab-label">SAMPLE CLAIM</span
+                    ><strong>CLM–0042</strong>
+                  </div>
+                  <span class="claim-status" data-claim-status>Submitted</span>
+                </div>
+                <div class="lab-form-row">
+                  <label
+                    >Your role<select id="claim-role">
+                      <option>Adjuster</option>
+                      <option>Manager</option>
+                      <option>Admin</option>
+                    </select></label
+                  ><label
+                    >Requested status<select id="claim-next">
+                      <option>Approved</option>
+                      <option>UnderReview</option>
+                      <option>Rejected</option>
+                      <option>Paid</option>
+                      <option>Submitted</option>
+                    </select></label
+                  >
+                </div>
+                <div class="lab-actions">
+                  <button class="lab-primary" data-claim-apply>
+                    Send status update <span>→</span></button
+                  ><button class="lab-reset" data-claim-reset>Reset</button>
+                </div>
+                <div class="lab-response" data-claim-response role="status">
+                  <strong>Ready to test the boundary.</strong
+                  ><span
+                    >The API checks the role before changing the claim.</span
+                  >
+                </div>
+                <details class="lab-audit">
+                  <summary>
+                    Inspect audit history <span data-audit-count>0 events</span>
+                  </summary>
+                  <ol data-claim-audit>
+                    <li>No status changes yet.</li>
+                  </ol>
+                </details>
+                <a
+                  class="lab-source"
+                  href="https://github.com/hajarmrifag/claims-management-api/blob/main/src/Claims.API/Controllers/ClaimsController.cs"
+                  >Inspect the authorization rule ↗</a
+                >
+              </section>
+              <section
+                id="panel-cuda"
+                role="tabpanel"
+                aria-labelledby="tab-cuda"
+                class="lab-panel"
+                hidden
+              >
+                <p class="lab-subtitle">An optimization earns its place.</p>
+                <h2>Change the workload.</h2>
+                <p class="lab-description">
+                  See how matrix size changes the gap between a custom kernel
+                  and cuBLAS.
+                </p>
+                <label class="matrix-control"
+                  >Matrix dimensions<select id="matrix-size">
+                    <option value="128">128 × 128</option>
+                    <option value="256">256 × 256</option>
+                    <option value="512">512 × 512</option>
+                    <option value="1024" selected>1024 × 1024</option>
+                  </select></label
+                >
+                <div
+                  class="gpu-chart"
+                  aria-label="Recorded GEMM throughput in GFLOPS"
+                >
+                  <div class="gpu-row">
+                    <div>
+                      <span>Naïve CUDA</span
+                      ><strong data-gpu-value="0">385.648</strong>
+                    </div>
+                    <div class="gpu-track">
+                      <i data-gpu-bar="0" style="width: 7.25%"></i>
+                    </div>
+                  </div>
+                  <div class="gpu-row">
+                    <div>
+                      <span>Shared-memory tiled</span
+                      ><strong data-gpu-value="1">485.283</strong>
+                    </div>
+                    <div class="gpu-track">
+                      <i data-gpu-bar="1" style="width: 9.12%"></i>
+                    </div>
+                  </div>
+                  <div class="gpu-row custom">
+                    <div>
+                      <span>Register-tiled · my kernel</span
+                      ><strong data-gpu-value="2">1,278.508</strong>
+                    </div>
+                    <div class="gpu-track">
+                      <i data-gpu-bar="2" style="width: 24.02%"></i>
+                    </div>
+                  </div>
+                  <div class="gpu-row baseline">
+                    <div>
+                      <span>cuBLAS · library baseline</span
+                      ><strong data-gpu-value="3">5,322.721</strong>
+                    </div>
+                    <div class="gpu-track">
+                      <i data-gpu-bar="3" style="width: 100%"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="gpu-result" role="status">
+                  <strong data-gpu-speedup>3.32×</strong
+                  ><span
+                    >faster than naïve<br /><b data-gpu-ratio>24.0%</b> of
+                    cuBLAS throughput</span
+                  >
+                </div>
+                <p class="lab-footnote">
+                  Recorded results · NVIDIA T4 · CUDA 12.8 · FP32 · median of 20
+                  runs · GFLOPS. This does not run CUDA in your browser.
                 </p>
                 <a
-                  class="text-link"
-                  href="https://github.com/hajarmrifag/claims-management-api/blob/main/docs/security/threat-model.md"
-                  >Inspect the threat model ↗</a
-                >
-              </div>
-            </details>
-            <ul class="tags">
-              <li>C# / ASP.NET Core</li>
-              <li>PostgreSQL</li>
-              <li>React</li>
-            </ul>
-            <div class="project-links">
-              <a href="https://claims-management-ync9.onrender.com"
-                >Live demo ↗</a
-              ><a href="https://github.com/hajarmrifag/claims-management-api"
-                >Source ↗</a
-              >
-            </div>
-          </article>
-
-          <article class="project compact">
-            <p class="eyebrow">03 · GPU / Performance engineering</p>
-            <h3>CUDA kernels</h3>
-            <p class="project-summary">
-              Optimize a matrix multiply. Measure it. Find the next bottleneck.
-            </p>
-            <div class="kernel-metric">
-              <strong>1.28 <small>TFLOPS</small></strong
-              ><span>FP32 GEMM · 1024 × 1024 · NVIDIA T4</span>
-            </div>
-            <p>
-              From naive memory access to shared-memory and register tiling,
-              guided by Nsight Compute. The final kernel reaches 24% of cuBLAS
-              throughput for the recorded workload.
-            </p>
-            <details>
-              <summary>
-                What the measurements taught me
-                <span aria-hidden="true">+</span>
-              </summary>
-              <div>
-                <p>
-                  Padding reduced excessive shared-memory wavefronts from about
-                  32% to 3% in the profiled kernel. A separate warp-shuffle
-                  Softmax experiment was slower than register caching, so the
-                  measured winner stayed.
-                </p>
-                <img
-                  class="benchmark-image"
-                  src="assets/gemm-t4.png"
-                  width="1620"
-                  height="900"
-                  loading="lazy"
-                  alt="Recorded GEMM throughput comparison on NVIDIA T4; cuBLAS outperforms the custom kernels"
-                /><a
-                  class="text-link"
+                  class="lab-source"
                   href="https://github.com/hajarmrifag/cuda-transformer-kernels/blob/main/results/gemm_t4.md"
-                  >Read benchmark conditions ↗</a
+                  >Open the benchmark record ↗</a
                 >
+              </section>
+              <section
+                id="panel-banking"
+                role="tabpanel"
+                aria-labelledby="tab-banking"
+                class="lab-panel"
+                hidden
+              >
+                <p class="lab-subtitle">A retry should never pay twice.</p>
+                <h2>Try to break a transfer.</h2>
+                <p class="lab-description">
+                  Send a sample transfer, replay it, or introduce a failure
+                  before commit.
+                </p>
+                <div class="balance-pair">
+                  <div>
+                    <span>SOURCE ACCOUNT</span
+                    ><strong data-bank-source>£1,000.00</strong>
+                  </div>
+                  <span class="balance-arrow" aria-hidden="true">→</span>
+                  <div>
+                    <span>DESTINATION</span
+                    ><strong data-bank-destination>£250.00</strong>
+                  </div>
+                </div>
+                <div
+                  class="bank-scenarios"
+                  role="group"
+                  aria-label="Transfer scenarios"
+                >
+                  <button data-bank-action="send">Send £100</button
+                  ><button data-bank-action="retry" disabled>
+                    Retry same request</button
+                  ><button data-bank-action="fail">Fail before commit</button
+                  ><button data-bank-action="overdraw">
+                    Try sending £5,000
+                  </button>
+                </div>
+                <div class="lab-response" data-bank-response role="status">
+                  <strong>£1,250.00 conserved across both accounts.</strong
+                  ><span>Choose a scenario to inspect its effect.</span>
+                </div>
+                <div class="bank-ledger">
+                  <span>Committed transfers <b data-bank-count>0</b></span
+                  ><button class="lab-reset" data-bank-reset>
+                    Reset accounts
+                  </button>
+                </div>
+                <details class="lab-audit">
+                  <summary>
+                    Why this works in the real API <span>+</span>
+                  </summary>
+                  <p>
+                    PostgreSQL transactions commit both balance updates
+                    together. An advisory lock serializes matching idempotency
+                    keys; ordered row locks avoid opposite-transfer deadlocks.
+                    This browser model demonstrates outcomes, not database
+                    concurrency.
+                  </p>
+                </details>
+                <a
+                  class="lab-source"
+                  href="https://github.com/hajarmrifag/neobank-growth-analytics/blob/main/banking_api/service.py"
+                  >Inspect the transaction service ↗</a
+                >
+              </section>
+              <section
+                id="panel-gridflex"
+                role="tabpanel"
+                aria-labelledby="tab-gridflex"
+                class="lab-panel"
+                hidden
+              >
+                <p class="lab-subtitle">
+                  Follow one scenario through the system.
+                </p>
+                <h2>Inside a simulation.</h2>
+                <p class="lab-description">
+                  Each layer has a job. Explore where the decisions live.
+                </p>
+                <div
+                  class="architecture-path"
+                  role="group"
+                  aria-label="Simulation request path"
+                >
+                  <button data-architecture="0" aria-pressed="true">
+                    <span>01</span>Interface</button
+                  ><span aria-hidden="true">→</span
+                  ><button data-architecture="1" aria-pressed="false">
+                    <span>02</span>Contract</button
+                  ><span aria-hidden="true">→</span
+                  ><button data-architecture="2" aria-pressed="false">
+                    <span>03</span>Compute</button
+                  ><span aria-hidden="true">→</span
+                  ><button data-architecture="3" aria-pressed="false">
+                    <span>04</span>Result
+                  </button>
+                </div>
+                <div class="architecture-detail" aria-live="polite">
+                  <span class="lab-label" data-architecture-file
+                    >frontend/src/api.ts</span
+                  >
+                  <h3 data-architecture-title>Keep the interface honest.</h3>
+                  <p data-architecture-copy>
+                    Controls remain drafts until applied. Request cancellation
+                    and an active-result guard prevent an older request from
+                    replacing the latest scenario.
+                  </p>
+                  <pre data-architecture-code><code>Draft settings → Apply
+POST /api/simulate
+AbortSignal + active-result guard</code></pre>
+                  <p class="architecture-tradeoff" data-architecture-tradeoff>
+                    Aborting a browser request does not terminate server
+                    computation already running.
+                  </p>
+                </div>
+                <div class="lab-actions">
+                  <button class="lab-primary" data-architecture-next>
+                    Next: the API contract <span>→</span>
+                  </button>
+                </div>
+                <a
+                  class="lab-source"
+                  data-architecture-source
+                  href="https://github.com/hajarmrifag/gridflex-ai/blob/main/frontend/src/api.ts"
+                  >Inspect this layer in the source ↗</a
+                >
+              </section>
+              <div class="workbench-footer">
+                <span data-lab-kind>LOCAL MODEL · NO ACCOUNT NEEDED</span
+                ><a href="#work">Explore the full projects ↓</a>
               </div>
-            </details>
-            <ul class="tags">
-              <li>CUDA C++</li>
-              <li>Nsight Compute</li>
-              <li>CMake</li>
-            </ul>
-            <div class="project-links">
-              <a href="https://github.com/hajarmrifag/cuda-transformer-kernels"
-                >Source & measurements ↗</a
-              >
             </div>
-          </article>
+            <div class="lab-fallback">
+              <div class="lab-noscript">
+                <h2>Explore the engineering.</h2>
+                <p>
+                  Enable JavaScript for the interactive experiments, or read the
+                  complete projects below.
+                </p>
+                <a href="#work">See selected work ↓</a>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <article class="project data-project">
-          <div>
-            <p class="eyebrow">04 · Backend / Data systems</p>
-            <h3>Neobank analytics<br />& transaction API</h3>
-            <ul class="tags">
-              <li>Python / FastAPI</li>
-              <li>PostgreSQL</li>
-              <li>SQL</li>
-              <li>Docker</li>
-            </ul>
-          </div>
-          <div>
-            <p class="project-summary">
-              A transaction service built around atomic transfers and idempotent
-              retries, alongside a reproducible analytics pipeline.
-            </p>
-            <p>
-              The analysis covers 891,772
-              <strong>synthetic</strong> transactions. It separates
-              statistically significant activation gains from whether an
-              incentive pays back.
-            </p>
-            <div class="project-links">
-              <a href="https://github.com/hajarmrifag/neobank-growth-analytics"
-                >Source & API documentation ↗</a
-              ><a href="https://neobank-growth-analytics-hajar.streamlit.app/"
-                >Analytics demo ↗</a
-              >
-            </div>
-          </div>
-        </article>
+        <div class="hero-floor">
+          <p>
+            Final-year software engineering at
+            <strong>Sichuan University.</strong><br />Full-stack products.
+            Reliable backends. Measured performance.
+          </p>
+          <a class="button lime" href="#work"
+            >Step inside the work <span aria-hidden="true">↘</span></a
+          ><span class="scroll-note" aria-hidden="true"
+            >SCROLL TO EXPLORE <span>↓</span></span
+          >
+        </div>
       </section>
-
+      <div class="discipline-strip" aria-label="Areas of interest">
+        <span>PRODUCT THINKING</span><b aria-hidden="true">/</b
+        ><span>SYSTEMS ENGINEERING</span><b aria-hidden="true">/</b
+        ><span>PERFORMANCE OBSESSION</span><b>✳</b
+        ><span>END-TO-END DELIVERY</span>
+      </div>
       <section
-        id="approach"
-        class="approach"
-        aria-labelledby="approach-heading"
+        id="work"
+        class="work light-surface"
+        aria-labelledby="work-heading"
       >
         <div class="wrap">
           <div class="section-heading">
-            <p class="eyebrow">02 / How I approach engineering</p>
-            <h2 id="approach-heading">
-              The interesting part<br />is in the <em>decisions.</em>
-            </h2>
+            <p class="eyebrow">01 / SELECTED WORK</p>
+            <h2 id="work-heading">Less talk.<br /><em>More proof.</em></h2>
+            <div class="section-intro">
+              <p>
+                Four projects. Four different problems.<br />A closer look at
+                the decisions underneath.
+              </p>
+              <div
+                class="work-filters"
+                role="group"
+                aria-label="Filter projects"
+              >
+                <button data-filter="all" aria-pressed="true">
+                  All work <sup>04</sup></button
+                ><button data-filter="product" aria-pressed="false">
+                  Product</button
+                ><button data-filter="systems" aria-pressed="false">
+                  Systems</button
+                ><button data-filter="performance" aria-pressed="false">
+                  Performance
+                </button>
+              </div>
+              <p class="sr-only" role="status" data-filter-status>
+                Showing all four projects.
+              </p>
+            </div>
           </div>
-          <div class="principles">
-            <article>
-              <span>01</span>
-              <h3>Define the invariant.</h3>
-              <p>
-                Conserve daily energy in a simulation. Keep a transfer atomic.
-                Enforce authorization in the API. Start with what must remain
-                true.
-              </p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>Measure the trade-off.</h3>
-              <p>
-                Compare against a clear baseline. Record the workload and
-                environment. Keep the experiment that did not win; it explains
-                the choice.
-              </p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>Close the delivery loop.</h3>
-              <p>
-                Make the project runnable, test the critical journey, publish a
-                demo and document where its operating limits begin.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="about" class="about wrap" aria-labelledby="about-heading">
-        <div>
-          <p class="eyebrow">03 / A little context</p>
-          <h2 id="about-heading">
-            Still learning.<br /><em>Already building.</em>
-          </h2>
-        </div>
-        <div>
-          <p class="large-copy">
-            I’m completing my Software Engineering degree at Sichuan University,
-            with graduation expected in 2027.
-          </p>
-          <p>
-            I’m interested in backend and full-stack engineering, particularly
-            where data, reliability and performance meet. My projects range from
-            energy simulations and financial workflows to low-level GPU
-            experiments.
-          </p>
-          <p>
-            In a university team project, SkyQuery, I worked on backend and data
-            engineering with HDFS, Hive, PySpark and FastAPI over 15 million
-            Expedia flight records.
-          </p>
-          <a
-            class="text-link"
-            href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis"
-            >Explore the team project ↗</a
+          <article
+            class="featured project"
+            id="gridflex"
+            data-category="product systems"
           >
-          <dl class="about-facts">
+            <div class="project-heading">
+              <div>
+                <p class="eyebrow">
+                  01 · Full-stack product / Scientific computing
+                </p>
+                <h3>
+                  GridFlex<span class="live-label"
+                    ><span class="status-dot" aria-hidden="true"></span>
+                    Deployed demo</span
+                  >
+                </h3>
+              </div>
+              <a
+                class="round-link"
+                href="work/gridflex.html"
+                aria-label="Read the GridFlex case study"
+                >↗</a
+              >
+            </div>
+            <a
+              class="project-image"
+              data-tilt
+              href="work/gridflex.html"
+              aria-label="Read the GridFlex case study"
+              ><img
+                src="assets/gridflex.png"
+                alt="GridFlex overview showing residual grid load, battery controls and energy metrics for Tétouan"
+                width="3420"
+                height="1964"
+                decoding="async"
+                loading="lazy"
+            /></a>
+            <div class="featured-bottom">
+              <div>
+                <h4>
+                  How much can storage and flexible demand change a power
+                  system?
+                </h4>
+                <p>
+                  A deployed simulation workspace with hourly dispatch replay,
+                  20-case scenario comparison and a perfect-foresight
+                  optimization benchmark.
+                </p>
+                <ul class="tags" aria-label="Technologies">
+                  <li>React / TypeScript</li>
+                  <li>FastAPI</li>
+                  <li>NumPy / SciPy</li>
+                  <li>Docker</li>
+                </ul>
+              </div>
+              <div class="evidence">
+                <div>
+                  <strong>31.9×</strong
+                  ><span
+                    >faster shift + battery pipeline<br />60-day local
+                    benchmark</span
+                  >
+                </div>
+                <div>
+                  <strong>91 + 5</strong
+                  ><span
+                    >Python tests + browser journeys<br />at the 0.2.0
+                    release</span
+                  >
+                </div>
+                <a class="text-link" href="work/gridflex.html"
+                  >Read the engineering case study
+                  <span aria-hidden="true">↗</span></a
+                >
+              </div>
+            </div>
+            <div class="project-links">
+              <a href="https://gridflex.onrender.com/"
+                >Open application <span aria-hidden="true">↗</span></a
+              ><button data-open-lab="gridflex">
+                Explore the architecture ↗</button
+              ><a href="https://github.com/hajarmrifag/gridflex-ai"
+                >Explore source <span aria-hidden="true">↗</span></a
+              ><span>Free hosting may take a moment to wake.</span>
+            </div>
+          </article>
+
+          <div class="project-grid">
+            <article
+              class="project compact claims-card"
+              id="claims"
+              data-category="product systems"
+            >
+              <div class="project-preview claims-preview">
+                <span class="eyebrow">TRY THE AUTHORIZATION RULE</span>
+                <p class="preview-title">
+                  Same request.<br /><em>Different permission.</em>
+                </p>
+                <div class="permission-row">
+                  <span>Adjuster</span><b>Cannot update status</b>
+                </div>
+                <div class="permission-row">
+                  <span>Manager / Admin</span><b>Can update status</b>
+                </div>
+                <button data-open-lab="claims">
+                  Try it yourself <span>↗</span>
+                </button>
+              </div>
+              <p class="eyebrow">02 · Backend / Application security</p>
+              <h3>Aegis Claims</h3>
+              <p class="project-summary">
+                An insurance claims workflow with authorization, document
+                handling and an audit history.
+              </p>
+              <div
+                class="workflow"
+                aria-label="Claim workflow: submission, authorized review, audit history"
+              >
+                <span>Submit</span><b aria-hidden="true">→</b><span>Review</span
+                ><b aria-hidden="true">→</b><span>Audit</span>
+              </div>
+              <p>
+                The API enforces role-based transitions and validates uploaded
+                file signatures. React handles forms and remote state;
+                PostgreSQL persists the workflow.
+              </p>
+              <details>
+                <summary>
+                  Engineering decisions <span aria-hidden="true">+</span>
+                </summary>
+                <div>
+                  <p>
+                    <strong>The interface is not a security boundary.</strong>
+                    Authorization lives in the ASP.NET Core API, with separate
+                    domain, application and infrastructure layers.
+                  </p>
+                  <p>
+                    <strong>Make limitations explicit.</strong> The public demo
+                    uses ephemeral file storage. The repository includes an
+                    Azure Blob provider for durable storage, plus a threat model
+                    and security assessment.
+                  </p>
+                  <a
+                    class="text-link"
+                    href="https://github.com/hajarmrifag/claims-management-api/blob/main/docs/security/threat-model.md"
+                    >Inspect the threat model ↗</a
+                  >
+                </div>
+              </details>
+              <ul class="tags">
+                <li>C# / ASP.NET Core</li>
+                <li>PostgreSQL</li>
+                <li>React</li>
+              </ul>
+              <div class="project-links">
+                <a href="https://claims-management-ync9.onrender.com"
+                  >Live demo ↗</a
+                ><a href="https://github.com/hajarmrifag/claims-management-api"
+                  >Source ↗</a
+                >
+              </div>
+            </article>
+
+            <article
+              class="project compact cuda-card"
+              id="cuda"
+              data-category="performance"
+            >
+              <div class="project-preview cuda-preview">
+                <span class="eyebrow">EXPLORE THE RECORDED RESULTS</span>
+                <p class="preview-title">
+                  Performance<br /><em>depends on the work.</em>
+                </p>
+                <div class="mini-bench">
+                  <span>My kernel / cuBLAS</span>
+                  <div>
+                    <b>93.0<small>%</small></b
+                    ><i>→</i><b>24.0<small>%</small></b>
+                  </div>
+                  <div><span>128 × 128</span><span>1024 × 1024</span></div>
+                </div>
+                <button data-open-lab="cuda">
+                  Change the matrix size <span>↗</span>
+                </button>
+              </div>
+              <p class="eyebrow">03 · GPU / Performance engineering</p>
+              <h3>CUDA kernels</h3>
+              <p class="project-summary">
+                Optimize a matrix multiply. Measure it. Find the next
+                bottleneck.
+              </p>
+              <div class="kernel-metric">
+                <strong>1.28 <small>TFLOPS</small></strong
+                ><span>FP32 GEMM · 1024 × 1024 · NVIDIA T4</span>
+              </div>
+              <p>
+                From naive memory access to shared-memory and register tiling,
+                guided by Nsight Compute. The final kernel reaches 24% of cuBLAS
+                throughput for the recorded workload.
+              </p>
+              <details>
+                <summary>
+                  What the measurements taught me
+                  <span aria-hidden="true">+</span>
+                </summary>
+                <div>
+                  <p>
+                    Padding reduced excessive shared-memory wavefronts from
+                    about 32% to 3% in the profiled kernel. A separate
+                    warp-shuffle Softmax experiment was slower than register
+                    caching, so the measured winner stayed.
+                  </p>
+                  <img
+                    class="benchmark-image"
+                    src="assets/gemm-t4.png"
+                    width="1620"
+                    height="900"
+                    loading="lazy"
+                    alt="Recorded GEMM throughput comparison on NVIDIA T4; cuBLAS outperforms the custom kernels"
+                  /><a
+                    class="text-link"
+                    href="https://github.com/hajarmrifag/cuda-transformer-kernels/blob/main/results/gemm_t4.md"
+                    >Read benchmark conditions ↗</a
+                  >
+                </div>
+              </details>
+              <ul class="tags">
+                <li>CUDA C++</li>
+                <li>Nsight Compute</li>
+                <li>CMake</li>
+              </ul>
+              <div class="project-links">
+                <a
+                  href="https://github.com/hajarmrifag/cuda-transformer-kernels"
+                  >Source & measurements ↗</a
+                >
+              </div>
+            </article>
+          </div>
+
+          <article
+            class="project data-project"
+            id="neobank"
+            data-category="systems"
+          >
             <div>
-              <dt>Education</dt>
-              <dd>Software Engineering<br />Sichuan University</dd>
+              <p class="eyebrow">04 · Backend / Data systems</p>
+              <h3>Neobank analytics<br />& transaction API</h3>
+              <ul class="tags">
+                <li>Python / FastAPI</li>
+                <li>PostgreSQL</li>
+                <li>SQL</li>
+                <li>Docker</li>
+              </ul>
             </div>
             <div>
-              <dt>Expected graduation</dt>
-              <dd>2027</dd>
+              <p class="project-summary">
+                A transaction service built around atomic transfers and
+                idempotent retries, alongside a reproducible analytics pipeline.
+              </p>
+              <p>
+                The analysis covers 891,772
+                <strong>synthetic</strong> transactions. It separates
+                statistically significant activation gains from whether an
+                incentive pays back.
+              </p>
+              <div class="project-links">
+                <button data-open-lab="banking">Try a transaction ↗</button>
+                <a
+                  href="https://github.com/hajarmrifag/neobank-growth-analytics"
+                  >Source & API documentation ↗</a
+                ><a href="https://neobank-growth-analytics-hajar.streamlit.app/"
+                  >Analytics demo ↗</a
+                >
+              </div>
             </div>
-            <div>
-              <dt>Location</dt>
-              <dd>Chengdu, China</dd>
-            </div>
-          </dl>
+          </article>
         </div>
       </section>
-
+      <section
+        id="approach"
+        class="approach wrap"
+        aria-labelledby="approach-heading"
+      >
+        <div class="section-heading">
+          <p class="eyebrow">02 / ENGINEERING MINDSET</p>
+          <h2 id="approach-heading">
+            The work behind<br /><em>the working thing.</em>
+          </h2>
+          <p class="section-description">
+            Good software is a series of deliberate decisions.<br />These are
+            the ones I keep coming back to.
+          </p>
+        </div>
+        <div class="decision-list">
+          <details open>
+            <summary>
+              <span class="decision-num">01</span>
+              <h3>Start with what must stay true.</h3>
+              <span class="detail-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="decision-content">
+              <p>
+                Energy must be conserved. A bank transfer must be atomic.
+                Authorization must hold even when the interface is bypassed. I
+                start with the invariant, then build around it.
+              </p>
+              <a href="work/gridflex.html#correctness"
+                >See it in GridFlex <span>↗</span></a
+              >
+              <div class="invariant-diagram" aria-hidden="true">
+                <span>INPUT</span><i>→</i><strong>CONSTRAINTS</strong><i>→</i
+                ><span>TRUSTED OUTPUT</span>
+              </div>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="decision-num">02</span>
+              <h3>Let the measurement disagree.</h3>
+              <span class="detail-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="decision-content">
+              <p>
+                A more sophisticated algorithm is not automatically faster. My
+                warp-shuffle Softmax experiment lost to register caching.
+                Keeping that result makes the final decision explainable.
+              </p>
+              <a href="https://github.com/hajarmrifag/cuda-transformer-kernels"
+                >Explore the experiment <span>↗</span></a
+              >
+              <div class="invariant-diagram" aria-hidden="true">
+                <span>HYPOTHESIS</span><i>→</i><strong>MEASUREMENT</strong
+                ><i>→</i><span>DECISION</span>
+              </div>
+            </div>
+          </details>
+          <details>
+            <summary>
+              <span class="decision-num">03</span>
+              <h3>Finish the journey.</h3>
+              <span class="detail-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="decision-content">
+              <p>
+                A repository is only part of the product. I work through the
+                interface, tests, container build and deployment, then document
+                where the system’s operating limits begin.
+              </p>
+              <a href="work/gridflex.html#delivery"
+                >Follow the delivery path <span>↗</span></a
+              >
+              <div class="invariant-diagram" aria-hidden="true">
+                <span>BUILD</span><i>→</i><strong>TEST + SHIP</strong><i>→</i
+                ><span>INSPECT</span>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+      <section
+        id="about"
+        class="about light-surface"
+        aria-labelledby="about-heading"
+      >
+        <div class="wrap about-layout">
+          <div class="about-note">
+            <p class="eyebrow">HELLO, I'M</p>
+            <p class="personal-name">Hajar<br /><em>Mrifag.</em></p>
+            <p class="personal-intro">
+              A software engineering student<br />who likes to understand the
+              whole thing.
+            </p>
+            <dl class="personal-facts">
+              <div>
+                <dt>Studying at</dt>
+                <dd>Sichuan University</dd>
+              </div>
+              <div>
+                <dt>Based in</dt>
+                <dd>Chengdu, China</dd>
+              </div>
+              <div>
+                <dt>Graduating</dt>
+                <dd>2027</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="about-copy">
+            <p class="eyebrow">03 / A LITTLE CONTEXT</p>
+            <h2 id="about-heading">
+              Still learning.<br /><em>Already building.</em>
+            </h2>
+            <p class="large-copy">
+              I’m Hajar, a final-year Software Engineering student at Sichuan
+              University, graduating in 2027.
+            </p>
+            <p>
+              I like the point where a clear interface meets a hard engineering
+              problem. My work moves between energy systems, financial workflows
+              and GPU performance—with curiosity as the common thread.
+            </p>
+            <p>
+              On SkyQuery, a university team project, I worked on backend and
+              data engineering with HDFS, Hive, PySpark and FastAPI over 15
+              million Expedia flight records.
+            </p>
+            <a
+              class="text-link"
+              href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis"
+              >Explore the team project ↗</a
+            >
+            <div class="toolkit">
+              <span class="eyebrow">TOOLS I WORK WITH</span>
+              <ul class="tags">
+                <li>Python</li>
+                <li>TypeScript</li>
+                <li>React</li>
+                <li>FastAPI</li>
+                <li>C# / .NET</li>
+                <li>PostgreSQL</li>
+                <li>Docker</li>
+                <li>CUDA C++</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
       <section
         id="contact"
         class="contact wrap"
         aria-labelledby="contact-heading"
       >
-        <p class="eyebrow">
-          <span class="status-dot" aria-hidden="true"></span> Open to 2027
-          software engineering opportunities
-        </p>
+        <div class="contact-top">
+          <p class="eyebrow">
+            <span class="status-dot"></span> THE NEXT CHAPTER / 2027
+          </p>
+          <span class="eyebrow">LET’S MAKE IT COUNT</span>
+        </div>
         <h2 id="contact-heading">
-          Let’s build<br /><em>something useful.</em>
+          Good things<br />start with <em>hello.</em
+          ><span aria-hidden="true">↗</span>
         </h2>
         <div class="contact-bottom">
           <p>
-            Have a role or a project in mind?<br />I’d be glad to talk through
-            the work.
+            I’m looking for software engineering opportunities after
+            graduation.<br />If the work resonates, I’d love to hear from you.
           </p>
           <a
-            class="button dark"
+            class="button lime"
             href="https://www.linkedin.com/in/hajar-mrifag-a7903334b"
-            >Connect on LinkedIn <span aria-hidden="true">↗</span></a
+            >Let’s connect <span aria-hidden="true">↗</span></a
           >
         </div>
       </section>
     </main>
     <footer class="wrap">
-      <a class="wordmark" href="./">hm<span>.</span></a>
-      <p>Hajar Mrifag · 2026</p>
+      <a class="footer-name" href="./">Hajar Mrifag.</a>
+      <p>© 2026<br /><span>Software engineering · Chengdu, China</span></p>
       <a href="https://github.com/hajarmrifag">GitHub ↗</a
       ><a href="#main">Back to top ↑</a>
     </footer>
+    <dialog class="lab-dialog" aria-labelledby="lab-dialog-title">
+      <div class="lab-dialog-top">
+        <h2 id="lab-dialog-title">Engineering playground</h2>
+        <button data-close-lab aria-label="Close engineering playground">
+          Close ×
+        </button>
+      </div>
+      <div data-lab-mount></div>
+    </dialog>
+    <dialog class="command-dialog" aria-labelledby="command-title">
+      <div class="command-header">
+        <h2 id="command-title">Where to?</h2>
+        <button data-close-command aria-label="Close quick navigation">
+          Esc <span>×</span>
+        </button>
+      </div>
+      <label class="sr-only" for="command-search"
+        >Search projects or pages</label
+      ><input
+        id="command-search"
+        placeholder="Find a project, a story, a connection…"
+        type="search"
+        autocomplete="off"
+      />
+      <div class="command-results">
+        <a
+          href="#playground"
+          data-command="playground experiments interactive lab"
+          data-command-lab="claims"
+          ><span>00</span>Engineering playground <b>↗</b></a
+        >
+        <a href="#work" data-command="work projects all"
+          ><span>01</span>Selected work <b>↗</b></a
+        ><a href="work/gridflex.html" data-command="gridflex energy case study"
+          ><span>02</span>GridFlex case study <b>↗</b></a
+        ><a href="#claims" data-command="claims security aegis backend"
+          ><span>03</span>Aegis Claims <b>↗</b></a
+        ><a href="#cuda" data-command="cuda gpu performance kernels"
+          ><span>04</span>CUDA kernels <b>↗</b></a
+        ><a href="#neobank" data-command="neobank banking api transactions"
+          ><span>05</span>Neobank API <b>↗</b></a
+        ><a href="#about" data-command="about hajar education"
+          ><span>06</span>A little about me <b>↗</b></a
+        ><a href="#contact" data-command="contact linkedin connect hire"
+          ><span>07</span>Let’s connect <b>↗</b></a
+        >
+      </div>
+      <p class="command-empty" hidden>
+        No match yet. Try “GridFlex” or “contact”.
+      </p>
+      <div class="command-footer">
+        <span>↑ ↓ to navigate · Enter to open</span><span>ESC TO CLOSE</span>
+      </div>
+    </dialog>
   </body>
 </html>
