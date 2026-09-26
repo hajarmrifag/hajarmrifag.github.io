@@ -39,6 +39,6 @@ GitHub Actions validates local links, anchors, assets, heading structure, JavaSc
 - `assets/`: original GridFlex screenshot, CV, recorded CUDA chart and favicon.
 - `scripts/check_site.py`: dependency-free static-site validation.
 
-GridFlex figures come from the 0.2.0 benchmark record and measure two engine operations, not whole-app latency. CUDA figures specify hardware, workload and methodology. Update values and context together. The CV contains public project and education facts plus an explicitly supplied contact email. The GridFlex screenshot is the original user-supplied image.
+GridFlex figures come from the 0.2.0 benchmark record and measure two engine operations, not whole-app latency. CUDA figures specify hardware, workload and methodology. Update values and context together. The CV contains project and education facts, internship experience from Hajar’s existing CVs, and an explicitly supplied contact email. The GridFlex screenshot is the original user-supplied image.
 
 GitHub Pages publishes the repository root from `main`. `.nojekyll` keeps the site as static files.
