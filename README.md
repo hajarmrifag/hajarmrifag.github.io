@@ -13,6 +13,8 @@ A focused software engineering portfolio: four selected projects, engineering ca
 - SkyQuery has a dedicated internship case study with employer/dates, individual and teammate responsibilities, implementation links, recorded results and explicit limitations. Sources are pinned to a repository revision.
 - CV, email, LinkedIn and GitHub links are accessible without JavaScript.
 
+Scroll reveals, a reading-progress bar and a floating section navigator connect the home page and case studies. Project images drift subtly while scrolling; selected cards have a pointer-following light on desktop. The reading navigator includes pause/resume controls. Motion is disabled when reduced motion is requested, including changes to that setting while the page is open. Content stays visible without JavaScript.
+
 Ordinary anchors provide navigation. All project content and default benchmark values are static HTML; JavaScript progressively enables the CUDA selector. The GridFlex case study also compares recorded engine timings by horizon. Reduced-motion preferences are respected. There is no framework, build step, account system or analytics. Fonts use Google Fonts with local fallbacks.
 
 ## Preview and checks
@@ -36,6 +38,7 @@ GitHub Actions validates local links, anchors, assets, heading structure, JavaSc
 - `cuda.js`, `cuda-data.js`, `tests/`: benchmark selector, recorded results and calculation checks.
 - `work/gridflex.html`, `work/skyquery.html`, `styles.css`, `case.css`: case study and reading layout.
 - `benchmark.js`: recorded GridFlex measurements.
+- `motion.js`, `motion.css`: progressive scroll motion and accessible section navigation.
 - `assets/`: original GridFlex screenshot, CV, recorded CUDA chart and favicon.
 - `scripts/check_site.py`: dependency-free static-site validation.
 
