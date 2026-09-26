@@ -2,7 +2,7 @@
 
 [Visit the portfolio](https://hajarmrifag.github.io/)
 
-A focused software engineering portfolio: four selected projects, an engineering case study, a downloadable CV and direct contact details. Project descriptions explain scope, technical decisions, evidence and deployment limits.
+A focused software engineering portfolio: four selected projects, engineering case studies, a downloadable CV and direct contact details. Project descriptions explain scope, technical decisions, evidence and deployment limits.
 
 ## Content and navigation
 
@@ -10,7 +10,7 @@ A focused software engineering portfolio: four selected projects, an engineering
 - Aegis Claims links to its deployed application, source and security assessment.
 - CUDA includes a matrix-size selector for recorded GEMM benchmarks, with a common scale and a cuBLAS baseline. These are T4 measurements, not benchmarks of the visitor's device.
 - Neobank links directly to database-backed tests and labels its data as synthetic.
-- Education and the SkyQuery internship contribution are separate from individual project work.
+- SkyQuery has a dedicated internship case study with employer/dates, individual and teammate responsibilities, implementation links, recorded results and explicit limitations. Sources are pinned to a repository revision.
 - CV, email, LinkedIn and GitHub links are accessible without JavaScript.
 
 Ordinary anchors provide navigation. All project content and default benchmark values are static HTML; JavaScript progressively enables the CUDA selector. The GridFlex case study also compares recorded engine timings by horizon. Reduced-motion preferences are respected. There is no framework, build step, account system or analytics. Fonts use Google Fonts with local fallbacks.
@@ -34,7 +34,7 @@ GitHub Actions validates local links, anchors, assets, heading structure, JavaSc
 
 - `index.html`, `portfolio.css`: home page and responsive layout.
 - `cuda.js`, `cuda-data.js`, `tests/`: benchmark selector, recorded results and calculation checks.
-- `work/gridflex.html`, `styles.css`, `case.css`: case study and reading layout.
+- `work/gridflex.html`, `work/skyquery.html`, `styles.css`, `case.css`: case study and reading layout.
 - `benchmark.js`: recorded GridFlex measurements.
 - `assets/`: original GridFlex screenshot, CV, recorded CUDA chart and favicon.
 - `scripts/check_site.py`: dependency-free static-site validation.
