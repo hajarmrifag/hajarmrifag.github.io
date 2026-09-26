@@ -22,7 +22,7 @@
 }
 .case-page .case-hero .eyebrow {
   font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 9px;
+  font-size: 12px;
 }
 .case-page .case-lead {
   max-width: 800px;
@@ -47,7 +47,7 @@
 }
 .case-page .case-section > .eyebrow {
   font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 9px;
+  font-size: 12px;
   position: sticky;
   top: 30px;
   align-self: start;
