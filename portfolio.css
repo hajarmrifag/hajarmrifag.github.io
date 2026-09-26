@@ -944,3 +944,58 @@ footer a {
     overflow-wrap: anywhere;
   }
 }
+
+.experience {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+  padding-block: 26px 30px;
+  border-top: 1px solid #45513b;
+  scroll-margin-top: 24px;
+}
+.experience .eyebrow {
+  color: #c7d2ba;
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+.experience h2 {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+.experience p:not(.eyebrow) {
+  font-size: 14px;
+  color: #c4d0b9;
+  line-height: 1.6;
+}
+.experience .text-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--lime);
+}
+@media (max-width: 700px) {
+  .experience {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding-block: 22px;
+  }
+  .experience h2 {
+    font-size: 23px;
+  }
+  .site-header nav {
+    gap: 14px;
+  }
+  .experience .eyebrow {
+    letter-spacing: 0.025em;
+  }
+}
+@media (max-width: 370px) {
+  .site-header nav {
+    gap: 10px;
+  }
+  .site-header {
+    gap: 12px;
+  }
+  .experience h2 {
+    font-size: 21px;
+  }
+}

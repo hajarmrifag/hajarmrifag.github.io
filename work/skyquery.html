@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SkyQuery — Internship case study · Hajar Mrifag</title>
+    <meta
+      name="description"
+      content="My backend and data engineering internship at Chengdu Suncaper: ownership, PySpark flight analysis, a FastAPI query prototype, and recorded results."
+    />
+    <link
+      rel="canonical"
+      href="https://hajarmrifag.github.io/work/skyquery.html"
+    />
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="../case.css" />
+  </head>
+  <body class="case-page internship-case">
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="wordmark" href="../">Hajar Mrifag.</a>
+      <nav aria-label="Main navigation">
+        <a href="../#experience">Experience</a><a href="../#work">Work</a
+        ><a href="../#contact">Contact</a>
+      </nav>
+    </header>
+    <main id="main" class="wrap">
+      <section class="case-hero">
+        <a class="back-link" href="../#experience">← Internship experience</a>
+        <p class="eyebrow">INTERNSHIP / MARCH–APRIL 2026</p>
+        <h1>SkyQuery<span class="name-period">.</span></h1>
+        <p class="case-lead">
+          Making flight data queryable, from PySpark analysis to a
+          conversational API.
+        </p>
+        <dl class="case-meta">
+          <div>
+            <dt>Employer</dt>
+            <dd>Chengdu Suncaper<br />Data Co., Ltd</dd>
+          </div>
+          <div>
+            <dt>My position</dt>
+            <dd>Data &amp; AI<br />Engineering Intern</dd>
+          </div>
+          <div>
+            <dt>Team</dt>
+            <dd>Two contributors<br />Backend/data + frontend/analysis</dd>
+          </div>
+          <div>
+            <dt>Delivery</dt>
+            <dd>14 stories assigned to me<br />Across three sprints</dd>
+          </div>
+        </dl>
+        <div class="case-links">
+          <a class="button dark" href="#ownership">My contribution ↓</a
+          ><a
+            class="text-link"
+            href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis"
+            >Team repository ↗</a
+          >
+        </div>
+      </section>
+      <div class="case-body">
+        <section class="case-section" id="ownership">
+          <p class="eyebrow">01 / Ownership</p>
+          <div>
+            <h2>My work, within a two-person team.</h2>
+            <p>
+              The internship project combined analysis of 15 million historical
+              Expedia flight records with a natural-language query interface. My
+              responsibilities were backend and data engineering.
+            </p>
+            <div class="ownership-grid">
+              <div>
+                <h3>My contribution</h3>
+                <ul>
+                  <li>
+                    HDFS upload scripts, Hive table definitions and PySpark
+                    analyses.
+                  </li>
+                  <li>
+                    Flight connection comparisons, aircraft/runway analysis, and
+                    weather, brand and rail enrichment.
+                  </li>
+                  <li>
+                    The FastAPI query endpoint, schema context, SQL execution
+                    and correction loop.
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3>My teammate’s contribution</h3>
+                <p>
+                  Maryam handled frontend and data analysis: the chat interface,
+                  SQL display, results table, route map and charts, alongside
+                  pricing, network and other analytical tasks.
+                </p>
+              </div>
+            </div>
+            <p class="source-note">
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/README.md"
+                >Team responsibilities and sprint allocation ↗</a
+              >
+              ·
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/tree/d1892faddb51e3e4b70acef6baa000212a109169/hajar"
+                >My implementation directory ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="case-section" id="architecture">
+          <p class="eyebrow">02 / System design</p>
+          <div>
+            <h2>Two workflows with different jobs.</h2>
+            <p>
+              The large-data analysis and the conversational query prototype are
+              separate paths in the published implementation.
+            </p>
+            <div class="workflow-grid">
+              <div>
+                <h3>Historical analysis</h3>
+                <ol>
+                  <li>Store flight records in HDFS and define Hive tables.</li>
+                  <li>
+                    Use PySpark for joins, enrichment and route comparisons.
+                  </li>
+                  <li>Export findings for analysis and presentation.</li>
+                </ol>
+              </div>
+              <div>
+                <h3>Conversational prototype</h3>
+                <ol>
+                  <li>
+                    The frontend sends a question and selected tables to
+                    FastAPI.
+                  </li>
+                  <li>
+                    A language model generates SQL using a static schema
+                    description.
+                  </li>
+                  <li>
+                    The service checks the query prefix, executes against
+                    SQLite, and returns up to 100 rows.
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <p>
+              The endpoint and some service names still refer to HiveQL, but the
+              linked query-service revision uses SQLite. The 15-million-record
+              dataset describes the analytics project; it is not a verified row
+              count for the prototype’s SQLite database.
+            </p>
+            <p class="source-note">
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/hajar/setup/hive_tables.sql"
+                >Hive table definitions ↗</a
+              >
+              ·
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/hajar/epic3/flight_backend/backend/app/services/hms_service.py"
+                >Schema context ↗</a
+              >
+              ·
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/hajar/epic3/flight_backend/backend/app/services/hive_execution_service.py"
+                >Query execution ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="case-section" id="decisions">
+          <p class="eyebrow">03 / Technical decisions</p>
+          <div>
+            <h2>Make failures visible and work bounded.</h2>
+            <h3>Give SQL generation schema context</h3>
+            <p>
+              The prompt includes table and column descriptions, and requests
+              SQL in the execution engine’s dialect. This supplies concrete
+              context, but does not prove that a generated answer is correct.
+            </p>
+            <h3>Limit the correction loop</h3>
+            <p>
+              For retryable execution failures, the next generation receives the
+              previous query and error. The route makes at most three attempts
+              in total. Validation failures return a client error instead of
+              being retried. Successful responses include the generated SQL,
+              columns, execution time and correction count.
+            </p>
+            <h3>Process connection comparisons by flight date</h3>
+            <p>
+              The PySpark splicing analysis filters nonstop flights for one
+              date, caches that working set, joins possible legs, and releases
+              the cache after collecting the result. Candidate connections must
+              have a layover between 90 and 480 minutes.
+            </p>
+            <p class="source-note">
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/hajar/epic3/flight_backend/backend/app/api/routes.py"
+                >API control flow ↗</a
+              >
+              ·
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/hajar/epic1/E1_H4_splicing_engine.py"
+                >PySpark comparison logic ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="case-section" id="results">
+          <p class="eyebrow">04 / Recorded result</p>
+          <div>
+            <h2>A concrete analysis, with its limits.</h2>
+            <p>
+              The recorded splicing run processed
+              <strong>95 flight dates</strong> and collected
+              <strong>950 comparison rows</strong>. One retained comparison for
+              LGA → CLT → ATL showed a combined fare of
+              <strong>$795.70</strong> against a direct fare of
+              <strong>$2,057.61</strong>: a difference of
+              <strong>$1,261.91</strong>.
+            </p>
+            <div class="callout">
+              <p>
+                These are historical fare comparisons, not realized passenger
+                savings or confirmed bookable itineraries. The script retains up
+                to ten rows per date before its final sort, and the log contains
+                repeated rows. The count is not 950 unique routes, and the
+                largest retained difference is not a proven global optimum.
+              </p>
+            </div>
+            <p>
+              This produces an inspectable analytical result: a reader can
+              follow the joins and connection constraints, then compare the
+              output with the recorded run.
+            </p>
+            <p class="source-note">
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/hajar/epic1/E1_H4_results.txt"
+                >Recorded run and fare comparisons ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="case-section" id="delivery">
+          <p class="eyebrow">05 / Collaboration &amp; delivery</p>
+          <div>
+            <h2>An interface between two areas of ownership.</h2>
+            <p>
+              The repository records three Agile/Scrum sprints, with 14 stories
+              assigned to me and 17 to Maryam. Our integration boundary is
+              visible in the code: her frontend sends the question and table
+              selection; my API returns the query and structured results used by
+              the interface.
+            </p>
+            <p>
+              I presented the platform and analysis findings to the team. The
+              source links below show the request and response contract that
+              connected our two areas of work.
+            </p>
+            <p class="source-note">
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/maryam/epic-3-text-to-sql/frontend/scripts/api.js"
+                >Frontend API integration ↗</a
+              >
+              ·
+              <a
+                href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/blob/d1892faddb51e3e4b70acef6baa000212a109169/hajar/epic3/flight_backend/backend/app/schemas/query.py"
+                >Request and response contract ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="case-section" id="next">
+          <p class="eyebrow">06 / What I would improve</p>
+          <div>
+            <h2>Turn prototype boundaries into explicit guarantees.</h2>
+            <ul>
+              <li>
+                <strong>Query execution:</strong> use a read-only database
+                connection, parsed statement validation and execution limits.
+                The current SELECT/WITH prefix check alone is not a complete
+                security boundary.
+              </li>
+              <li>
+                <strong>Analysis quality:</strong> deduplicate candidates, rank
+                before truncating, and align fare search snapshots before making
+                stronger savings claims.
+              </li>
+              <li>
+                <strong>Reproducibility:</strong> document the SQLite dataset
+                and align endpoint names with the actual execution engine.
+              </li>
+              <li>
+                <strong>Verification:</strong> add regression cases for invalid
+                SQL, exhausted attempts and duplicate itinerary rows.
+              </li>
+            </ul>
+            <p>
+              These are next steps, not features claimed as completed during the
+              internship.
+            </p>
+          </div>
+        </section>
+      </div>
+      <div class="case-end">
+        <a class="text-link" href="../assets/Hajar-Mrifag-CV.pdf" download
+          >Download my CV ↓</a
+        ><a class="text-link" href="mailto:hajarmrifag2@gmail.com"
+          >Discuss the work ↗</a
+        >
+      </div>
+    </main>
+    <footer class="wrap">
+      <a class="wordmark" href="../">Hajar Mrifag.</a>
+      <p>Sources linked to repository revision d1892fa.</p>
+      <a href="../#work">More work ↗</a>
+    </footer>
+  </body>
+</html>
