@@ -10,7 +10,7 @@ A focused software engineering portfolio: four selected projects, an engineering
 - Aegis Claims links to its deployed application, source and security assessment.
 - CUDA includes a matrix-size selector for recorded GEMM benchmarks, with a common scale and a cuBLAS baseline. These are T4 measurements, not benchmarks of the visitor's device.
 - Neobank links directly to database-backed tests and labels its data as synthetic.
-- Education and the SkyQuery team contribution are separate from individual project work.
+- Education and the SkyQuery internship contribution are separate from individual project work.
 - CV, email, LinkedIn and GitHub links are accessible without JavaScript.
 
 Ordinary anchors provide navigation. All project content and default benchmark values are static HTML; JavaScript progressively enables the CUDA selector. The GridFlex case study also compares recorded engine timings by horizon. Reduced-motion preferences are respected. There is no framework, build step, account system or analytics. Fonts use Google Fonts with local fallbacks.
