@@ -4,6 +4,6 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "python3 scripts/check_site.py && node --check portfolio.js && node --check playgrounds.js && node --check playground-models.js && node --check benchmark.js"
+    "check": "python3 scripts/check_site.py && node --check cuda.js && node --check cuda-data.js && node --check benchmark.js"
   }
 }
