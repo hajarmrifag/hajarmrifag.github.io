@@ -31,7 +31,12 @@ class Page(HTMLParser):
 
 
 errors = []
-pages = {path.resolve(): Page(path) for path in ROOT.rglob('*.html') if '.git' not in path.parts}
+skip_dirs = {'node_modules', 'dist', '.git'}
+pages = {
+    path.resolve(): Page(path)
+    for path in ROOT.rglob('*.html')
+    if not skip_dirs.intersection(path.parts)
+}
 references = 0
 for path, page in pages.items():
     if page.h1s != 1:
