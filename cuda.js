@@ -4,7 +4,9 @@ const number = new Intl.NumberFormat("en-GB", {
   minimumFractionDigits: 3,
   maximumFractionDigits: 3,
 });
-selector.addEventListener("change", () => {
+if (!selector) {
+  /* The comparison lives on the CUDA case study. */
+} else selector.addEventListener("change", () => {
   const result = compareGemm(selector.value);
   result.values.forEach((value, index) => {
     document.querySelector(`[data-gpu-value="${index}"]`).textContent =
@@ -19,4 +21,4 @@ selector.addEventListener("change", () => {
   document.querySelector("[data-matrix-label]").textContent =
     `${selector.value} × ${selector.value}`;
 });
-document.querySelector(".cuda-control").hidden = false;
+document.querySelector(".cuda-control")?.removeAttribute("hidden");

@@ -5,7 +5,7 @@ const chapters = [
   ...document.querySelectorAll(
     casePage
       ? ".case-hero, .case-section"
-      : ".intro, #experience, #gridflex, .project-row, #about, #contact",
+      : "#intro, #work, #practice, #path, #contact",
   ),
 ];
 const animations = new Set();
@@ -29,6 +29,42 @@ if (chapters.length) {
   progress.setAttribute("aria-hidden", "true");
   document.body.append(progress);
 
+  if (!casePage) {
+    const images = [
+      ...document.querySelectorAll(".spread-shot img, .case-shot img"),
+    ];
+    const imageContainers = images.map((image) => image.parentElement);
+    const updateHome = () => {
+      frame = 0;
+      const height = window.innerHeight;
+      const scrollable = document.documentElement.scrollHeight - height;
+      const ratio =
+        scrollable > 0
+          ? Math.max(0, Math.min(1, window.scrollY / scrollable))
+          : 0;
+      progress.style.transform = `scaleX(${ratio})`;
+      images.forEach((image, i) => {
+        const rect = imageContainers[i].getBoundingClientRect();
+        const offset = motionDisabled()
+          ? 0
+          : Math.max(
+              -12,
+              Math.min(12, (rect.top + rect.height / 2 - height / 2) * 0.025),
+            );
+        image.style.setProperty("--image-drift", `${offset.toFixed(2)}px`);
+      });
+    };
+    const scheduleHome = () => {
+      if (!frame) frame = requestAnimationFrame(updateHome);
+    };
+    window.addEventListener("scroll", scheduleHome, { passive: true });
+    window.addEventListener("resize", scheduleHome, { passive: true });
+    reducedMotion.addEventListener("change", () => {
+      for (const animation of animations) animation.cancel();
+      scheduleHome();
+    });
+    updateHome();
+  } else {
   const dock = document.createElement("nav");
   dock.className = "chapter-dock";
   dock.setAttribute("aria-label", "Reading navigation");
@@ -82,12 +118,14 @@ if (chapters.length) {
 
   const labels = chapters.map((chapter, index) => {
     if (!chapter.id) chapter.id = `chapter-${index + 1}`;
-    if (chapter.matches(".intro, .case-hero"))
+    if (chapter.matches("#intro, .intro, .case-hero"))
       return casePage
         ? document.querySelector("h1").textContent.trim()
         : "Introduction";
-    if (chapter.id === "experience") return "Internship";
-    if (chapter.id === "contact") return "Get in touch";
+    if (chapter.id === "work") return "Selected work";
+    if (chapter.id === "practice") return "Practice";
+    if (chapter.id === "path") return "Path";
+    if (chapter.id === "contact") return "Contact";
     if (chapter.matches(".case-section")) {
       return (
         chapter
@@ -114,7 +152,7 @@ if (chapters.length) {
   next.addEventListener("click", () => goTo(activeIndex + 1));
 
   const images = [
-    ...document.querySelectorAll(".featured-image img, .case-shot img"),
+    ...document.querySelectorAll(".spread-shot img, .case-shot img"),
   ];
   const imageContainers = images.map((image) => image.parentElement);
   function update() {
@@ -187,6 +225,7 @@ if (chapters.length) {
     scheduleUpdate();
   });
   update();
+  }
 }
 
 if ("IntersectionObserver" in window) {
@@ -241,37 +280,87 @@ if ("IntersectionObserver" in window) {
   );
   document
     .querySelectorAll(
-      ".intro > div, .intro-facts, .experience, .section-heading, .featured, .project-row, .about, .contact-layout, .case-hero, .case-shot, .case-section",
+      ".hero-grid, .fact-strip, .section-head, .spread, .ledger, .practice-grid, .path-list, .contact-layout, .case-hero, .case-shot, .case-section",
     )
     .forEach((element) => observer.observe(element));
 }
 
-// Pointer light follows the cursor only on devices with an accurate hovering pointer.
-if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-  document
-    .querySelectorAll(
-      ".featured-image, .ownership-grid > div, .workflow-grid > div, .cuda-comparison",
-    )
-    .forEach((card) => {
-      card.classList.add("pointer-light");
-      let pointerFrame = 0;
-      let x = 0;
-      let y = 0;
-      card.addEventListener(
-        "pointermove",
-        (event) => {
-          if (motionDisabled()) return;
-          const rect = card.getBoundingClientRect();
-          x = event.clientX - rect.left;
-          y = event.clientY - rect.top;
-          if (!pointerFrame)
-            pointerFrame = requestAnimationFrame(() => {
-              pointerFrame = 0;
-              card.style.setProperty("--pointer-x", `${x}px`);
-              card.style.setProperty("--pointer-y", `${y}px`);
-            });
-        },
-        { passive: true },
-      );
+const stage = document.querySelector("[data-stage]");
+if (stage) {
+  const tabs = [...stage.querySelectorAll('[role="tab"]')];
+  const panels = [...stage.querySelectorAll('[role="tabpanel"]')];
+  let current = Math.max(0, tabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true"));
+  stage.classList.add("is-live");
+
+  function showFrame(panel, index) {
+    const frames = [...panel.querySelectorAll("[data-frame]")];
+    const dots = [...panel.querySelectorAll("[data-frame-dot]")];
+    frames.forEach((frameImage, i) => {
+      const on = i === index;
+      frameImage.classList.toggle("is-shown", on);
+      frameImage.toggleAttribute("aria-hidden", !on);
     });
+    dots.forEach((dot, i) => dot.setAttribute("aria-pressed", i === index ? "true" : "false"));
+  }
+
+  function select(index) {
+    if (index === current && stage.classList.contains("is-ready")) return;
+    current = index;
+    tabs.forEach((tab, i) => {
+      const on = i === index;
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.tabIndex = on ? 0 : -1;
+    });
+    panels.forEach((panel, i) => {
+      const on = i === index;
+      panel.classList.toggle("is-active", on);
+      panel.hidden = !on;
+      if (on && !motionDisabled()) {
+        animate(
+          panel,
+          [
+            { opacity: 0, transform: "translateY(8px)" },
+            { opacity: 1, transform: "translateY(0)" },
+          ],
+          { duration: 260, easing: "ease-out" },
+        );
+      }
+    });
+    stage.classList.add("is-ready");
+  }
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => select(index));
+    tab.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "touch") return;
+      select(index);
+    });
+    tab.addEventListener("keydown", (event) => {
+      let next = null;
+      if (event.key === "ArrowDown" || event.key === "ArrowRight") next = (index + 1) % tabs.length;
+      if (event.key === "ArrowUp" || event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+      if (event.key === "Home") next = 0;
+      if (event.key === "End") next = tabs.length - 1;
+      if (next === null) return;
+      event.preventDefault();
+      select(next);
+      tabs[next].focus();
+    });
+  });
+
+  panels.forEach((panel) => {
+    panel.querySelectorAll("[data-frame-dot]").forEach((dot, index) => {
+      dot.addEventListener("click", () => showFrame(panel, index));
+    });
+  });
+
+  select(current);
 }
+
+const menu = document.querySelector(".nav-disclosure");
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && menu?.open) {
+    menu.open = false;
+    menu.querySelector("summary")?.focus();
+  }
+});

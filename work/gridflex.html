@@ -8,30 +8,40 @@
       name="description"
       content="A React and FastAPI energy simulator: architecture decisions, a 31.9× local pipeline speedup, scientific validation and deployment trade-offs."
     />
-    <meta name="theme-color" content="#f5f3ed" />
+    <meta name="theme-color" content="#f3f4f6" />
     <link
       rel="canonical"
       href="https://hajarmrifag.github.io/work/gridflex.html"
     />
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="stylesheet" href="../case.css" />
-    <script src="../benchmark.js" defer></script>
     <link rel="stylesheet" href="../motion.css" />
+    <script src="../benchmark.js" defer></script>
     <script src="../motion.js" defer></script>
   </head>
   <body class="case-page">
     <a class="skip" href="#main">Skip to content</a>
-    <header class="site-header wrap">
-      <a class="wordmark" href="../" aria-label="Hajar Mrifag, home"
-        >Hajar Mrifag.</a
-      >
-      <nav aria-label="Main navigation">
-        <a href="../#work">Work</a><a href="../#about">About</a
-        ><a class="nav-contact" href="../#contact">Get in touch ↗</a>
-      </nav>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="wordmark" href="../" aria-label="Hajar Mrifag, home">Hajar Mrifag<span>.</span></a>
+        <details class="nav-disclosure">
+          <summary>Menu</summary>
+          <nav aria-label="Main navigation">
+            <a href="../#work">Work</a>
+            <a href="../#practice">Practice</a>
+            <a href="../#path">Path</a>
+            <a href="../#contact">Contact</a>
+            <a class="nav-cv" href="../assets/Hajar-Mrifag-CV.pdf" download>CV</a>
+          </nav>
+        </details>
+      </div>
     </header>
     <main id="main" class="wrap">
       <section class="case-hero">
@@ -74,10 +84,10 @@
       </section>
       <div class="case-shot">
         <img
-          src="../assets/gridflex.png"
+          src="../assets/gridflex.jpg"
           alt="GridFlex workspace with hourly residual load, energy metrics and configurable battery storage"
-          width="3420"
-          height="1964"
+          width="2000"
+          height="1148"
           fetchpriority="high"
         />
       </div>
@@ -347,10 +357,10 @@
         >
       </div>
     </main>
-    <footer class="wrap">
-      <a class="wordmark" href="../">Hajar Mrifag.</a>
+    <footer class="wrap site-foot">
+      <a class="wordmark" href="../">Hajar Mrifag<span>.</span></a>
       <p>Hajar Mrifag · 2026</p>
-      <a href="https://github.com/hajarmrifag">GitHub ↗</a>
+      <a href="https://github.com/hajarmrifag">GitHub</a>
     </footer>
   </body>
 </html>
