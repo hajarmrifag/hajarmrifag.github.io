@@ -15,15 +15,24 @@ if (stations.length !== 6) {
 
 mountFilmStrip(root);
 
+const skipIntro = document.querySelector<HTMLButtonElement>("#skip-intro");
+skipIntro?.addEventListener("click", () => {
+  root.dataset.skipIntro = "true";
+  document.documentElement.classList.add("intro-settled");
+  document.querySelector<HTMLElement>("[data-station].is-selected")?.focus({ preventScroll: true });
+});
+
 void import("./scene")
   .then(({ mountNightFloorScene }) => {
-    const scene = mountNightFloorScene(canvas, stations);
+    const scene = mountNightFloorScene(canvas, stations, root);
     if (!scene) {
       canvas.hidden = true;
+      document.documentElement.classList.add("intro-settled");
       return;
     }
     window.addEventListener("pagehide", () => scene.dispose());
   })
   .catch(() => {
     canvas.hidden = true;
+    document.documentElement.classList.add("intro-settled");
   });

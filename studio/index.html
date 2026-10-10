@@ -17,6 +17,18 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./src/style.css" />
+    <script>
+      (function () {
+        try {
+          var force = new URLSearchParams(location.search).get("intro") === "1";
+          var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var seen = sessionStorage.getItem("night-floor-intro") === "seen";
+          if (!force && (reduce || seen)) document.documentElement.classList.add("intro-settled");
+        } catch (error) {
+          document.documentElement.classList.add("intro-settled");
+        }
+      })();
+    </script>
   </head>
   <body>
     <a class="skip" href="#content">Skip to content</a>
@@ -26,6 +38,7 @@
         <div>
           <p class="kicker">Sichuan University · Class of 2027</p>
           <h1 id="content">Hajar Mrifag<span class="mark">.</span></h1>
+          <button type="button" class="skip-intro" id="skip-intro">Skip intro</button>
         </div>
         <nav class="contact" aria-label="Contact">
           <a class="cv" href="/assets/Hajar-Mrifag-CV.pdf" download>CV</a>

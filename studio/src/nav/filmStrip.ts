@@ -1,5 +1,11 @@
 const FRAME_KEY = /^[1-6]$/;
 
+export interface StationSelectDetail {
+  index: number;
+  id: string;
+  user: boolean;
+}
+
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -21,7 +27,10 @@ export function mountFilmStrip(root: HTMLElement): void {
   let index = frames.findIndex((frame) => frame.classList.contains("is-selected"));
   if (index < 0) index = 0;
 
-  const apply = (next: number, options: { focus?: boolean; scroll?: boolean }) => {
+  const apply = (
+    next: number,
+    options: { focus?: boolean; scroll?: boolean; user?: boolean },
+  ) => {
     index = (next + frames.length) % frames.length;
     for (const [frameIndex, frame] of frames.entries()) {
       const selected = frameIndex === index;
@@ -30,8 +39,9 @@ export function mountFilmStrip(root: HTMLElement): void {
       if (selected) frame.setAttribute("aria-current", "true");
       else frame.removeAttribute("aria-current");
     }
-    const station = frames[index].dataset.station;
-    if (station) root.dataset.selected = station;
+    const id = frames[index].dataset.station ?? "";
+    if (id) root.dataset.selected = id;
+    if (options.user) root.dataset.stationUser = "true";
     const frame = frames[index];
     if (options.scroll) {
       frame.scrollIntoView({
@@ -41,6 +51,11 @@ export function mountFilmStrip(root: HTMLElement): void {
       });
     }
     if (options.focus) frame.focus({ preventScroll: true });
+    root.dispatchEvent(
+      new CustomEvent<StationSelectDetail>("nightfloor:station", {
+        detail: { index, id, user: options.user === true },
+      }),
+    );
   };
 
   apply(index, { scroll: false });
@@ -50,7 +65,7 @@ export function mountFilmStrip(root: HTMLElement): void {
     const frame = event.target.closest<HTMLElement>("[data-station]");
     if (!frame || !root.contains(frame)) return;
     const next = frames.indexOf(frame);
-    if (next >= 0) apply(next, { scroll: false });
+    if (next >= 0) apply(next, { scroll: false, user: true });
   });
 
   window.addEventListener("keydown", (event) => {
@@ -58,7 +73,7 @@ export function mountFilmStrip(root: HTMLElement): void {
 
     if (FRAME_KEY.test(event.key)) {
       event.preventDefault();
-      apply(Number(event.key) - 1, { focus: true, scroll: true });
+      apply(Number(event.key) - 1, { focus: true, scroll: true, user: true });
       return;
     }
 
@@ -70,6 +85,6 @@ export function mountFilmStrip(root: HTMLElement): void {
 
     event.preventDefault();
     const delta = event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 1;
-    apply(index + delta, { focus: true, scroll: true });
+    apply(index + delta, { focus: true, scroll: true, user: true });
   });
 }

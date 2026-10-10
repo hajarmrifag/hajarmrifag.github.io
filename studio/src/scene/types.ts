@@ -1,6 +1,6 @@
 import type { Station } from "../content/stations";
 
-/** The future room mounts behind the document. Milestone 1 keeps this empty. */
+/** The live rail behind the document. The room itself comes later. */
 export interface NightFloorScene {
   readonly stations: readonly Station[];
   dispose(): void;
