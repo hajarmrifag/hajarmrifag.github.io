@@ -41,10 +41,21 @@
         engineering roles in 2027.
       </p>
 
-      <nav class="work" aria-label="Projects">
-        <ol class="reel">
+      <nav class="work" aria-label="Projects" aria-describedby="reel-help">
+        <p class="reel-help" id="reel-help">1–6 select a frame. Arrow keys move along the strip.</p>
+        <div class="gate">
+          <div class="sprockets" aria-hidden="true"></div>
+          <ol class="reel">
           <li>
-            <article data-station="sourced" data-when="Oct 2026" data-kind="Hackathon">
+            <article
+              class="is-selected"
+              data-station="sourced"
+              data-when="Oct 2026"
+              data-kind="Hackathon"
+              aria-current="true"
+              tabindex="0"
+            >
+              <p class="frame-no">01</p>
               <p class="when">Oct 2026</p>
               <h2><a href="/work/sourced.html">Sourced</a></h2>
               <p class="kind">Hackathon</p>
@@ -59,7 +70,8 @@
             </article>
           </li>
           <li>
-            <article data-station="aegis" data-when="Oct 2026" data-kind="Personal · C#">
+            <article data-station="aegis" data-when="Oct 2026" data-kind="Personal · C#" tabindex="-1">
+              <p class="frame-no">02</p>
               <p class="when">Oct 2026</p>
               <h2><a href="/work/aegis.html">Aegis Claims</a></h2>
               <p class="kind">Personal · C#</p>
@@ -75,7 +87,8 @@
             </article>
           </li>
           <li>
-            <article data-station="gridflex" data-when="Sep 2026" data-kind="Personal · Python">
+            <article data-station="gridflex" data-when="Sep 2026" data-kind="Personal · Python" tabindex="-1">
+              <p class="frame-no">03</p>
               <p class="when">Sep 2026</p>
               <h2><a href="/work/gridflex.html">GridFlex</a></h2>
               <p class="kind">Personal · Python</p>
@@ -91,7 +104,8 @@
             </article>
           </li>
           <li>
-            <article data-station="neobank" data-when="Sep 2026" data-kind="Personal · Python">
+            <article data-station="neobank" data-when="Sep 2026" data-kind="Personal · Python" tabindex="-1">
+              <p class="frame-no">04</p>
               <p class="when">Sep 2026</p>
               <h2><a href="/work/neobank.html">Neobank</a></h2>
               <p class="kind">Personal · Python</p>
@@ -107,7 +121,8 @@
             </article>
           </li>
           <li>
-            <article data-station="cuda" data-when="Sep 2026" data-kind="Personal · CUDA">
+            <article data-station="cuda" data-when="Sep 2026" data-kind="Personal · CUDA" tabindex="-1">
+              <p class="frame-no">05</p>
               <p class="when">Sep 2026</p>
               <h2><a href="/work/cuda.html">CUDA kernels</a></h2>
               <p class="kind">Personal · CUDA</p>
@@ -119,7 +134,8 @@
             </article>
           </li>
           <li>
-            <article data-station="skyquery" data-when="Apr 2026" data-kind="Internship">
+            <article data-station="skyquery" data-when="Apr 2026" data-kind="Internship" tabindex="-1">
+              <p class="frame-no">06</p>
               <p class="when">Apr 2026</p>
               <h2><a href="/work/skyquery.html">SkyQuery</a></h2>
               <p class="kind">Internship</p>
@@ -132,7 +148,9 @@
               </p>
             </article>
           </li>
-        </ol>
+          </ol>
+          <div class="sprockets" aria-hidden="true"></div>
+        </div>
       </nav>
 
       <footer class="colophon">

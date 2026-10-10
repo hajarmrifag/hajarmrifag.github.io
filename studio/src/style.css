@@ -80,7 +80,9 @@ body {
 .when,
 .kind,
 .links,
-.colophon {
+.colophon,
+.reel-help,
+.frame-no {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
@@ -89,7 +91,8 @@ body {
 .kicker,
 .when,
 .kind,
-.colophon {
+.colophon,
+.reel-help {
   color: var(--muted);
 }
 
@@ -98,6 +101,8 @@ body {
 .kind,
 .lede,
 .links,
+.reel-help,
+.frame-no,
 .colophon p {
   margin: 0;
 }
@@ -178,26 +183,79 @@ h2 a:hover,
   margin-top: auto;
 }
 
+.reel-help {
+  margin-bottom: 0.7rem;
+}
+
+.gate {
+  background: #181b22;
+  border: 1px solid var(--line);
+}
+
+.sprockets {
+  height: 14px;
+  background-image: radial-gradient(circle, #0c0e13 3.5px, transparent 4px);
+  background-size: 22px 14px;
+  background-position: center;
+  background-repeat: repeat-x;
+}
+
 .reel {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 0.55rem;
   margin: 0;
-  padding: 1rem 0 0;
-  border-top: 1px solid var(--line);
+  padding: 0.35rem 0.7rem 0.55rem;
+}
+
+.reel > li {
+  min-width: 0;
 }
 
 .reel article {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  min-width: 0;
+  gap: 0.4rem;
+  min-height: 100%;
+  padding: 0.75rem 0.65rem 0.8rem;
+  border: 1px solid transparent;
+  background: rgba(244, 240, 230, 0.03);
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
-.reel article p:not(.when, .kind, .links) {
-  margin: 0;
+.reel article.is-selected {
   color: var(--paper);
+  border-color: rgba(224, 192, 137, 0.72);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(224, 192, 137, 0.24), transparent 62%),
+    rgba(244, 240, 230, 0.05);
+  box-shadow:
+    inset 0 1px 0 rgba(224, 192, 137, 0.5),
+    0 14px 32px rgba(0, 0, 0, 0.28);
+}
+
+.frame-no {
+  color: rgba(201, 193, 180, 0.7);
+}
+
+.reel article.is-selected .frame-no {
+  color: var(--brass);
+}
+
+.reel article.is-selected h2 {
+  font-weight: 600;
+}
+
+.reel article p:not(.when, .kind, .links, .frame-no) {
+  margin: 0;
+  color: inherit;
   font-size: 0.92rem;
   line-height: 1.4;
 }
@@ -211,7 +269,8 @@ h2 a:hover,
 }
 
 a:focus-visible,
-.skip:focus-visible {
+.skip:focus-visible,
+.reel article:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
 }
@@ -223,8 +282,17 @@ a:focus-visible,
 
 @media (max-width: 980px) {
   .reel {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem 1rem;
+    display: flex;
+    gap: 0.7rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.75rem;
+  }
+
+  .reel > li {
+    flex: 0 0 min(78vw, 320px);
+    scroll-snap-align: center;
   }
 }
 
@@ -244,7 +312,13 @@ a:focus-visible,
     padding-bottom: 0;
   }
 
-  .reel {
-    grid-template-columns: 1fr;
+  .reel > li {
+    flex-basis: min(86vw, 320px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel article {
+    transition: none;
   }
 }
