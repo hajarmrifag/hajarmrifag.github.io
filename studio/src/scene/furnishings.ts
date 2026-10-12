@@ -7,13 +7,16 @@ import {
   MeshStandardMaterial,
   PlaneGeometry,
   SphereGeometry,
+  Texture,
   TubeGeometry,
   Vector2,
   Vector3,
   Scene,
 } from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { Station } from "../content/stations";
 import { BENCH, NAMEPLATE, STATION_X } from "./layout";
+import nameplateUrl from "./nameplate.glb?url";
 import { addBox, addCylinder, canvasTexture, type SceneBin } from "./props";
 import type { StudioPalette } from "./surfaces";
 
@@ -32,21 +35,6 @@ const SHORT_NAME: Record<string, string> = {
   skyquery: "SkyQuery",
 };
 
-function drawName(context: CanvasRenderingContext2D): void {
-  const { width, height } = context.canvas;
-  context.clearRect(0, 0, width, height);
-  context.fillStyle = "#c6a15a";
-  context.fillRect(0, 0, width, height);
-  context.fillStyle = "#2a2116";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.font = "600 120px 'Schibsted Grotesk', sans-serif";
-  context.fillText("Hajar Mrifag", width / 2, height * 0.4);
-  context.fillStyle = "#3e3326";
-  context.font = "400 42px 'IBM Plex Mono', ui-monospace, monospace";
-  context.fillText("Software Engineering  ·  2027", width / 2, height * 0.68);
-}
-
 function drawLabel(text: string): (context: CanvasRenderingContext2D) => void {
   return (context) => {
     const { width, height } = context.canvas;
@@ -60,31 +48,41 @@ function drawLabel(text: string): (context: CanvasRenderingContext2D) => void {
   };
 }
 
-function addNameplate(bin: SceneBin, scene: Scene, palette: StudioPalette): void {
+function keepTexture(bin: SceneBin, seen: Set<Texture>, texture: Texture | null): void {
+  if (!texture || seen.has(texture)) return;
+  seen.add(texture);
+  bin.raw(texture);
+}
+
+function addNameplate(bin: SceneBin, scene: Scene): void {
   const mount = new Group();
   mount.position.set(NAMEPLATE.x, NAMEPLATE.y, NAMEPLATE.z);
   mount.rotation.x = -0.42;
   scene.add(mount);
-  cast(addBox(bin, mount, 0.52, 0.24, 0.012, 0, 0, -0.008, palette.brass));
-  const plate = new Mesh(bin.geo(new PlaneGeometry(0.48, 0.2)), palette.nameplate(canvasTexture(bin, 1024, 512, drawName)));
-  plate.position.z = 0.001;
-  cast(plate);
-  mount.add(plate);
-  for (const side of [-1, 1]) {
-    cast(
-      addBox(
-        bin,
-        scene,
-        0.012,
-        0.1,
-        0.012,
-        NAMEPLATE.x + side * 0.12,
-        BENCH.top + 0.05,
-        NAMEPLATE.z + 0.045,
-        palette.brass,
-      ),
-    );
-  }
+  const seen = new Set<Texture>();
+  new GLTFLoader().load(nameplateUrl, (gltf) => {
+    const plate = gltf.scene;
+    plate.traverse((child) => {
+      if (!(child instanceof Mesh)) return;
+      child.castShadow = true;
+      child.receiveShadow = true;
+      bin.geo(child.geometry);
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      for (const material of materials) {
+        bin.mat(material);
+        if (!(material instanceof MeshStandardMaterial)) continue;
+        keepTexture(bin, seen, material.map);
+        keepTexture(bin, seen, material.roughnessMap);
+        keepTexture(bin, seen, material.metalnessMap);
+        keepTexture(bin, seen, material.normalMap);
+        material.envMapIntensity = 0.35;
+        if (!material.roughnessMap) continue;
+        material.roughness = 0.58;
+        material.roughnessMap = null;
+      }
+    });
+    mount.add(plate);
+  });
 }
 
 function addLamp(
@@ -329,7 +327,7 @@ export function addFurnishings(bin: SceneBin, scene: Scene, stations: readonly S
   for (const x of STATION_X) addLamp(bin, lamps, x, palette.warmShade, palette.steel, palette.warmBulb, parts);
   addLamp(bin, lamps, -1.55, palette.greenShade, palette.brass, palette.greenBulb, parts);
 
-  addNameplate(bin, scene, palette);
+  addNameplate(bin, scene);
   const notebook = cast(addBox(bin, scene, 0.16, 0.012, 0.22, -1.62, BENCH.top + 0.01, BENCH.centerZ + 0.16, palette.paper));
   notebook.rotation.y = -0.2;
   const pen = cast(addCylinder(bin, scene, 0.004, 0.13, -1.48, BENCH.top + 0.012, BENCH.centerZ + 0.22, palette.brass));

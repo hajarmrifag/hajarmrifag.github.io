@@ -2,3 +2,5 @@ node_modules
 dist
 *.local
 .DS_Store
+# OFL font files used only to engrave the nameplate mesh. The GLB ships outlines, not these files.
+pipeline-test/fonts/

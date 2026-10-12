@@ -36,6 +36,7 @@ pages = {
     path.resolve(): Page(path)
     for path in ROOT.rglob('*.html')
     if not skip_dirs.intersection(path.parts)
+    if not (path.parent.name == 'studio' and path.name != 'index.html')
 }
 references = 0
 for path, page in pages.items():

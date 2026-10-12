@@ -15,7 +15,7 @@ import {
 import type { Station } from "../content/stations";
 import { addArchitecture } from "./architecture";
 import { addFurnishings } from "./furnishings";
-import { BENCH, STATION_X } from "./layout";
+import { BENCH, NAMEPLATE, STATION_X } from "./layout";
 import { createSceneBin } from "./props";
 import { createStudioPalette } from "./surfaces";
 
@@ -79,14 +79,22 @@ function addNightGrade(scene: Scene, renderer: WebGLRenderer, quality: StudioQua
 
   const warm = quality.lamps ? STATION_X : [STATION_X[0], STATION_X[3], STATION_X[5]];
   for (const x of warm) addPool(scene, x, 0xffc49a, quality.lamps ? 16 : 22, 1.55);
-  addPool(scene, -1.55, 0xffd2ae, 14, 2.1);
+  addPool(scene, NAMEPLATE.x - 0.85, 0xffd2ae, 8, 2.4, NAMEPLATE.z + 0.35, NAMEPLATE.y + 0.42);
 
   return environment;
 }
 
-function addPool(scene: Scene, x: number, color: number, intensity: number, distance: number): void {
+function addPool(
+  scene: Scene,
+  x: number,
+  color: number,
+  intensity: number,
+  distance: number,
+  z = BENCH.centerZ + 0.12,
+  y = BENCH.top + 0.48,
+): void {
   const light = new PointLight(color, intensity, distance, 2);
-  light.position.set(x, BENCH.top + 0.48, BENCH.centerZ + 0.12);
+  light.position.set(x, y, z);
   scene.add(light);
 }
 

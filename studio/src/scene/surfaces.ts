@@ -37,7 +37,6 @@ export interface StudioPalette {
   plateGlass: MeshStandardMaterial;
   screen: MeshStandardMaterial;
   city(map: CanvasTextureType, glow: CanvasTextureType, strength?: number): MeshStandardMaterial;
-  nameplate(map: CanvasTextureType): MeshStandardMaterial;
   plaque(map: CanvasTextureType): MeshStandardMaterial;
 }
 
@@ -253,19 +252,6 @@ export function createStudioPalette(bin: SceneBin): StudioPalette {
           emissiveIntensity: strength,
           roughness: 0.96,
           metalness: 0,
-        }),
-      );
-    },
-    nameplate(map) {
-      return bin.mat(
-        new MeshStandardMaterial({
-          map,
-          roughness: 0.42,
-          metalness: 0.62,
-          emissive: 0xc6a15a,
-          emissiveMap: map,
-          emissiveIntensity: 0.32,
-          envMapIntensity: 0.55,
         }),
       );
     },
