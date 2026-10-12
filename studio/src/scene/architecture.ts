@@ -95,6 +95,12 @@ function addWindow(
   addBox(bin, scene, 0.06, height, 0.1, x - width / 2, y, z, palette.frame);
   addBox(bin, scene, 0.06, height, 0.1, x + width / 2, y, z, palette.frame);
   addBox(bin, scene, 0.04, height, 0.06, x, y, z, palette.frame);
+  const casingZ = z + 0.07;
+  addBox(bin, scene, width + 0.2, 0.04, 0.045, x, ROOM.windowTop + 0.012, casingZ, palette.frame);
+  addBox(bin, scene, 0.04, height + 0.02, 0.045, x - width / 2 - 0.03, y, casingZ, palette.frame);
+  addBox(bin, scene, 0.04, height + 0.02, 0.045, x + width / 2 + 0.03, y, casingZ, palette.frame);
+  addBox(bin, scene, width + 0.02, 0.028, 0.12, x, ROOM.sill + 0.012, z + 0.07, palette.pier);
+  addBox(bin, scene, width - 0.04, 0.006, 0.008, x, ROOM.sill + 0.028, z + 0.125, palette.brass);
   const pane = new Mesh(bin.geo(new PlaneGeometry(width - 0.08, height - 0.08)), palette.windowGlass);
   pane.position.set(x, y, z + 0.02);
   scene.add(pane);
@@ -178,5 +184,10 @@ export function addArchitecture(bin: SceneBin, scene: Scene, palette: StudioPale
     palette.pier,
   );
 
-  addBox(bin, scene, span, 0.08, 0.08, (ROOM.x0 + ROOM.x1) / 2, 0.04, wallZ + 0.12, palette.pier);
+  const base = 0.08;
+  addBox(bin, scene, span, base, 0.035, (ROOM.x0 + ROOM.x1) / 2, base / 2, wallZ + 0.1, palette.frame);
+  addBox(bin, scene, span, 0.012, 0.012, (ROOM.x0 + ROOM.x1) / 2, base + 0.004, wallZ + 0.112, palette.brass);
+  addBox(bin, scene, 0.035, base, depth - 0.2, ROOM.x0 + 0.1, base / 2, sideZ, palette.frame);
+  addBox(bin, scene, 0.035, base, depth - 0.2, ROOM.x1 - 0.1, base / 2, sideZ, palette.frame);
+  addBox(bin, scene, span - 0.3, 0.035, 0.05, (ROOM.x0 + ROOM.x1) / 2, ROOM.height - 0.02, wallZ + 0.1, palette.frame);
 }
