@@ -1,34 +1,83 @@
-import {
-  CanvasTexture,
-  Color,
-  Mesh,
-  MeshBasicMaterial,
-  MeshLambertMaterial,
-  PlaneGeometry,
-  RepeatWrapping,
-  Scene,
-} from "three";
+import { CanvasTexture, Color, Mesh, NoColorSpace, PlaneGeometry, Scene } from "three";
 import { ROOM, STATION_X } from "./layout";
 import { addBox, canvasTexture, type SceneBin } from "./props";
+import type { StudioPalette } from "./surfaces";
 
-const NIGHT = new Color("#10141c");
+const NIGHT = new Color("#0c1016");
 
-function cityPattern(context: CanvasRenderingContext2D): void {
-  const { width, height } = context.canvas;
-  context.fillStyle = "#161b26";
-  context.fillRect(0, 0, width, height);
-  let n = 1;
-  for (let y = 10; y < height - 8; y += 16) {
-    for (let x = 8; x < width - 8; x += 14) {
-      n += 1;
-      const roll = Math.abs(Math.sin(n * 12.9898) * 43758.5453) % 1;
-      if (roll > 0.62) continue;
-      context.globalAlpha = 0.4 + (roll % 0.5);
-      context.fillStyle = roll > 0.85 ? "#d5e2f5" : "#e4b56d";
-      context.fillRect(x, y, 6, 8);
+/**
+ * Tiny occupied windows on a dark facade. Glow and color passes share one seed.
+ * `stretch` keeps a window square on the tall mesh so it cannot bloom into an orb.
+ * Farther facades are slightly smaller and dimmer.
+ */
+function cityPattern(
+  seed: number,
+  glow: boolean,
+  blur: number,
+  stretch: number,
+): (context: CanvasRenderingContext2D) => void {
+  return (context) => {
+    const { width, height } = context.canvas;
+    if (glow) {
+      context.fillStyle = "#101820";
+      context.fillRect(0, 0, width, height);
+    } else {
+      context.fillStyle = "#c5ced6";
+      context.fillRect(0, 0, width, height);
+      context.fillStyle = "rgba(36, 44, 54, 0.42)";
+      context.fillRect(0, 0, width, height * 0.2);
+      context.fillStyle = "rgba(28, 34, 42, 0.3)";
+      context.fillRect(width * ((seed % 5) * 0.14), 0, width * 0.16, height);
     }
-  }
-  context.globalAlpha = 1;
+    let state = seed * 997 + 17;
+    const next = () => {
+      state = (state * 16807 + 11) % 2147483647;
+      return state / 2147483647;
+    };
+    const floors = 7 + Math.floor(next() * 3);
+    for (let floor = 0; floor < floors; floor += 1) {
+      const yJitter = next();
+      const columns = 4 + Math.floor(next() * 3);
+      const rowLit = next();
+      const rowY = height * (0.34 + ((floor + yJitter * 0.28) / floors) * 0.6);
+      for (let col = 0; col < columns; col += 1) {
+        const xJitter = next();
+        const sizeJitter = next();
+        const warm = next() > 0.33;
+        const strength = 0.22 + next() * 0.78;
+        if (rowLit < 0.12 || xJitter < 0.1) continue;
+        const halfH = (1.25 + sizeJitter * 1.05) * (1 - blur * 0.2);
+        const halfW = Math.min(halfH * stretch * (0.8 + sizeJitter * 0.35), 8);
+        const x = width * ((col + 0.42 + (xJitter - 0.5) * 0.42) / columns);
+        const y = rowY + (sizeJitter - 0.5) * 4;
+        if (glow) {
+          context.fillStyle = warm ? "#c4a27a" : "#8aa4b8";
+          context.globalAlpha = strength * (0.16 + (1 - blur) * 0.06);
+          context.fillRect(x - halfW - 1, y - halfH - 0.8, (halfW + 1) * 2, (halfH + 0.8) * 2);
+          context.fillStyle = warm ? "#ffe3c4" : "#d5e4f2";
+          context.globalAlpha = strength * (0.72 + (1 - blur) * 0.22);
+          context.fillRect(x - halfW, y - halfH, halfW * 2, halfH * 2);
+        } else {
+          context.fillStyle = warm ? "#6a6258" : "#556270";
+          context.globalAlpha = 0.35;
+          context.fillRect(x - halfW, y - halfH, halfW * 2, halfH * 2);
+        }
+      }
+    }
+    context.globalAlpha = 1;
+  };
+}
+
+/** Glow is stored linear so the soft falloff is not crushed by an sRGB decode. */
+function cityGlow(bin: SceneBin, seed: number, blur: number, stretch: number): CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 256;
+  canvas.height = 384;
+  const context = canvas.getContext("2d");
+  if (context) cityPattern(seed, true, blur, stretch)(context);
+  const texture = bin.raw(new CanvasTexture(canvas));
+  texture.colorSpace = NoColorSpace;
+  return texture;
 }
 
 function addWindow(
@@ -36,77 +85,68 @@ function addWindow(
   scene: Scene,
   x: number,
   width: number,
-  frame: MeshLambertMaterial,
-  glass: MeshBasicMaterial,
+  palette: StudioPalette,
 ): void {
   const y = (ROOM.sill + ROOM.windowTop) / 2;
   const height = ROOM.windowTop - ROOM.sill;
   const z = ROOM.zBack + 0.08;
-  addBox(bin, scene, width + 0.08, 0.06, 0.1, x, ROOM.sill, z, frame);
-  addBox(bin, scene, width + 0.08, 0.06, 0.1, x, ROOM.windowTop, z, frame);
-  addBox(bin, scene, 0.06, height, 0.1, x - width / 2, y, z, frame);
-  addBox(bin, scene, 0.06, height, 0.1, x + width / 2, y, z, frame);
-  addBox(bin, scene, 0.04, height, 0.06, x, y, z, frame);
-  const pane = new Mesh(bin.geo(new PlaneGeometry(width - 0.08, height - 0.08)), glass);
+  addBox(bin, scene, width + 0.08, 0.06, 0.1, x, ROOM.sill, z, palette.frame);
+  addBox(bin, scene, width + 0.08, 0.06, 0.1, x, ROOM.windowTop, z, palette.frame);
+  addBox(bin, scene, 0.06, height, 0.1, x - width / 2, y, z, palette.frame);
+  addBox(bin, scene, 0.06, height, 0.1, x + width / 2, y, z, palette.frame);
+  addBox(bin, scene, 0.04, height, 0.06, x, y, z, palette.frame);
+  const pane = new Mesh(bin.geo(new PlaneGeometry(width - 0.08, height - 0.08)), palette.windowGlass);
   pane.position.set(x, y, z + 0.02);
   scene.add(pane);
 }
 
-function addCity(bin: SceneBin, scene: Scene): void {
-  const texture = canvasTexture(bin, 256, 384, cityPattern);
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  const fronts = [0, 0.2, 0.45, 0.7, 0.15, 0.55, 0.33, 0.82];
+function addCity(bin: SceneBin, scene: Scene, palette: StudioPalette): void {
   const specs = [
-    { x: -2.4, w: 1.8, h: 6.2, z: -6.4 },
-    { x: -0.2, w: 2.2, h: 8.4, z: -7.6 },
-    { x: 2.2, w: 1.6, h: 5.1, z: -6.1 },
-    { x: 4.3, w: 2.4, h: 9.2, z: -8.1 },
-    { x: 6.8, w: 1.7, h: 6.6, z: -6.5 },
-    { x: 8.9, w: 2.1, h: 7.8, z: -7.4 },
-    { x: 11.2, w: 1.9, h: 5.4, z: -6.2 },
-    { x: 13.2, w: 1.5, h: 4.4, z: -7.1 },
+    { x: -2.4, w: 1.8, h: 6.2, z: -6.4, seed: 3 },
+    { x: -0.2, w: 2.2, h: 8.4, z: -7.6, seed: 11 },
+    { x: 2.2, w: 1.6, h: 5.1, z: -6.1, seed: 19 },
+    { x: 4.3, w: 2.4, h: 9.2, z: -8.1, seed: 29 },
+    { x: 6.8, w: 1.7, h: 6.6, z: -6.5, seed: 37 },
+    { x: 8.9, w: 2.1, h: 7.8, z: -7.4, seed: 47 },
+    { x: 11.2, w: 1.9, h: 5.4, z: -6.2, seed: 53 },
+    { x: 13.2, w: 1.5, h: 4.4, z: -7.1, seed: 61 },
   ];
-  for (const [index, spec] of specs.entries()) {
-    const map = bin.tex(texture.clone()) as CanvasTexture;
-    map.offset.set(fronts[index] ?? 0, 0);
-    map.repeat.set(1, spec.h / 4);
-    const material = bin.mat(
-      new MeshLambertMaterial({ color: 0x1c2230, map }),
+  for (const spec of specs) {
+    const distance = Math.min(1, Math.max(0, (-spec.z - 6) / 2.2));
+    const stretch = (spec.h / spec.w) * (256 / 384);
+    const map = canvasTexture(bin, 256, 384, cityPattern(spec.seed, false, distance, stretch));
+    const windows = cityGlow(bin, spec.seed, distance, stretch);
+    addBox(
+      bin,
+      scene,
+      spec.w,
+      spec.h,
+      1.4,
+      spec.x,
+      spec.h / 2 - 0.2,
+      spec.z,
+      palette.city(map, windows, 0.82 - distance * 0.22),
     );
-    addBox(bin, scene, spec.w, spec.h, 1.4, spec.x, spec.h / 2 - 0.2, spec.z, material);
   }
 }
 
-/** Concrete shell, tall windows, and a blockout city beyond the glass. */
-export function addArchitecture(bin: SceneBin, scene: Scene): void {
+/** Concrete shell, tall windows, and the city beyond the glass. */
+export function addArchitecture(bin: SceneBin, scene: Scene, palette: StudioPalette): void {
   scene.background = NIGHT;
 
-  const concrete = bin.mat(new MeshLambertMaterial({ color: 0x3c4048 }));
-  const wall = bin.mat(new MeshLambertMaterial({ color: 0x2a2e36 }));
-  const pier = bin.mat(new MeshLambertMaterial({ color: 0x343840 }));
-  const frame = bin.mat(new MeshLambertMaterial({ color: 0x1a1d24 }));
-  const glass = bin.mat(
-    new MeshBasicMaterial({
-      color: 0xb7c6d6,
-      transparent: true,
-      opacity: 0.12,
-      depthWrite: false,
-    }),
-  );
-
-  addCity(bin, scene);
+  addCity(bin, scene, palette);
 
   const floorWidth = ROOM.x1 - ROOM.x0 + 2;
   const floorDepth = 12;
-  addBox(bin, scene, floorWidth, 0.18, floorDepth, (ROOM.x0 + ROOM.x1) / 2, -0.09, 1.2, concrete);
+  const floor = addBox(bin, scene, floorWidth, 0.18, floorDepth, (ROOM.x0 + ROOM.x1) / 2, -0.09, 1.2, palette.concrete);
+  floor.receiveShadow = true;
   for (const seam of [-1.2, 1.6, 4.4]) {
-    addBox(bin, scene, floorWidth - 0.4, 0.01, 0.025, (ROOM.x0 + ROOM.x1) / 2, 0.005, seam, pier);
+    addBox(bin, scene, floorWidth - 0.4, 0.01, 0.025, (ROOM.x0 + ROOM.x1) / 2, 0.005, seam, palette.pier);
   }
 
   const wallZ = ROOM.zBack;
   const span = ROOM.x1 - ROOM.x0;
-  addBox(bin, scene, span, ROOM.sill, 0.16, (ROOM.x0 + ROOM.x1) / 2, ROOM.sill / 2, wallZ, wall);
+  addBox(bin, scene, span, ROOM.sill, 0.16, (ROOM.x0 + ROOM.x1) / 2, ROOM.sill / 2, wallZ, palette.wall);
   addBox(
     bin,
     scene,
@@ -116,16 +156,16 @@ export function addArchitecture(bin: SceneBin, scene: Scene): void {
     (ROOM.x0 + ROOM.x1) / 2,
     (ROOM.height + ROOM.windowTop) / 2,
     wallZ,
-    wall,
+    palette.wall,
   );
 
-  addWindow(bin, scene, -1.7, 1.7, frame, glass);
-  for (const x of STATION_X) addWindow(bin, scene, x, 1.45, frame, glass);
+  addWindow(bin, scene, -1.7, 1.7, palette);
+  for (const x of STATION_X) addWindow(bin, scene, x, 1.45, palette);
 
   const depth = ROOM.zFront - ROOM.zBack;
   const sideZ = (ROOM.zFront + ROOM.zBack) / 2;
-  addBox(bin, scene, 0.16, ROOM.height, depth, ROOM.x0, ROOM.height / 2, sideZ, wall);
-  addBox(bin, scene, 0.16, ROOM.height, depth, ROOM.x1, ROOM.height / 2, sideZ, wall);
+  addBox(bin, scene, 0.16, ROOM.height, depth, ROOM.x0, ROOM.height / 2, sideZ, palette.wall);
+  addBox(bin, scene, 0.16, ROOM.height, depth, ROOM.x1, ROOM.height / 2, sideZ, palette.wall);
   addBox(
     bin,
     scene,
@@ -135,8 +175,8 @@ export function addArchitecture(bin: SceneBin, scene: Scene): void {
     (ROOM.x0 + ROOM.x1) / 2,
     ROOM.height,
     sideZ,
-    pier,
+    palette.pier,
   );
 
-  addBox(bin, scene, span, 0.08, 0.08, (ROOM.x0 + ROOM.x1) / 2, 0.04, wallZ + 0.12, pier);
+  addBox(bin, scene, span, 0.08, 0.08, (ROOM.x0 + ROOM.x1) / 2, 0.04, wallZ + 0.12, palette.pier);
 }

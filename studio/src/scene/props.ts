@@ -14,7 +14,10 @@ import {
 export interface SceneBin {
   geo<T extends BufferGeometry>(geometry: T): T;
   mat<T extends Material>(material: T): T;
+  /** Color textures. Stored in sRGB. */
   tex<T extends Texture>(texture: T): T;
+  /** Data textures (roughness, glow masks) and environment maps. Color space is left alone. */
+  raw<T extends Texture>(texture: T): T;
   dispose(): void;
 }
 
@@ -34,6 +37,10 @@ export function createSceneBin(): SceneBin {
     tex(texture) {
       textures.push(texture);
       texture.colorSpace = SRGBColorSpace;
+      return texture;
+    },
+    raw(texture) {
+      textures.push(texture);
       return texture;
     },
     dispose() {

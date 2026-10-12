@@ -1,4 +1,12 @@
-import { NoToneMapping, PerspectiveCamera, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from "three";
+import {
+  ACESFilmicToneMapping,
+  PCFSoftShadowMap,
+  PerspectiveCamera,
+  Scene,
+  SRGBColorSpace,
+  Vector3,
+  WebGLRenderer,
+} from "three";
 import type { StationSelectDetail } from "../nav/filmStrip";
 import type { Station } from "../content/stations";
 import { addBlockout } from "./blockout";
@@ -94,10 +102,20 @@ export function mountNightFloorScene(
   }
 
   renderer.outputColorSpace = SRGBColorSpace;
-  renderer.toneMapping = NoToneMapping;
+  renderer.toneMapping = ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  const lean =
+    window.matchMedia("(max-width: 800px)").matches || (navigator.hardwareConcurrency ?? 8) <= 4;
+  if (!lean) {
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = PCFSoftShadowMap;
+  }
 
   const scene = new Scene();
-  const disposeBlockout = addBlockout(scene, stations);
+  const disposeBlockout = addBlockout(scene, stations, renderer, {
+    shadows: !lean,
+    lamps: !lean,
+  });
   const camera = new PerspectiveCamera(35, 1, 0.06, 80);
   const rig = new CameraRig();
   const look = new Vector3();
@@ -120,7 +138,7 @@ export function mountNightFloorScene(
     height = nextHeight;
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, lean ? 1.25 : 2));
     renderer.setSize(width, height, false);
     placeSubject();
   };

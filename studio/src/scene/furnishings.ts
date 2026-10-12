@@ -1,7 +1,14 @@
-import { Group, Mesh, MeshBasicMaterial, MeshLambertMaterial, PlaneGeometry, Scene } from "three";
+import { Group, Mesh, MeshStandardMaterial, PlaneGeometry, Scene } from "three";
 import type { Station } from "../content/stations";
 import { BENCH, NAMEPLATE, STATION_X } from "./layout";
 import { addBox, addCylinder, canvasTexture, type SceneBin } from "./props";
+
+function cast(mesh: Mesh): Mesh {
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+import type { StudioPalette } from "./surfaces";
 
 const SHORT_NAME: Record<string, string> = {
   sourced: "Sourced",
@@ -40,78 +47,69 @@ function drawLabel(text: string): (context: CanvasRenderingContext2D) => void {
   };
 }
 
-function drawScreen(context: CanvasRenderingContext2D): void {
-  context.fillStyle = "#141920";
-  context.fillRect(0, 0, 256, 160);
-  context.fillStyle = "#8aa0b8";
-  for (let row = 0; row < 5; row += 1) {
-    context.globalAlpha = 0.35 + (row % 3) * 0.15;
-    context.fillRect(18, 22 + row * 24, 150 - row * 12, 8);
-  }
-  context.globalAlpha = 1;
-}
-
-function addNameplate(bin: SceneBin, scene: Scene, brass: MeshLambertMaterial): void {
+function addNameplate(bin: SceneBin, scene: Scene, palette: StudioPalette): void {
   const texture = canvasTexture(bin, 1024, 512, drawName);
-  const face = bin.mat(new MeshBasicMaterial({ map: texture }));
+  const face = palette.nameplate(texture);
   const plate = new Mesh(bin.geo(new PlaneGeometry(0.5, 0.22)), face);
   plate.position.set(NAMEPLATE.x, NAMEPLATE.y, NAMEPLATE.z);
   plate.rotation.x = -0.42;
+  cast(plate);
   scene.add(plate);
-  addBox(bin, scene, 0.52, 0.012, 0.16, NAMEPLATE.x, BENCH.top + 0.008, NAMEPLATE.z + 0.02, brass);
+  cast(addBox(bin, scene, 0.52, 0.012, 0.16, NAMEPLATE.x, BENCH.top + 0.008, NAMEPLATE.z + 0.02, palette.brass));
 }
 
 function addLamp(
   bin: SceneBin,
   parent: Group,
   x: number,
-  shade: MeshLambertMaterial,
-  metal: MeshLambertMaterial,
-  bulb: MeshLambertMaterial,
+  shade: MeshStandardMaterial,
+  metal: MeshStandardMaterial,
+  bulb: MeshStandardMaterial,
 ): void {
   const z = BENCH.centerZ - 0.18;
-  addCylinder(bin, parent, 0.008, 0.22, x, BENCH.top + 0.92, z, metal);
-  addBox(bin, parent, 0.16, 0.05, 0.16, x, BENCH.top + 0.78, z, shade);
-  addBox(bin, parent, 0.04, 0.03, 0.04, x, BENCH.top + 0.74, z, bulb);
+  cast(addCylinder(bin, parent, 0.008, 0.22, x, BENCH.top + 0.92, z, metal));
+  cast(addBox(bin, parent, 0.16, 0.05, 0.16, x, BENCH.top + 0.78, z, shade));
+  cast(addBox(bin, parent, 0.04, 0.03, 0.04, x, BENCH.top + 0.74, z, bulb));
 }
 
-function addSourced(bin: SceneBin, group: Group, paper: MeshLambertMaterial, ink: MeshLambertMaterial): void {
-  addBox(bin, group, 0.3, 0.38, 0.015, 0, 0.22, 0.06, paper);
+function addSourced(bin: SceneBin, group: Group, paper: MeshStandardMaterial, ink: MeshStandardMaterial): void {
+  cast(addBox(bin, group, 0.3, 0.38, 0.015, 0, 0.22, 0.06, paper));
   for (const [index, y] of [0.1, 0.17, 0.24, 0.31].entries()) {
-    addBox(bin, group, index % 2 === 0 ? 0.2 : 0.12, 0.022, 0.02, -0.02, y, 0.075, index % 2 === 0 ? ink : paper);
+    cast(addBox(bin, group, index % 2 === 0 ? 0.2 : 0.12, 0.022, 0.02, -0.02, y, 0.075, index % 2 === 0 ? ink : paper));
   }
 }
 
-function addAegis(bin: SceneBin, group: Group, folder: MeshLambertMaterial, stamp: MeshLambertMaterial): void {
-  addBox(bin, group, 0.28, 0.22, 0.018, -0.02, 0.16, 0.02, folder);
-  addBox(bin, group, 0.28, 0.22, 0.012, 0.03, 0.17, 0.05, folder);
-  addCylinder(bin, group, 0.045, 0.02, 0.08, 0.28, 0.08, stamp);
+function addAegis(bin: SceneBin, group: Group, folder: MeshStandardMaterial, stamp: MeshStandardMaterial): void {
+  cast(addBox(bin, group, 0.28, 0.22, 0.018, -0.02, 0.16, 0.02, folder));
+  cast(addBox(bin, group, 0.28, 0.22, 0.012, 0.03, 0.17, 0.05, folder));
+  cast(addCylinder(bin, group, 0.045, 0.02, 0.08, 0.28, 0.08, stamp));
 }
 
-function addGridFlex(bin: SceneBin, group: Group, cell: MeshLambertMaterial, tray: MeshLambertMaterial): void {
-  addBox(bin, group, 0.34, 0.04, 0.16, 0, 0.03, 0, tray);
-  for (const x of [-0.1, 0, 0.1]) addBox(bin, group, 0.07, 0.22, 0.1, x, 0.15, 0, cell);
-  addBox(bin, group, 0.22, 0.14, 0.012, 0.02, 0.22, -0.1, tray);
+function addGridFlex(bin: SceneBin, group: Group, cell: MeshStandardMaterial, tray: MeshStandardMaterial): void {
+  cast(addBox(bin, group, 0.34, 0.04, 0.16, 0, 0.03, 0, tray));
+  for (const x of [-0.1, 0, 0.1]) cast(addBox(bin, group, 0.07, 0.22, 0.1, x, 0.15, 0, cell));
+  cast(addBox(bin, group, 0.22, 0.14, 0.012, 0.02, 0.22, -0.1, tray));
 }
 
-function addNeobank(bin: SceneBin, group: Group, body: MeshLambertMaterial, token: MeshLambertMaterial): void {
-  addBox(bin, group, 0.28, 0.12, 0.18, 0, 0.08, 0, body);
-  addBox(bin, group, 0.16, 0.012, 0.02, 0, 0.145, 0.06, token);
-  addCylinder(bin, group, 0.045, 0.012, 0.05, 0.16, 0.02, token);
+function addNeobank(bin: SceneBin, group: Group, body: MeshStandardMaterial, token: MeshStandardMaterial): void {
+  cast(addBox(bin, group, 0.28, 0.12, 0.18, 0, 0.08, 0, body));
+  cast(addBox(bin, group, 0.16, 0.012, 0.02, 0, 0.145, 0.06, token));
+  cast(addCylinder(bin, group, 0.045, 0.012, 0.05, 0.16, 0.02, token));
 }
 
-function addCuda(bin: SceneBin, group: Group, glass: MeshBasicMaterial, foot: MeshLambertMaterial): void {
+function addCuda(bin: SceneBin, group: Group, glass: MeshStandardMaterial, foot: MeshStandardMaterial): void {
   const plate = new Mesh(bin.geo(new PlaneGeometry(0.34, 0.24)), glass);
   plate.position.set(0, 0.16, 0);
   plate.rotation.x = -0.35;
+  cast(plate);
   group.add(plate);
-  addBox(bin, group, 0.03, 0.06, 0.03, -0.12, 0.04, 0.04, foot);
-  addBox(bin, group, 0.03, 0.06, 0.03, 0.12, 0.04, 0.04, foot);
+  cast(addBox(bin, group, 0.03, 0.06, 0.03, -0.12, 0.04, 0.04, foot));
+  cast(addBox(bin, group, 0.03, 0.06, 0.03, 0.12, 0.04, 0.04, foot));
 }
 
-function addSkyQuery(bin: SceneBin, group: Group, left: MeshLambertMaterial, right: MeshLambertMaterial): void {
-  const sheetA = addBox(bin, group, 0.16, 0.28, 0.012, -0.1, 0.16, 0, left);
-  const sheetB = addBox(bin, group, 0.16, 0.28, 0.012, 0.1, 0.16, 0, right);
+function addSkyQuery(bin: SceneBin, group: Group, left: MeshStandardMaterial, right: MeshStandardMaterial): void {
+  const sheetA = cast(addBox(bin, group, 0.16, 0.28, 0.012, -0.1, 0.16, 0, left));
+  const sheetB = cast(addBox(bin, group, 0.16, 0.28, 0.012, 0.1, 0.16, 0, right));
   sheetA.rotation.y = 0.18;
   sheetB.rotation.y = -0.18;
 }
@@ -121,129 +119,89 @@ function addStation(
   scene: Scene,
   station: Station,
   index: number,
-  materials: StationMaterials,
+  palette: StudioPalette,
 ): void {
   const group = new Group();
   const x = STATION_X[index] ?? 0;
   group.position.set(x, BENCH.top, BENCH.centerZ);
   scene.add(group);
-  addBox(bin, group, 0.5, 0.2, 0.015, 0, 0.16, -0.2, materials.carrel);
+  cast(addBox(bin, group, 0.5, 0.2, 0.015, 0, 0.16, -0.2, palette.carrel));
   const label = new Mesh(
     bin.geo(new PlaneGeometry(0.28, 0.07)),
-    bin.mat(
-      new MeshBasicMaterial({
-        map: canvasTexture(bin, 512, 128, drawLabel(SHORT_NAME[station.id] ?? station.name)),
-      }),
-    ),
+    palette.plaque(canvasTexture(bin, 512, 128, drawLabel(SHORT_NAME[station.id] ?? station.name))),
   );
   label.position.set(0, 0.045, BENCH.depth / 2 - 0.08);
   label.rotation.x = -0.65;
+  cast(label);
   group.add(label);
 
-  if (station.id === "sourced") addSourced(bin, group, materials.paper, materials.ink);
-  if (station.id === "aegis") addAegis(bin, group, materials.folder, materials.brass);
-  if (station.id === "gridflex") addGridFlex(bin, group, materials.cell, materials.steel);
-  if (station.id === "neobank") addNeobank(bin, group, materials.steel, materials.brass);
-  if (station.id === "cuda") addCuda(bin, group, materials.glass, materials.steel);
-  if (station.id === "skyquery") addSkyQuery(bin, group, materials.paper, materials.folder);
+  if (station.id === "sourced") addSourced(bin, group, palette.paper, palette.ink);
+  if (station.id === "aegis") addAegis(bin, group, palette.folder, palette.brass);
+  if (station.id === "gridflex") addGridFlex(bin, group, palette.cell, palette.steel);
+  if (station.id === "neobank") addNeobank(bin, group, palette.steel, palette.brass);
+  if (station.id === "cuda") addCuda(bin, group, palette.plateGlass, palette.steel);
+  if (station.id === "skyquery") addSkyQuery(bin, group, palette.paper, palette.folder);
 }
 
-interface StationMaterials {
-  paper: MeshLambertMaterial;
-  ink: MeshLambertMaterial;
-  folder: MeshLambertMaterial;
-  brass: MeshLambertMaterial;
-  cell: MeshLambertMaterial;
-  steel: MeshLambertMaterial;
-  glass: MeshBasicMaterial;
-  carrel: MeshLambertMaterial;
-}
-
-function addChair(bin: SceneBin, scene: Scene, cloth: MeshLambertMaterial, metal: MeshLambertMaterial): void {
+function addChair(bin: SceneBin, scene: Scene, cloth: MeshStandardMaterial, metal: MeshStandardMaterial): void {
   const chair = new Group();
   chair.position.set(-2.15, 0, 0.95);
   chair.rotation.y = Math.PI / 2;
   scene.add(chair);
-  addBox(bin, chair, 0.46, 0.05, 0.46, 0, 0.48, 0, cloth);
-  addBox(bin, chair, 0.46, 0.42, 0.04, 0, 0.72, 0.2, cloth);
-  addCylinder(bin, chair, 0.035, 0.36, 0, 0.26, 0, metal);
-  addCylinder(bin, chair, 0.26, 0.025, 0, 0.04, 0, metal);
+  cast(addBox(bin, chair, 0.46, 0.05, 0.46, 0, 0.48, 0, cloth));
+  cast(addBox(bin, chair, 0.46, 0.42, 0.04, 0, 0.72, 0.2, cloth));
+  cast(addCylinder(bin, chair, 0.035, 0.36, 0, 0.26, 0, metal));
+  cast(addCylinder(bin, chair, 0.26, 0.025, 0, 0.04, 0, metal));
 }
 
-function addDesk(bin: SceneBin, scene: Scene, wood: MeshLambertMaterial, steel: MeshLambertMaterial, screen: MeshBasicMaterial): void {
-  addBox(bin, scene, 1.2, 0.04, 0.62, -2.7, 0.74, 0.15, wood);
-  addBox(bin, scene, 1.08, 0.68, 0.04, -2.7, 0.36, -0.12, steel);
-  addBox(bin, scene, 0.2, 0.4, 0.42, -3.15, 0.22, 0.15, steel);
+function addDesk(bin: SceneBin, scene: Scene, wood: MeshStandardMaterial, steel: MeshStandardMaterial, screen: MeshStandardMaterial): void {
+  cast(addBox(bin, scene, 1.2, 0.04, 0.62, -2.7, 0.74, 0.15, wood));
+  cast(addBox(bin, scene, 1.08, 0.68, 0.04, -2.7, 0.36, -0.12, steel));
+  cast(addBox(bin, scene, 0.2, 0.4, 0.42, -3.15, 0.22, 0.15, steel));
   const monitor = new Group();
   monitor.position.set(-2.7, 0.98, -0.02);
   monitor.rotation.y = -Math.PI / 2;
   scene.add(monitor);
-  addBox(bin, monitor, 0.52, 0.32, 0.03, 0, 0, 0, steel);
+  cast(addBox(bin, monitor, 0.52, 0.32, 0.03, 0, 0, 0, steel));
   const display = new Mesh(bin.geo(new PlaneGeometry(0.46, 0.26)), screen);
   display.position.z = 0.018;
   monitor.add(display);
-  addBox(bin, scene, 0.32, 0.015, 0.11, -2.45, 0.77, 0.22, steel);
+  cast(addBox(bin, scene, 0.32, 0.015, 0.11, -2.45, 0.77, 0.22, steel));
 }
 
-function addShelves(bin: SceneBin, scene: Scene, wood: MeshLambertMaterial, paper: MeshLambertMaterial, steel: MeshLambertMaterial): void {
+function addShelves(bin: SceneBin, scene: Scene, wood: MeshStandardMaterial, paper: MeshStandardMaterial, steel: MeshStandardMaterial): void {
   const shelf = new Group();
   shelf.position.set(-3.42, 0, -1.7);
   scene.add(shelf);
-  addBox(bin, shelf, 0.04, 2.05, 0.32, 0, 1.05, 0, steel);
-  addBox(bin, shelf, 0.04, 2.05, 0.32, 0.86, 1.05, 0, steel);
-  for (const y of [0.28, 0.72, 1.16, 1.6]) addBox(bin, shelf, 0.86, 0.025, 0.3, 0.43, y, 0, wood);
-  addBox(bin, shelf, 0.04, 0.28, 0.2, 0.16, 0.88, 0, paper);
-  addBox(bin, shelf, 0.035, 0.32, 0.2, 0.22, 0.9, 0, steel);
-  addBox(bin, shelf, 0.05, 0.24, 0.18, 0.3, 0.86, 0, paper);
-  addBox(bin, shelf, 0.22, 0.1, 0.16, 0.58, 1.24, 0, steel);
-  addBox(bin, shelf, 0.16, 0.16, 0.16, 0.5, 1.76, 0, paper);
+  cast(addBox(bin, shelf, 0.04, 2.05, 0.32, 0, 1.05, 0, steel));
+  cast(addBox(bin, shelf, 0.04, 2.05, 0.32, 0.86, 1.05, 0, steel));
+  for (const y of [0.28, 0.72, 1.16, 1.6]) cast(addBox(bin, shelf, 0.86, 0.025, 0.3, 0.43, y, 0, wood));
+  cast(addBox(bin, shelf, 0.04, 0.28, 0.2, 0.16, 0.88, 0, paper));
+  cast(addBox(bin, shelf, 0.035, 0.32, 0.2, 0.22, 0.9, 0, steel));
+  cast(addBox(bin, shelf, 0.05, 0.24, 0.18, 0.3, 0.86, 0, paper));
+  cast(addBox(bin, shelf, 0.22, 0.1, 0.16, 0.58, 1.24, 0, steel));
+  cast(addBox(bin, shelf, 0.16, 0.16, 0.16, 0.5, 1.76, 0, paper));
 }
 
 /** Bench, six station markers, lamps, nameplate, chair, shelves, and the side desk. */
-export function addFurnishings(bin: SceneBin, scene: Scene, stations: readonly Station[]): void {
-  const wood = bin.mat(new MeshLambertMaterial({ color: 0x7a5a3c }));
-  const steel = bin.mat(new MeshLambertMaterial({ color: 0x23262c }));
-  const brass = bin.mat(new MeshLambertMaterial({ color: 0xc6a15a }));
-  const paper = bin.mat(new MeshLambertMaterial({ color: 0xe6e0d2 }));
-  const ink = bin.mat(new MeshLambertMaterial({ color: 0x2a313c }));
-  const folder = bin.mat(new MeshLambertMaterial({ color: 0x8d734c }));
-  const cell = bin.mat(new MeshLambertMaterial({ color: 0x4d6a78 }));
-  const cloth = bin.mat(new MeshLambertMaterial({ color: 0x3a4048 }));
-  const carrel = bin.mat(new MeshLambertMaterial({ color: 0x2c3138 }));
-  const warmShade = bin.mat(new MeshLambertMaterial({ color: 0x8a7560 }));
-  const greenShade = bin.mat(new MeshLambertMaterial({ color: 0x2f6a52 }));
-  const warmBulb = bin.mat(new MeshLambertMaterial({ color: 0xffe2bf, emissive: 0xffb15a, emissiveIntensity: 1 }));
-  const greenBulb = bin.mat(new MeshLambertMaterial({ color: 0xd7f5e4, emissive: 0x8ddebe, emissiveIntensity: 1 }));
-  const glass = bin.mat(
-    new MeshBasicMaterial({
-      color: 0xc5d4e4,
-      transparent: true,
-      opacity: 0.45,
-      depthWrite: false,
-    }),
-  );
-  const screen = bin.mat(
-    new MeshBasicMaterial({ map: canvasTexture(bin, 256, 160, drawScreen) }),
-  );
-
+export function addFurnishings(bin: SceneBin, scene: Scene, stations: readonly Station[], palette: StudioPalette): void {
   const length = BENCH.x1 - BENCH.x0;
   const centerX = (BENCH.x0 + BENCH.x1) / 2;
-  addBox(bin, scene, length, 0.68, BENCH.depth - 0.06, centerX, 0.36, BENCH.centerZ, steel);
-  addBox(bin, scene, length + 0.04, 0.045, BENCH.depth, centerX, BENCH.top - 0.02, BENCH.centerZ, wood);
-  addBox(bin, scene, length, 0.06, 0.08, centerX, 0.58, BENCH.centerZ - BENCH.depth / 2 - 0.02, steel);
-  addBox(bin, scene, length - 0.4, 0.03, 0.03, centerX + 0.3, BENCH.top + 1.02, BENCH.centerZ, steel);
+  cast(addBox(bin, scene, length, 0.68, BENCH.depth - 0.06, centerX, 0.36, BENCH.centerZ, palette.steel));
+  cast(addBox(bin, scene, length + 0.04, 0.045, BENCH.depth, centerX, BENCH.top - 0.02, BENCH.centerZ, palette.bench));
+  cast(addBox(bin, scene, length, 0.06, 0.08, centerX, 0.58, BENCH.centerZ - BENCH.depth / 2 - 0.02, palette.steel));
+  cast(addBox(bin, scene, length - 0.4, 0.03, 0.03, centerX + 0.3, BENCH.top + 1.02, BENCH.centerZ, palette.steel));
 
   const lamps = new Group();
   scene.add(lamps);
-  for (const x of STATION_X) addLamp(bin, lamps, x, warmShade, steel, warmBulb);
-  addLamp(bin, lamps, -1.55, greenShade, brass, greenBulb);
+  for (const x of STATION_X) addLamp(bin, lamps, x, palette.warmShade, palette.steel, palette.warmBulb);
+  addLamp(bin, lamps, -1.55, palette.greenShade, palette.brass, palette.greenBulb);
 
-  addNameplate(bin, scene, brass);
+  addNameplate(bin, scene, palette);
 
-  const materials: StationMaterials = { paper, ink, folder, brass, cell, steel, glass, carrel };
-  for (const [index, station] of stations.entries()) addStation(bin, scene, station, index, materials);
+  for (const [index, station] of stations.entries()) addStation(bin, scene, station, index, palette);
 
-  addChair(bin, scene, cloth, steel);
-  addDesk(bin, scene, wood, steel, screen);
-  addShelves(bin, scene, wood, paper, steel);
+  addChair(bin, scene, palette.cloth, palette.steel);
+  addDesk(bin, scene, palette.wood, palette.steel, palette.screen);
+  addShelves(bin, scene, palette.wood, palette.paper, palette.steel);
 }
