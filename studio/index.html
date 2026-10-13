@@ -54,6 +54,69 @@
         engineering roles in 2027.
       </p>
 
+      <section class="cuda-bench" data-cuda-bench aria-labelledby="cuda-bench-title" aria-hidden="true" inert>
+        <div class="cuda-bezel">
+          <header class="cuda-head">
+            <div>
+              <p class="cuda-kicker" id="cuda-bench-title">GEMM instrument</p>
+              <p class="cuda-scale">Throughput in GFLOPS. Higher is better.</p>
+            </div>
+            <p class="cuda-size" data-matrix-label>1024 × 1024</p>
+          </header>
+          <div class="cuda-switch" role="radiogroup" aria-label="Matrix dimensions">
+            <span class="cuda-index" aria-hidden="true"></span>
+            <label class="detent">
+              <input type="radio" name="cuda-matrix" value="128" />
+              <span>128</span>
+            </label>
+            <label class="detent">
+              <input type="radio" name="cuda-matrix" value="256" />
+              <span>256</span>
+            </label>
+            <label class="detent">
+              <input type="radio" name="cuda-matrix" value="512" />
+              <span>512</span>
+            </label>
+            <label class="detent">
+              <input type="radio" name="cuda-matrix" value="1024" checked />
+              <span>1024</span>
+            </label>
+          </div>
+          <div class="cuda-scope" aria-label="Recorded GEMM throughput">
+            <div class="cuda-row">
+              <span>Naïve CUDA</span>
+              <span class="cuda-track"><i data-gpu-bar="0" style="width: 7.25%"></i></span>
+              <strong data-gpu-value="0" aria-label="385.648 GFLOPS">385.648</strong>
+            </div>
+            <div class="cuda-row">
+              <span>Shared-memory tiled</span>
+              <span class="cuda-track"><i data-gpu-bar="1" style="width: 9.12%"></i></span>
+              <strong data-gpu-value="1" aria-label="485.283 GFLOPS">485.283</strong>
+            </div>
+            <div class="cuda-row is-custom">
+              <span>Register-tiled kernel</span>
+              <span class="cuda-track"><i data-gpu-bar="2" style="width: 24.02%"></i></span>
+              <strong data-gpu-value="2" aria-label="1,278.508 GFLOPS">1,278.508</strong>
+            </div>
+            <div class="cuda-row is-baseline">
+              <span>cuBLAS baseline</span>
+              <span class="cuda-track"><i data-gpu-bar="3" style="width: 100%"></i></span>
+              <strong data-gpu-value="3" aria-label="5,322.721 GFLOPS">5,322.721</strong>
+            </div>
+          </div>
+          <p class="cuda-result" data-gpu-result role="status">
+            3.32× the naïve kernel’s throughput; 24.0% of cuBLAS for 1024 × 1024.
+          </p>
+          <p class="cuda-method">
+            NVIDIA T4 · CUDA 12.8 · FP32 · median of 20 runs · stored measurements, not live execution.
+          </p>
+          <p class="cuda-limit">
+            Warp-shuffle Softmax was slower on this workload. It stays in the case study and is not plotted here.
+          </p>
+          <a class="cuda-study" href="/work/cuda.html">Technical case study</a>
+        </div>
+      </section>
+
       <nav class="work" aria-label="Projects" aria-describedby="reel-help">
         <p class="reel-help" id="reel-help">1–6 select a frame. Arrow keys move along the strip.</p>
         <div class="gate">

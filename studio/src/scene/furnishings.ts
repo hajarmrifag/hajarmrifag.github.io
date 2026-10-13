@@ -4,6 +4,7 @@ import {
   Group,
   LatheGeometry,
   Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
   PlaneGeometry,
   SphereGeometry,
@@ -161,14 +162,40 @@ function addNeobank(bin: SceneBin, group: Group, body: MeshStandardMaterial, tok
   cast(addCylinder(bin, group, 0.045, 0.012, 0.05, 0.16, 0.02, token));
 }
 
-function addCuda(bin: SceneBin, group: Group, glass: MeshStandardMaterial, foot: MeshStandardMaterial): void {
-  const plate = new Mesh(bin.geo(new PlaneGeometry(0.34, 0.24)), glass);
-  plate.position.set(0, 0.16, 0);
-  plate.rotation.x = -0.35;
-  cast(plate);
-  group.add(plate);
-  cast(addBox(bin, group, 0.03, 0.06, 0.03, -0.12, 0.04, 0.04, foot));
-  cast(addBox(bin, group, 0.03, 0.06, 0.03, 0.12, 0.04, 0.04, foot));
+function drawCudaFace(context: CanvasRenderingContext2D): void {
+  const { width, height } = context.canvas;
+  context.fillStyle = "#12100e";
+  context.fillRect(0, 0, width, height);
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillStyle = "#e0c089";
+  context.font = "500 54px 'IBM Plex Mono', ui-monospace, monospace";
+  context.fillText("GEMM", width / 2, height / 2 - 36);
+  context.fillStyle = "#c9c1b4";
+  context.font = "400 26px 'IBM Plex Mono', ui-monospace, monospace";
+  context.fillText("NVIDIA T4   ·   FP32   ·   RECORDED", width / 2, height / 2 + 28);
+}
+
+function addCuda(bin: SceneBin, group: Group, foot: MeshStandardMaterial, brass: MeshStandardMaterial): void {
+  const face = bin.mat(
+    new MeshBasicMaterial({ map: canvasTexture(bin, 1024, 560, drawCudaFace), color: 0xffffff }),
+  );
+  const chassis = new Group();
+  chassis.position.set(0, 0.2, 0.02);
+  chassis.rotation.x = -0.42;
+  group.add(chassis);
+  cast(addBox(bin, chassis, 0.68, 0.4, 0.02, 0, 0, -0.006, foot));
+  cast(addBox(bin, chassis, 0.7, 0.012, 0.024, 0, 0.194, 0.006, brass));
+  cast(addBox(bin, chassis, 0.7, 0.012, 0.024, 0, -0.194, 0.006, brass));
+  cast(addBox(bin, chassis, 0.012, 0.4, 0.024, -0.344, 0, 0.006, brass));
+  cast(addBox(bin, chassis, 0.012, 0.4, 0.024, 0.344, 0, 0.006, brass));
+  const screen = new Mesh(bin.geo(new PlaneGeometry(0.62, 0.34)), face);
+  screen.position.set(0, 0, 0.012);
+  cast(screen);
+  chassis.add(screen);
+  cast(addBox(bin, group, 0.028, 0.1, 0.028, -0.24, 0.05, 0.02, foot));
+  cast(addBox(bin, group, 0.028, 0.1, 0.028, 0.24, 0.05, 0.02, foot));
+  cast(addBox(bin, group, 0.5, 0.012, 0.04, 0, 0.1, 0.01, brass));
 }
 
 function addSkyQuery(bin: SceneBin, group: Group, left: MeshStandardMaterial, right: MeshStandardMaterial): void {
@@ -203,7 +230,7 @@ function addStation(
   if (station.id === "aegis") addAegis(bin, group, palette.folder, palette.brass);
   if (station.id === "gridflex") addGridFlex(bin, group, palette.cell, palette.steel);
   if (station.id === "neobank") addNeobank(bin, group, palette.steel, palette.brass);
-  if (station.id === "cuda") addCuda(bin, group, palette.plateGlass, palette.steel);
+  if (station.id === "cuda") addCuda(bin, group, palette.steel, palette.brass);
   if (station.id === "skyquery") addSkyQuery(bin, group, palette.paper, palette.folder);
 }
 

@@ -33,7 +33,6 @@ export interface StudioPalette {
   greenShade: MeshStandardMaterial;
   warmBulb: MeshStandardMaterial;
   greenBulb: MeshStandardMaterial;
-  plateGlass: MeshStandardMaterial;
   screen: MeshStandardMaterial;
   city(map: CanvasTextureType, glow: CanvasTextureType, strength?: number): MeshStandardMaterial;
   plaque(map: CanvasTextureType): MeshStandardMaterial;
@@ -215,16 +214,6 @@ export function createStudioPalette(bin: SceneBin): StudioPalette {
         emissiveIntensity: 1.1,
         roughness: 0.4,
         metalness: 0,
-      }),
-    ),
-    plateGlass: bin.mat(
-      new MeshStandardMaterial({
-        color: 0xd5e2ee,
-        roughness: 0.08,
-        metalness: 0.06,
-        transparent: true,
-        opacity: 0.55,
-        envMapIntensity: 1,
       }),
     ),
     screen: bin.mat(

@@ -74,6 +74,10 @@ function isTypingTarget(target: EventTarget | null): boolean {
   );
 }
 
+function isExhibitControl(target: EventTarget | null): boolean {
+  return target instanceof Element && Boolean(target.closest("[data-cuda-bench]"));
+}
+
 /**
  * Blockout laboratory on one spline. The arrival, the rail, and the
  * sit-down / stand-up moves share that path.
@@ -269,6 +273,7 @@ export function mountNightFloorScene(
 
   const onKey = (event: KeyboardEvent) => {
     if (event.metaKey || event.ctrlKey || event.altKey || isTypingTarget(event.target)) return;
+    if (isExhibitControl(event.target) && event.key !== "Escape") return;
     if (event.key === "Enter") {
       if (event.target instanceof Element && event.target.closest("a, button")) return;
       const index = stations.findIndex((station) => station.id === root.dataset.selected);

@@ -1,4 +1,5 @@
 import { readStations } from "./content/stations";
+import { mountCudaBench } from "./exhibit/cudaBench";
 import { mountFilmStrip } from "./nav/filmStrip";
 
 const root = document.querySelector<HTMLElement>("[data-night-floor]");
@@ -14,6 +15,8 @@ if (stations.length !== 6) {
 }
 
 mountFilmStrip(root);
+mountCudaBench(root);
+mountSeatedView(root);
 
 const skipIntro = document.querySelector<HTMLButtonElement>("#skip-intro");
 skipIntro?.addEventListener("click", () => {
@@ -21,6 +24,22 @@ skipIntro?.addEventListener("click", () => {
   document.documentElement.classList.add("intro-settled");
   document.querySelector<HTMLElement>("[data-station].is-selected")?.focus({ preventScroll: true });
 });
+
+/** Compact the homepage identity while a station is in the close view. */
+function mountSeatedView(root: HTMLElement): void {
+  let seated = false;
+  const sync = () => {
+    const approach = Number(root.dataset.approach ?? "0");
+    const next = seated ? approach >= 0.45 : approach >= 0.22;
+    if (next === seated) return;
+    seated = next;
+    root.classList.toggle("is-seated", next);
+  };
+  new MutationObserver(sync).observe(root, {
+    attributes: true,
+    attributeFilter: ["data-approach"],
+  });
+}
 
 void import("./scene")
   .then(({ mountNightFloorScene }) => {
