@@ -1,0 +1,29 @@
+Walnut veneer used on the isolated workbench. All of these are CC0.
+
+License: https://polyhaven.com/license
+Poly Haven releases every texture as CC0 (public domain). No attribution is required.
+
+The smoked walnut sheet and several other walnut veneers were inspected and not used,
+because their figure is cathedral or chevron. The three sheets below are straight grain.
+
+Black Walnut Veneer 02
+https://polyhaven.com/a/black_walnut_veneer_02
+https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/black_walnut_veneer_02/black_walnut_veneer_02_diff_2k.jpg
+https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/black_walnut_veneer_02/black_walnut_veneer_02_nor_gl_2k.jpg
+Author: Jenelle van Heerden. 1 m × 1 m. CC0.
+
+Black Walnut Veneer 03
+https://polyhaven.com/a/black_walnut_veneer_03
+https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/black_walnut_veneer_03/black_walnut_veneer_03_diff_2k.jpg
+https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/black_walnut_veneer_03/black_walnut_veneer_03_nor_gl_2k.jpg
+Author: Jenelle van Heerden. 1 m × 1 m. CC0.
+
+European Walnut Veneer 05
+https://polyhaven.com/a/european_walnut_veneer_05
+https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/european_walnut_veneer_05/european_walnut_veneer_05_diff_2k.jpg
+https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/european_walnut_veneer_05/european_walnut_veneer_05_nor_gl_2k.jpg
+Author: Jenelle van Heerden. 1 m × 1 m. CC0.
+
+Downloaded 2K JPEGs are resized into the workbench GLB. OpenGL normal maps (nor_gl).
+The three color scans are luminance-matched to the same dark walnut tone.
+Their grain is kept. The normal maps are not recolored.

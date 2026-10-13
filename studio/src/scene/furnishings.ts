@@ -17,6 +17,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { Station } from "../content/stations";
 import { BENCH, NAMEPLATE, STATION_X } from "./layout";
 import nameplateUrl from "./nameplate.glb?url";
+import workbenchUrl from "./workbench.glb?url";
 import { addBox, addCylinder, canvasTexture, type SceneBin } from "./props";
 import type { StudioPalette } from "./surfaces";
 
@@ -52,6 +53,31 @@ function keepTexture(bin: SceneBin, seen: Set<Texture>, texture: Texture | null)
   if (!texture || seen.has(texture)) return;
   seen.add(texture);
   bin.raw(texture);
+}
+
+function addWorkbench(bin: SceneBin, scene: Scene): void {
+  const seen = new Set<Texture>();
+  new GLTFLoader().load(workbenchUrl, (gltf) => {
+    const bench = gltf.scene;
+    bench.traverse((child) => {
+      if (!(child instanceof Mesh)) return;
+      child.castShadow = true;
+      child.receiveShadow = true;
+      bin.geo(child.geometry);
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      for (const material of materials) {
+        bin.mat(material);
+        if (!(material instanceof MeshStandardMaterial)) continue;
+        if (material.metalness > 0.5) material.envMapIntensity = 0.35;
+        for (const map of [material.map, material.normalMap, material.roughnessMap]) {
+          keepTexture(bin, seen, map);
+          if (!map) continue;
+          map.anisotropy = 8;
+        }
+      }
+    });
+    scene.add(bench);
+  });
 }
 
 function addNameplate(bin: SceneBin, scene: Scene): void {
@@ -298,28 +324,9 @@ function addShelves(
   cast(addBox(bin, shelf, 0.12, 0.09, 0.16, 0.48, 1.76, 0, steel));
 }
 
-/** Bench, six station markers, lamps, nameplate, chair, shelves, and the side desk. */
+/** Approved workbench, six station markers, lamps, nameplate, chair, shelves, and the side desk. */
 export function addFurnishings(bin: SceneBin, scene: Scene, stations: readonly Station[], palette: StudioPalette): void {
-  const length = BENCH.x1 - BENCH.x0;
-  const centerX = (BENCH.x0 + BENCH.x1) / 2;
-  cast(addBox(bin, scene, length - 0.12, 0.07, BENCH.depth - 0.2, centerX, 0.045, BENCH.centerZ + 0.03, palette.steel));
-  cast(addBox(bin, scene, length, 0.52, BENCH.depth - 0.1, centerX, 0.38, BENCH.centerZ, palette.steel));
-  cast(addBox(bin, scene, length + 0.04, 0.045, BENCH.depth, centerX, BENCH.top - 0.02, BENCH.centerZ, palette.bench));
-  cast(
-    addBox(
-      bin,
-      scene,
-      length + 0.02,
-      0.008,
-      0.01,
-      centerX,
-      BENCH.top - 0.012,
-      BENCH.centerZ + BENCH.depth / 2 - 0.006,
-      palette.brass,
-    ),
-  );
-  cast(addBox(bin, scene, length, 0.05, 0.06, centerX, 0.62, BENCH.centerZ - BENCH.depth / 2, palette.steel));
-  cast(addBox(bin, scene, length - 0.5, 0.018, 0.018, centerX + 0.2, BENCH.top + 1.028, BENCH.centerZ, palette.steel));
+  addWorkbench(bin, scene);
 
   const lamps = new Group();
   scene.add(lamps);

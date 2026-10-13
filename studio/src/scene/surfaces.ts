@@ -21,7 +21,6 @@ export interface StudioPalette {
   frame: MeshStandardMaterial;
   windowGlass: MeshStandardMaterial;
   wood: MeshStandardMaterial;
-  bench: MeshStandardMaterial;
   brass: MeshStandardMaterial;
   steel: MeshStandardMaterial;
   paper: MeshStandardMaterial;
@@ -159,8 +158,6 @@ export function createStudioPalette(bin: SceneBin): StudioPalette {
   const woodMap = tile(bin, 256, SRGBColorSpace, grain);
   const stoneMap = tile(bin, 256, SRGBColorSpace, concrete);
   const brushMap = tile(bin, 128, NoColorSpace, brush);
-  const benchMap = repeated(bin, woodMap, 4, 1);
-  const benchRough = repeated(bin, brushMap, 4, 1);
   const floorMap = repeated(bin, stoneMap, 6, 4);
   const wallMap = repeated(bin, stoneMap, 3, 1);
 
@@ -192,7 +189,6 @@ export function createStudioPalette(bin: SceneBin): StudioPalette {
       }),
     ),
     wood: standard(bin, 0x4a3222, 0.72, 0, repeated(bin, woodMap, 2, 1)),
-    bench: standard(bin, 0x3e291c, 0.78, 0, benchMap, benchRough),
     brass: standard(bin, 0xd4b06a, 0.4, 0.78, undefined, brushMap),
     steel: standard(bin, 0x4e555c, 0.62, 0.64),
     paper: standard(bin, 0xe7e0d2, 0.88, 0),

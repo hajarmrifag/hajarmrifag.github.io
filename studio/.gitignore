@@ -4,3 +4,5 @@ dist
 .DS_Store
 # OFL font files used only to engrave the nameplate mesh. The GLB ships outlines, not these files.
 pipeline-test/fonts/
+# CC0 veneer downloads used to bake the workbench GLB. The GLB embeds the images.
+pipeline-test/textures/
