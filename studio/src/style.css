@@ -1089,6 +1089,324 @@ a:focus-visible,
   }
 }
 
+.aegis-desk {
+  position: fixed;
+  z-index: 2;
+  left: 50%;
+  top: 18%;
+  width: min(46rem, calc(100vw - 7.5rem));
+  overflow: auto;
+  padding: 0.7rem 0.75rem 0.65rem;
+  color: var(--paper);
+  background:
+    linear-gradient(180deg, rgba(196, 154, 90, 0.16), transparent 1.8rem),
+    #1a1511;
+  box-shadow:
+    inset 0 0 0 1px rgba(224, 192, 137, 0.4),
+    inset 0 0 0 5px #120f0c,
+    inset 0 0 0 6px rgba(224, 192, 137, 0.2),
+    0 18px 28px rgba(0, 0, 0, 0.46);
+  scrollbar-color: rgba(224, 192, 137, 0.45) transparent;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 14px);
+  transition:
+    opacity 480ms ease,
+    transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aegis-desk.is-live {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.aegis-top,
+.aegis-kicker,
+.aegis-sim,
+.well-label,
+.claim-stamp,
+.claim-number,
+.audit-label,
+.audit-note,
+.stamp-rule,
+.claim-seal,
+.stamp-button {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.aegis-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.1rem 0.15rem 0.45rem;
+  border-bottom: 1px solid rgba(224, 192, 137, 0.32);
+}
+
+.aegis-kicker,
+.aegis-sim,
+.well-label,
+.audit-label,
+.audit-note,
+.stamp-rule,
+.claim-desc,
+.claim-line,
+.stamp-result {
+  margin: 0;
+}
+
+.aegis-kicker {
+  color: var(--brass);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.aegis-sim,
+.well-label,
+.audit-label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aegis-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(14rem, 0.85fr);
+  gap: 0.85rem;
+  margin-top: 0.7rem;
+}
+
+.claim-sheet {
+  position: relative;
+  padding: 1.15rem 0.95rem 0.8rem;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 230, 0.55), transparent 1.4rem),
+    #f0e2c4;
+  color: #2a2118;
+  border: 1px solid rgba(90, 64, 32, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 252, 246, 0.7),
+    0 12px 18px rgba(0, 0, 0, 0.32);
+}
+
+.claim-sheet::before {
+  content: "";
+  position: absolute;
+  top: -0.55rem;
+  left: 0.8rem;
+  width: 5.5rem;
+  height: 0.7rem;
+  background: #e4d2ae;
+  border: 1px solid rgba(90, 64, 32, 0.18);
+  border-bottom: 0;
+}
+
+.claim-stamp {
+  color: #8d342c;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.claim-number {
+  margin: 0.2rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.claim-desc,
+.claim-line {
+  margin-top: 0.35rem;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.claim-amount {
+  margin: 0.45rem 0 0;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+}
+
+.claim-seal {
+  display: grid;
+  place-items: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  margin: 0.7rem 0 0 auto;
+  border: 2px dashed rgba(90, 64, 32, 0.35);
+  border-radius: 50%;
+  color: #8a6230;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+}
+
+.claim-seal[data-empty="false"] {
+  border-style: solid;
+  border-color: #8d342c;
+  color: #8d342c;
+}
+
+.audit-label {
+  margin-top: 0.8rem;
+  color: #6d6256;
+}
+
+.audit-list {
+  margin: 0.3rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.audit-note,
+.stamp-rule {
+  margin-top: 0.45rem;
+  color: #6d6256;
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
+.stamp-well {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.role-pick,
+.status-pick {
+  display: grid;
+  border-top: 1px solid rgba(244, 240, 230, 0.16);
+}
+
+.well-label {
+  padding: 0.35rem 0 0.15rem;
+}
+
+.well-stop {
+  position: relative;
+  display: block;
+}
+
+.well-stop input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.well-stop span {
+  display: block;
+  padding: 0.28rem 0 0.28rem 0.8rem;
+  color: var(--muted);
+  border-left: 2px solid transparent;
+}
+
+.well-stop input:checked + span {
+  color: var(--brass);
+  border-left-color: var(--brass);
+}
+
+.well-stop input:focus-visible + span,
+.stamp-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.stamp-button {
+  align-self: flex-start;
+  width: 5.4rem;
+  height: 5.4rem;
+  margin-top: 0.2rem;
+  border: 3px solid #8a6230;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3ddb0, #c4a15a 58%, #8d6a32);
+  color: #1a140c;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 230, 0.7),
+    0 8px 0 #5c4120;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.aegis-desk.is-pressing .stamp-button {
+  transform: translateY(5px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 230, 0.7),
+    0 3px 0 #5c4120;
+}
+
+.stamp-result {
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.stamp-rule {
+  color: var(--muted);
+}
+
+.aegis-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin: 0.75rem 0 0;
+}
+
+.aegis-study {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-width: min(100%, 16rem);
+  padding: 0.42rem 0.65rem;
+  background: var(--brass);
+  color: #1a140c;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.aegis-study::after {
+  content: "→";
+}
+
+.aegis-study:hover,
+.aegis-study:focus-visible {
+  background: #f2d7a2;
+}
+
+.aegis-code {
+  color: var(--brass);
+}
+
+.aegis-code:hover,
+.aegis-code:focus-visible {
+  color: var(--focus);
+}
+
+@media (max-width: 800px) {
+  .aegis-desk {
+    width: min(46rem, calc(100vw - 1.25rem));
+  }
+
+  .aegis-body {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reel article {
     transition: none;
@@ -1098,6 +1416,8 @@ a:focus-visible,
   .cuda-index,
   .cuda-track i,
   .sourced-desk,
+  .aegis-desk,
+  .stamp-button,
   .floor,
   .floor::before,
   h1,

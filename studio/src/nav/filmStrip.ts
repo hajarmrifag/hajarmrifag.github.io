@@ -70,7 +70,7 @@ export function mountFilmStrip(root: HTMLElement): void {
 
   window.addEventListener("keydown", (event) => {
     if (event.metaKey || event.ctrlKey || event.altKey || isTypingTarget(event.target)) return;
-    if (event.target instanceof Element && event.target.closest("[data-cuda-bench], [data-sourced-desk]")) return;
+    if (event.target instanceof Element && event.target.closest("[data-cuda-bench], [data-sourced-desk], [data-aegis-desk]")) return;
 
     if (FRAME_KEY.test(event.key)) {
       event.preventDefault();

@@ -75,7 +75,7 @@ function isTypingTarget(target: EventTarget | null): boolean {
 }
 
 function isExhibitControl(target: EventTarget | null): boolean {
-  return target instanceof Element && Boolean(target.closest("[data-cuda-bench], [data-sourced-desk]"));
+  return target instanceof Element && Boolean(target.closest("[data-cuda-bench], [data-sourced-desk], [data-aegis-desk]"));
 }
 
 /**

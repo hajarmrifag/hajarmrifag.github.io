@@ -157,6 +157,77 @@
         </p>
       </section>
 
+      <section class="aegis-desk" data-aegis-desk aria-labelledby="aegis-desk-title" aria-hidden="true" inert>
+        <div class="aegis-top">
+          <p class="aegis-kicker" id="aegis-desk-title">Claims folder</p>
+          <p class="aegis-sim">Simulated API rules</p>
+        </div>
+        <div class="aegis-body">
+          <article class="claim-sheet">
+            <p class="claim-stamp">Demo data</p>
+            <p class="claim-number">CLM-2041</p>
+            <p class="claim-desc">Rear window damage reported after a hailstorm. Fictional record only.</p>
+            <p class="claim-amount">$2,400.00</p>
+            <p class="claim-line">Status <strong data-claim-status>Submitted</strong></p>
+            <p class="claim-seal" data-seal data-empty="true">No seal</p>
+            <h3 class="audit-label">Status history</h3>
+            <ol class="audit-list" data-audit>
+              <li>No status change has been recorded.</li>
+            </ol>
+            <p class="audit-note">A history row stores the previous status, the new status, and the change time. It does not store the role.</p>
+          </article>
+          <div class="stamp-well">
+            <div class="role-pick" role="radiogroup" aria-label="Role attempting the status change">
+              <p class="well-label">Role</p>
+              <label class="well-stop">
+                <input type="radio" name="aegis-role" value="Adjuster" checked />
+                <span>Adjuster</span>
+              </label>
+              <label class="well-stop">
+                <input type="radio" name="aegis-role" value="Manager" />
+                <span>Manager</span>
+              </label>
+              <label class="well-stop">
+                <input type="radio" name="aegis-role" value="Admin" />
+                <span>Admin</span>
+              </label>
+            </div>
+            <div class="status-pick" role="radiogroup" aria-label="Requested claim status">
+              <p class="well-label">Requested status</p>
+              <label class="well-stop">
+                <input type="radio" name="aegis-status" value="Submitted" />
+                <span>Submitted</span>
+              </label>
+              <label class="well-stop">
+                <input type="radio" name="aegis-status" value="UnderReview" checked />
+                <span>Under review</span>
+              </label>
+              <label class="well-stop">
+                <input type="radio" name="aegis-status" value="Approved" />
+                <span>Approved</span>
+              </label>
+              <label class="well-stop">
+                <input type="radio" name="aegis-status" value="Rejected" />
+                <span>Rejected</span>
+              </label>
+              <label class="well-stop">
+                <input type="radio" name="aegis-status" value="Paid" />
+                <span>Paid</span>
+              </label>
+            </div>
+            <button type="button" class="stamp-button" data-stamp>Stamp</button>
+            <p class="stamp-result" data-stamp-result role="status">
+              Choose a role and a status, then stamp the folder. This desk does not call the API.
+            </p>
+            <p class="stamp-rule">Registration creates an Adjuster. Only Manager and Admin may change status. An unrecognized status name is a 400. These five names are the ones the API accepts.</p>
+          </div>
+        </div>
+        <p class="aegis-links">
+          <a class="aegis-study" href="/work/aegis.html">Technical case study</a>
+          <a class="aegis-code" href="https://github.com/hajarmrifag/claims-management-api">Source code</a>
+        </p>
+      </section>
+
       <section class="cuda-bench" data-cuda-bench aria-labelledby="cuda-bench-title" aria-hidden="true" inert>
         <div class="cuda-bezel">
           <header class="cuda-head">

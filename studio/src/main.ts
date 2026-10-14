@@ -1,4 +1,5 @@
 import { readStations } from "./content/stations";
+import { mountAegisDesk } from "./exhibit/aegisDesk";
 import { mountCudaBench } from "./exhibit/cudaBench";
 import { mountSourcedDesk } from "./exhibit/sourcedDesk";
 import { mountFilmStrip } from "./nav/filmStrip";
@@ -18,6 +19,7 @@ if (stations.length !== 6) {
 mountFilmStrip(root);
 mountCudaBench(root);
 mountSourcedDesk(root);
+mountAegisDesk(root);
 mountSeatedView(root);
 
 const skipIntro = document.querySelector<HTMLButtonElement>("#skip-intro");
