@@ -9,6 +9,7 @@ import {
   PlaneGeometry,
   SphereGeometry,
   Texture,
+  TorusGeometry,
   TubeGeometry,
   Vector2,
   Vector3,
@@ -137,11 +138,29 @@ function addLamp(
   parent.add(glow);
 }
 
-function addSourced(bin: SceneBin, group: Group, paper: MeshStandardMaterial, ink: MeshStandardMaterial): void {
-  cast(addBox(bin, group, 0.3, 0.38, 0.015, 0, 0.22, 0.06, paper));
+function addSourced(
+  bin: SceneBin,
+  group: Group,
+  paper: MeshStandardMaterial,
+  ink: MeshStandardMaterial,
+  brass: MeshStandardMaterial,
+): void {
+  const folio = new Group();
+  folio.rotation.x = -0.2;
+  group.add(folio);
+  cast(addBox(bin, folio, 0.3, 0.38, 0.012, 0, 0.22, 0.05, paper));
   for (const [index, y] of [0.1, 0.17, 0.24, 0.31].entries()) {
-    cast(addBox(bin, group, index % 2 === 0 ? 0.2 : 0.12, 0.022, 0.02, -0.02, y, 0.075, index % 2 === 0 ? ink : paper));
+    cast(addBox(bin, folio, index % 2 === 0 ? 0.2 : 0.12, 0.016, 0.014, -0.02, y, 0.062, index % 2 === 0 ? ink : paper));
   }
+  const loupe = new Mesh(bin.geo(new TorusGeometry(0.046, 0.006, 8, 24)), brass);
+  loupe.position.set(0.18, 0.08, 0.1);
+  loupe.rotation.x = Math.PI / 2.35;
+  loupe.rotation.z = -0.35;
+  cast(loupe);
+  folio.add(loupe);
+  const grip = cast(addCylinder(bin, folio, 0.006, 0.07, 0.24, 0.045, 0.1, brass));
+  grip.rotation.z = 0.85;
+  grip.rotation.x = 0.55;
 }
 
 function addAegis(bin: SceneBin, group: Group, folder: MeshStandardMaterial, stamp: MeshStandardMaterial): void {
@@ -226,7 +245,7 @@ function addStation(
   cast(label);
   group.add(label);
 
-  if (station.id === "sourced") addSourced(bin, group, palette.paper, palette.ink);
+  if (station.id === "sourced") addSourced(bin, group, palette.paper, palette.ink, palette.brass);
   if (station.id === "aegis") addAegis(bin, group, palette.folder, palette.brass);
   if (station.id === "gridflex") addGridFlex(bin, group, palette.cell, palette.steel);
   if (station.id === "neobank") addNeobank(bin, group, palette.steel, palette.brass);

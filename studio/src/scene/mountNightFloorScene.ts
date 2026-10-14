@@ -75,7 +75,7 @@ function isTypingTarget(target: EventTarget | null): boolean {
 }
 
 function isExhibitControl(target: EventTarget | null): boolean {
-  return target instanceof Element && Boolean(target.closest("[data-cuda-bench]"));
+  return target instanceof Element && Boolean(target.closest("[data-cuda-bench], [data-sourced-desk]"));
 }
 
 /**
@@ -272,8 +272,10 @@ export function mountNightFloorScene(
   };
 
   const onKey = (event: KeyboardEvent) => {
-    if (event.metaKey || event.ctrlKey || event.altKey || isTypingTarget(event.target)) return;
-    if (isExhibitControl(event.target) && event.key !== "Escape") return;
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const exhibit = isExhibitControl(event.target);
+    if (isTypingTarget(event.target) && !(exhibit && event.key === "Escape")) return;
+    if (exhibit && event.key !== "Escape") return;
     if (event.key === "Enter") {
       if (event.target instanceof Element && event.target.closest("a, button")) return;
       const index = stations.findIndex((station) => station.id === root.dataset.selected);
