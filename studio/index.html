@@ -293,6 +293,62 @@
         </p>
       </section>
 
+      <section class="neobank-ledger" data-neobank-desk aria-labelledby="neobank-desk-title" aria-hidden="true" inert>
+        <div class="nb-top">
+          <p class="nb-kicker" id="neobank-desk-title">Passbook</p>
+          <p class="nb-sim">Simulated ledger · not a live bank</p>
+        </div>
+        <div class="nb-book">
+          <article class="nb-page">
+            <p class="nb-who">Alice Demo</p>
+            <p class="nb-role">Source</p>
+            <p class="nb-balance" data-alice-pounds>£100.00</p>
+            <p class="nb-minor" data-alice-minor>10000 pence</p>
+          </article>
+          <div class="nb-token">
+            <p class="nb-token-label">Idempotency key</p>
+            <p class="nb-key" data-key>demo-transfer-001</p>
+            <button type="button" class="nb-mint" data-new-key>New key</button>
+          </div>
+          <article class="nb-page">
+            <p class="nb-who">Bob Demo</p>
+            <p class="nb-role">Destination</p>
+            <p class="nb-balance" data-bob-pounds>£0.00</p>
+            <p class="nb-minor" data-bob-minor>0 pence</p>
+          </article>
+        </div>
+        <div class="nb-well">
+          <div class="nb-amounts" role="radiogroup" aria-label="Transfer amount in pence">
+            <label class="nb-detent">
+              <input type="radio" name="neobank-amount" value="2500" checked />
+              <span>£25.00</span>
+            </label>
+            <label class="nb-detent">
+              <input type="radio" name="neobank-amount" value="15000" aria-label="£150.00, 15000 pence, above Alice’s balance" />
+              <span>£150.00</span>
+            </label>
+          </div>
+          <button type="button" class="nb-post" data-post>Post transfer</button>
+          <p class="nb-result" data-result role="status">Post a transfer. This desk follows the API rules and does not call it.</p>
+          <article class="nb-slip" data-slip data-outcome="empty">
+            <p class="nb-seal" data-seal>No entry</p>
+            <p class="nb-slip-line" data-slip-line>Alice Demo and Bob Demo are fictional. Opening balances are £100.00 and £0.00.</p>
+          </article>
+          <p class="nb-rule">Both balances and the transfer row commit together. The same key does not pay twice.</p>
+          <button type="button" class="nb-reset" data-reset>Reset example</button>
+        </div>
+        <details class="nb-notes">
+          <summary>Ledger notes</summary>
+          <p>
+            Amounts are integer pence. A new transfer is HTTP 201 with Idempotency-Replayed false. The same key and the same transfer return HTTP 200, the original id, and Idempotency-Replayed true, without moving money again. A used key with a different amount is HTTP 409 idempotency_conflict. Insufficient funds is HTTP 409 insufficient_funds; the rejection rolls back and does not keep the key. The analytics set of 891,772 records is synthetic and is not this ledger.
+          </p>
+        </details>
+        <p class="nb-links">
+          <a class="nb-study" href="/work/neobank.html">Technical case study</a>
+          <a class="nb-code" href="https://github.com/hajarmrifag/neobank-growth-analytics">Source code</a>
+        </p>
+      </section>
+
       <section class="cuda-bench" data-cuda-bench aria-labelledby="cuda-bench-title" aria-hidden="true" inert>
         <div class="cuda-bezel">
           <header class="cuda-head">

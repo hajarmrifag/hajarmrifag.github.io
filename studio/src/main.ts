@@ -1,6 +1,7 @@
 import { readStations } from "./content/stations";
 import { mountAegisDesk } from "./exhibit/aegisDesk";
 import { mountGridFlex } from "./exhibit/gridflexTable";
+import { mountNeobankLedger } from "./exhibit/neobankLedger";
 import { mountCudaBench } from "./exhibit/cudaBench";
 import { mountSourcedDesk } from "./exhibit/sourcedDesk";
 import { mountFilmStrip } from "./nav/filmStrip";
@@ -22,6 +23,7 @@ mountCudaBench(root);
 mountSourcedDesk(root);
 mountAegisDesk(root);
 mountGridFlex(root);
+mountNeobankLedger(root);
 mountSeatedView(root);
 
 const skipIntro = document.querySelector<HTMLButtonElement>("#skip-intro");
