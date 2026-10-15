@@ -228,6 +228,71 @@
         </p>
       </section>
 
+      <section class="gridflex-table" data-gridflex-desk aria-labelledby="gridflex-desk-title" aria-hidden="true" inert>
+        <div class="gf-top">
+          <p class="gf-kicker" id="gridflex-desk-title">Energy light table</p>
+          <p class="gf-sim">Recorded · not a live run</p>
+        </div>
+        <div class="gf-body">
+          <div class="gf-film">
+            <p class="gf-label">Tétouan · 1 Jan 2017 UTC · measured demand</p>
+            <div class="gf-well" data-demand-film></div>
+            <div class="gf-ticks" aria-hidden="true"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
+            <label class="gf-scrub">
+              <span>Hour</span>
+              <input type="range" min="0" max="23" value="0" step="1" data-hour aria-describedby="gf-hour-readout" />
+            </label>
+            <p class="gf-readout" id="gf-hour-readout" data-hour-readout role="status">
+              <span class="gf-clock" data-hour-clock>00:00 UTC</span>
+              <span class="gf-mw"><b data-hour-mw>66.48</b> MW</span>
+            </p>
+            <p class="gf-caption">Hourly mean, to 0.01 MW. Day sum <span data-day-sum>1537.7</span> MWh.</p>
+            <p class="gf-rule">Shift keeps the day’s energy. Battery charges on surplus and discharges above a peak. Neither result is drawn here.</p>
+          </div>
+          <div class="gf-bench">
+            <p class="gf-label">Engine time · days</p>
+            <div class="gf-days" role="radiogroup" aria-label="Recorded benchmark horizon">
+              <label class="gf-detent">
+                <input type="radio" name="gridflex-days" value="30" aria-label="30 days" />
+                <span>30</span>
+              </label>
+              <label class="gf-detent">
+                <input type="radio" name="gridflex-days" value="60" aria-label="60 days" checked />
+                <span>60</span>
+              </label>
+              <label class="gf-detent">
+                <input type="radio" name="gridflex-days" value="365" aria-label="365 days" />
+                <span>365</span>
+              </label>
+            </div>
+            <div class="gf-result" data-bench-result role="status">
+              <p class="gf-speed" data-speedup>31.9×</p>
+              <div class="gf-pair">
+                <p><span>Before</span><strong data-before-ms>71.731 ms</strong></p>
+                <p><span>After</span><strong data-after-ms>2.246 ms</strong></p>
+              </div>
+              <p class="gf-scope" data-scope></p>
+            </div>
+            <div class="gf-times" aria-hidden="true">
+              <span class="gf-track"><i data-before-bar></i></span>
+              <span class="gf-track is-after"><i data-after-bar></i></span>
+            </div>
+            <p class="gf-decision">Not page load. NumPy replaced pandas writes. Same output.</p>
+          </div>
+        </div>
+        <details class="gf-notes">
+          <summary>Recording notes</summary>
+          <p>
+            Median of seven runs after a warm-up, on one seeded synthetic profile. macOS arm64, Python 3.14.7, NumPy 2.5.3, pandas 2.3.3. These milliseconds time that engine operation, not page load and not the application. The numeric result did not change. The public app accepts up to 60 days; 365 days tests engine scaling. The film is measured Tétouan demand. Solar and wind in that sample are estimated shapes and are not shown. The case study has the full record.
+          </p>
+        </details>
+        <p class="gf-links">
+          <a class="gf-study" href="/work/gridflex.html">Technical case study</a>
+          <a class="gf-code" href="https://github.com/hajarmrifag/gridflex-ai">Source code</a>
+          <a class="gf-live" href="https://gridflex.onrender.com/">Live application</a>
+        </p>
+      </section>
+
       <section class="cuda-bench" data-cuda-bench aria-labelledby="cuda-bench-title" aria-hidden="true" inert>
         <div class="cuda-bezel">
           <header class="cuda-head">
