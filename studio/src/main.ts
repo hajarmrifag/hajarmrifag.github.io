@@ -2,6 +2,7 @@ import { readStations } from "./content/stations";
 import { mountAegisDesk } from "./exhibit/aegisDesk";
 import { mountGridFlex } from "./exhibit/gridflexTable";
 import { mountNeobankLedger } from "./exhibit/neobankLedger";
+import { mountSkyQuery } from "./exhibit/skyqueryDesk";
 import { mountCudaBench } from "./exhibit/cudaBench";
 import { mountSourcedDesk } from "./exhibit/sourcedDesk";
 import { mountFilmStrip } from "./nav/filmStrip";
@@ -24,6 +25,7 @@ mountSourcedDesk(root);
 mountAegisDesk(root);
 mountGridFlex(root);
 mountNeobankLedger(root);
+mountSkyQuery(root);
 mountSeatedView(root);
 
 const skipIntro = document.querySelector<HTMLButtonElement>("#skip-intro");
