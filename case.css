@@ -1,9 +1,9 @@
 /* Shared studio identity; the case study keeps a quiet reading surface. */
 .case-page {
-  --paper: #efeee7;
-  --ink: #1b2118;
-  --accent: #526d2c;
-  --line: #cdd0c3;
+  --paper: #f3f0e9;
+  --ink: #21231f;
+  --accent: #a44228;
+  --line: #cecec3;
   --white: #fafaf5;
   --muted: #62685b;
 }
@@ -159,3 +159,7 @@
     font-size: 13px;
   }
 }
+
+/* The case studies share the homepage’s editorial identity. */
+.case-page h1, .case-page h2, .case-page h3, .case-page h4 { font-family: "Space Grotesk", var(--sans); }
+.case-page .wordmark { font-weight: 600; }

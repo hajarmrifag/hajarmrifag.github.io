@@ -6,8 +6,8 @@ body {
   position: fixed;
   inset: 0 0 auto;
   height: 3px;
-  background: #d1f56b;
-  box-shadow: 0 0 14px #a6df6970;
+  background: #ef613e;
+  box-shadow: none;
   transform: scaleX(0);
   transform-origin: left;
   z-index: 100;
@@ -43,7 +43,7 @@ body {
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: #d1f56b;
+  color: #ffc0a7;
   font: 20px/1 sans-serif;
   cursor: pointer;
 }

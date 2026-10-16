@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="stylesheet" href="../case.css" />
     <script src="../benchmark.js" defer></script>
@@ -74,10 +75,12 @@
       </section>
       <div class="case-shot">
         <img
-          src="../assets/gridflex.png"
+          src="../assets/gridflex-1600.webp"
+          srcset="../assets/gridflex-640.webp 640w, ../assets/gridflex-960.webp 960w, ../assets/gridflex-1600.webp 1600w"
+          sizes="(max-width: 760px) calc(100vw - 60px), (max-width: 1500px) calc(100vw - 172px), 1300px"
           alt="GridFlex workspace with hourly residual load, energy metrics and configurable battery storage"
-          width="3420"
-          height="1964"
+          width="1600"
+          height="919"
           fetchpriority="high"
         />
       </div>
