@@ -16,7 +16,7 @@ import type { Station } from "../content/stations";
 import { addArchitecture } from "./architecture";
 import { NIGHT_HORIZON } from "./city";
 import { addFurnishings } from "./furnishings";
-import { BENCH, NAMEPLATE, STATION_X } from "./layout";
+import { BENCH, STATION_X } from "./layout";
 import { createSceneBin } from "./props";
 import { createStudioPalette } from "./surfaces";
 
@@ -81,7 +81,8 @@ function addNightGrade(scene: Scene, renderer: WebGLRenderer, quality: StudioQua
 
   const warm = quality.lamps ? STATION_X : [STATION_X[0], STATION_X[3], STATION_X[5]];
   for (const x of warm) addPool(scene, x, 0xffc49a, quality.lamps ? 16 : 22, 1.55);
-  addPool(scene, NAMEPLATE.x - 0.85, 0xffd2ae, 8, 2.4, NAMEPLATE.z + 0.35, NAMEPLATE.y + 0.42);
+  // Just under the task-lamp mouth, clear of the reflector so the bulb does not blow out.
+  addPool(scene, -1.6, 0xffc49a, 5, 1.45, -0.16, 0.98);
   const cool = quality.reflections ? [-0.8, 4.6, 10.2] : [4.6];
   for (const x of cool) {
     addPool(scene, x, 0xa9c0d4, quality.reflections ? 2.6 : 3.4, quality.reflections ? 6.4 : 8.5, -3.45, 1.75);

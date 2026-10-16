@@ -1,22 +1,16 @@
 import {
-  CatmullRomCurve3,
-  CylinderGeometry,
   Group,
-  LatheGeometry,
   Mesh,
   MeshStandardMaterial,
   PlaneGeometry,
-  SphereGeometry,
   Texture,
   TorusGeometry,
-  TubeGeometry,
-  Vector2,
-  Vector3,
   Scene,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { Station } from "../content/stations";
 import { BENCH, NAMEPLATE, STATION_X } from "./layout";
+import lampUrl from "./lamp.glb?url";
 import nameplateUrl from "./nameplate.glb?url";
 import workbenchUrl from "./workbench.glb?url";
 import { addBox, addCylinder, canvasTexture, type SceneBin } from "./props";
@@ -112,29 +106,29 @@ function addNameplate(bin: SceneBin, scene: Scene): void {
   });
 }
 
-function addLamp(
-  bin: SceneBin,
-  parent: Group,
-  x: number,
-  shade: MeshStandardMaterial,
-  metal: MeshStandardMaterial,
-  bulb: MeshStandardMaterial,
-  parts: LampParts,
-): void {
-  const z = BENCH.centerZ - 0.18;
-  const y = BENCH.top;
-  const canopy = new Mesh(parts.canopy, metal);
-  canopy.position.set(x, y + 1.02, z);
-  cast(canopy);
-  parent.add(canopy);
-  cast(addCylinder(bin, parent, 0.004, 0.2, x, y + 0.91, z, metal));
-  const drum = new Mesh(parts.shade, shade);
-  drum.position.set(x, y + 0.76, z);
-  cast(drum);
-  parent.add(drum);
-  const glow = new Mesh(parts.bulb, bulb);
-  glow.position.set(x, y + 0.775, z);
-  parent.add(glow);
+/** Base contact point. The shade mouth is the warm pool in blockout.ts. */
+const TASK_LAMP = { x: -1.64, z: -0.64 };
+
+function addTaskLamp(bin: SceneBin, scene: Scene): void {
+  const mount = new Group();
+  mount.position.set(TASK_LAMP.x, BENCH.top, TASK_LAMP.z);
+  scene.add(mount);
+  new GLTFLoader().load(lampUrl, (gltf) => {
+    const lamp = gltf.scene;
+    lamp.traverse((child) => {
+      if (!(child instanceof Mesh)) return;
+      child.castShadow = true;
+      child.receiveShadow = true;
+      bin.geo(child.geometry);
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      for (const material of materials) {
+        bin.mat(material);
+        if (!(material instanceof MeshStandardMaterial)) continue;
+        material.envMapIntensity = 0.35;
+      }
+    });
+    mount.add(lamp);
+  });
 }
 
 function addSourced(
@@ -225,133 +219,10 @@ function addStation(
   if (station.id === "skyquery") addSkyQuery(bin, group, palette.paper, palette.folder);
 }
 
-interface LampParts {
-  shade: LatheGeometry;
-  bulb: SphereGeometry;
-  canopy: CylinderGeometry;
-}
-
-function lampParts(bin: SceneBin): LampParts {
-  return {
-    shade: bin.geo(
-      new LatheGeometry(
-        [
-          new Vector2(0.016, 0.05),
-          new Vector2(0.04, 0.044),
-          new Vector2(0.074, 0.026),
-          new Vector2(0.08, 0.01),
-          new Vector2(0.062, 0),
-        ],
-        14,
-      ),
-    ),
-    bulb: bin.geo(new SphereGeometry(0.015, 10, 8)),
-    canopy: bin.geo(new CylinderGeometry(0.016, 0.024, 0.016, 10)),
-  };
-}
-
-function addChair(bin: SceneBin, scene: Scene, cloth: MeshStandardMaterial, metal: MeshStandardMaterial): void {
-  const chair = new Group();
-  chair.position.set(-2.15, 0, 0.95);
-  chair.rotation.y = Math.PI / 2;
-  scene.add(chair);
-  const caster = bin.geo(new SphereGeometry(0.016, 8, 6));
-  cast(addCylinder(bin, chair, 0.035, 0.02, 0, 0.05, 0, metal));
-  for (let i = 0; i < 5; i += 1) {
-    const arm = new Group();
-    arm.rotation.y = (i / 5) * Math.PI * 2 + 0.3;
-    chair.add(arm);
-    cast(addBox(bin, arm, 0.26, 0.016, 0.02, 0.13, 0.07, 0, metal));
-    const wheel = new Mesh(caster, metal);
-    wheel.position.set(0.26, 0.04, 0);
-    cast(wheel);
-    arm.add(wheel);
-  }
-  cast(addCylinder(bin, chair, 0.02, 0.32, 0, 0.22, 0, metal));
-  const seat = cast(addCylinder(bin, chair, 0.2, 0.04, 0, 0.46, 0, cloth));
-  seat.scale.set(1.05, 1, 0.9);
-  const back = cast(addBox(bin, chair, 0.36, 0.38, 0.028, 0, 0.78, -0.16, cloth));
-  back.rotation.x = -0.14;
-  cast(addBox(bin, chair, 0.03, 0.14, 0.025, 0, 0.56, -0.08, metal));
-}
-
-function addDesk(
-  bin: SceneBin,
-  scene: Scene,
-  wood: MeshStandardMaterial,
-  steel: MeshStandardMaterial,
-  screen: MeshStandardMaterial,
-  paper: MeshStandardMaterial,
-): void {
-  cast(addBox(bin, scene, 1.2, 0.035, 0.62, -2.7, 0.74, 0.15, wood));
-  cast(addBox(bin, scene, 1.08, 0.62, 0.03, -2.7, 0.38, -0.12, steel));
-  cast(addBox(bin, scene, 0.04, 0.68, 0.52, -3.22, 0.36, 0.12, steel));
-  cast(addBox(bin, scene, 0.04, 0.68, 0.52, -2.18, 0.36, 0.12, steel));
-  const monitor = new Group();
-  monitor.position.set(-2.7, 1.02, -0.02);
-  monitor.rotation.y = -Math.PI / 2;
-  scene.add(monitor);
-  cast(addBox(bin, monitor, 0.5, 0.3, 0.018, 0, 0, 0, steel));
-  const display = new Mesh(bin.geo(new PlaneGeometry(0.44, 0.24)), screen);
-  display.position.z = 0.011;
-  monitor.add(display);
-  cast(addCylinder(bin, scene, 0.012, 0.16, -2.7, 0.84, -0.02, steel));
-  const foot = cast(addCylinder(bin, scene, 0.11, 0.012, -2.7, 0.762, -0.02, steel));
-  foot.scale.z = 0.55;
-  const keys = cast(addBox(bin, scene, 0.28, 0.012, 0.09, -2.48, 0.766, 0.22, steel));
-  keys.rotation.x = -0.14;
-  cast(addBox(bin, scene, 0.14, 0.008, 0.2, -2.95, 0.764, 0.22, paper));
-  const lead = new CatmullRomCurve3([
-    new Vector3(-2.7, 0.78, -0.04),
-    new Vector3(-2.66, 0.62, -0.08),
-    new Vector3(-2.74, 0.48, -0.1),
-    new Vector3(-2.7, 0.36, -0.12),
-  ]);
-  const cable = new Mesh(bin.geo(new TubeGeometry(lead, 7, 0.005, 5, false)), steel);
-  cast(cable);
-  scene.add(cable);
-}
-
-function addShelves(
-  bin: SceneBin,
-  scene: Scene,
-  wood: MeshStandardMaterial,
-  paper: MeshStandardMaterial,
-  steel: MeshStandardMaterial,
-  brass: MeshStandardMaterial,
-): void {
-  const shelf = new Group();
-  shelf.position.set(-3.42, 0, -1.7);
-  scene.add(shelf);
-  cast(addBox(bin, shelf, 0.028, 2.05, 0.28, 0, 1.05, 0, steel));
-  cast(addBox(bin, shelf, 0.028, 2.05, 0.28, 0.86, 1.05, 0, steel));
-  for (const y of [0.32, 0.78, 1.24, 1.68]) cast(addBox(bin, shelf, 0.84, 0.018, 0.26, 0.43, y, 0, wood));
-  const books: Array<[number, number, number, number]> = [
-    [0.16, 0.86, 0.22, 0],
-    [0.24, 0.9, 0.26, 0.02],
-    [0.34, 0.84, 0.2, -0.04],
-    [0.52, 1.34, 0.16, 0.12],
-    [0.62, 1.3, 0.18, 0],
-  ];
-  for (const [x, y, height, lean] of books) {
-    const book = cast(addBox(bin, shelf, 0.028, height, 0.18, x, y, 0, paper));
-    book.rotation.z = lean;
-  }
-  cast(addBox(bin, shelf, 0.16, 0.05, 0.12, 0.58, 0.82, 0, steel));
-  cast(addCylinder(bin, shelf, 0.035, 0.07, 0.22, 1.32, 0.02, brass));
-  cast(addBox(bin, shelf, 0.12, 0.09, 0.16, 0.48, 1.76, 0, steel));
-}
-
-/** Approved workbench, six station markers, lamps, nameplate, chair, shelves, and the side desk. */
+/** The walnut bench, task lamp, nameplate, and six station markers. */
 export function addFurnishings(bin: SceneBin, scene: Scene, stations: readonly Station[], palette: StudioPalette): void {
   addWorkbench(bin, scene);
-
-  const lamps = new Group();
-  scene.add(lamps);
-  const parts = lampParts(bin);
-  for (const x of STATION_X) addLamp(bin, lamps, x, palette.warmShade, palette.steel, palette.warmBulb, parts);
-  addLamp(bin, lamps, -1.55, palette.greenShade, palette.brass, palette.greenBulb, parts);
-
+  addTaskLamp(bin, scene);
   addNameplate(bin, scene);
   const notebook = cast(addBox(bin, scene, 0.16, 0.012, 0.22, -1.62, BENCH.top + 0.01, BENCH.centerZ + 0.16, palette.paper));
   notebook.rotation.y = -0.2;
@@ -360,8 +231,4 @@ export function addFurnishings(bin: SceneBin, scene: Scene, stations: readonly S
   pen.rotation.y = 0.4;
 
   for (const [index, station] of stations.entries()) addStation(bin, scene, station, index, palette);
-
-  addChair(bin, scene, palette.cloth, palette.steel);
-  addDesk(bin, scene, palette.wood, palette.steel, palette.screen, palette.paper);
-  addShelves(bin, scene, palette.wood, palette.paper, palette.steel, palette.brass);
 }

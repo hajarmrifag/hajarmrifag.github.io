@@ -7,7 +7,7 @@ import {
   SRGBColorSpace,
   type CanvasTexture as CanvasTextureType,
 } from "three";
-import { canvasTexture, type SceneBin } from "./props";
+import type { SceneBin } from "./props";
 
 /**
  * Original procedural surfaces for the Night Floor laboratory.
@@ -23,20 +23,13 @@ export interface StudioPalette {
   pier: MeshStandardMaterial;
   frame: MeshStandardMaterial;
   windowGlass: MeshStandardMaterial;
-  wood: MeshStandardMaterial;
   brass: MeshStandardMaterial;
   steel: MeshStandardMaterial;
   paper: MeshStandardMaterial;
   ink: MeshStandardMaterial;
   folder: MeshStandardMaterial;
   cell: MeshStandardMaterial;
-  cloth: MeshStandardMaterial;
   carrel: MeshStandardMaterial;
-  warmShade: MeshStandardMaterial;
-  greenShade: MeshStandardMaterial;
-  warmBulb: MeshStandardMaterial;
-  greenBulb: MeshStandardMaterial;
-  screen: MeshStandardMaterial;
   plaque(map: CanvasTextureType): MeshStandardMaterial;
 }
 
@@ -64,27 +57,6 @@ function tile(
 
 function wave(u: number, turns: number): number {
   return 0.5 + 0.5 * Math.sin(u * Math.PI * 2 * turns);
-}
-
-function grain(data: Uint8ClampedArray, size: number): void {
-  for (let y = 0; y < size; y += 1) {
-    for (let x = 0; x < size; x += 1) {
-      const u = x / size;
-      const v = y / size;
-      const wobble = 0.012 * Math.sin(u * Math.PI * 2 * 2);
-      const v2 = v + wobble;
-      const bands = Math.abs(Math.sin(v2 * Math.PI * 2 * 14));
-      const fine = Math.abs(Math.sin(v2 * Math.PI * 2 * 40 + u * 2));
-      const along = 0.92 + 0.08 * Math.sin(u * Math.PI * 2);
-      const shade = along * (0.86 + 0.14 * bands) * (0.96 + 0.04 * fine);
-      const value = Math.round(58 + shade * 36);
-      const index = (y * size + x) * 4;
-      data[index] = value;
-      data[index + 1] = value;
-      data[index + 2] = value;
-      data[index + 3] = 255;
-    }
-  }
 }
 
 function concrete(data: Uint8ClampedArray, size: number): void {
@@ -156,22 +128,10 @@ function standard(
 }
 
 export function createStudioPalette(bin: SceneBin, reflections: boolean): StudioPalette {
-  const woodMap = tile(bin, 256, SRGBColorSpace, grain);
   const stoneMap = tile(bin, 256, SRGBColorSpace, concrete);
   const brushMap = tile(bin, 128, NoColorSpace, brush);
   const floorMap = repeated(bin, stoneMap, 6, 4);
   const wallMap = repeated(bin, stoneMap, 3, 1);
-
-  const screenMap = canvasTexture(bin, 256, 160, (context) => {
-    context.fillStyle = "#121820";
-    context.fillRect(0, 0, 256, 160);
-    context.fillStyle = "#9aafc4";
-    for (let row = 0; row < 5; row += 1) {
-      context.globalAlpha = 0.28 + (row % 3) * 0.12;
-      context.fillRect(18, 22 + row * 24, 150 - row * 12, 8);
-    }
-    context.globalAlpha = 1;
-  });
 
   return {
     concrete: standard(bin, 0x8d929b, 0.92, 0, floorMap),
@@ -202,46 +162,13 @@ export function createStudioPalette(bin: SceneBin, reflections: boolean): Studio
             envMapIntensity: 0.85,
           }),
         ),
-    wood: standard(bin, 0x4a3222, 0.72, 0, repeated(bin, woodMap, 2, 1)),
     brass: standard(bin, 0xd4b06a, 0.4, 0.78, undefined, brushMap),
     steel: standard(bin, 0x4e555c, 0.62, 0.64),
     paper: standard(bin, 0xe7e0d2, 0.88, 0),
     ink: standard(bin, 0x2c3340, 0.72, 0),
     folder: standard(bin, 0x9a7a4e, 0.78, 0),
     cell: standard(bin, 0x6d8796, 0.42, 0.22),
-    cloth: standard(bin, 0x3e4550, 0.92, 0),
     carrel: standard(bin, 0x3a4048, 0.84, 0.04),
-    warmShade: standard(bin, 0x6e5848, 0.58, 0.18),
-    greenShade: standard(bin, 0x245443, 0.52, 0.16),
-    warmBulb: bin.mat(
-      new MeshStandardMaterial({
-        color: 0xffe2c2,
-        emissive: 0xffb15a,
-        emissiveIntensity: 0.85,
-        roughness: 0.4,
-        metalness: 0,
-      }),
-    ),
-    greenBulb: bin.mat(
-      new MeshStandardMaterial({
-        color: 0xfff0d8,
-        emissive: 0xffc48a,
-        emissiveIntensity: 1.1,
-        roughness: 0.4,
-        metalness: 0,
-      }),
-    ),
-    screen: bin.mat(
-      new MeshStandardMaterial({
-        color: 0x1a222c,
-        map: screenMap,
-        emissive: 0x8aa0b4,
-        emissiveMap: screenMap,
-        emissiveIntensity: 0.35,
-        roughness: 0.72,
-        metalness: 0,
-      }),
-    ),
     plaque(map) {
       return bin.mat(
         new MeshStandardMaterial({
