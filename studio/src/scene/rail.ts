@@ -35,7 +35,7 @@ export function stationU(index: number): number {
   return (INTRO_POINTS + index) / (POINT_COUNT - 1);
 }
 
-function stationIndexAt(u: number): number {
+export function stationIndexAt(u: number): number {
   const along = u * (POINT_COUNT - 1) - INTRO_POINTS;
   const index = Math.round(along);
   if (index < 0 || index > 5 || Math.abs(along - index) > 0.04) return -1;

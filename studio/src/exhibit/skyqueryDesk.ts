@@ -5,6 +5,9 @@
  * This desk does not call the API or a language model.
  */
 
+import { bindExhibit } from "./presence";
+import { watchStage } from "./stage";
+
 const PIN = "d1892fa";
 
 const PROMPTS = [
@@ -162,6 +165,7 @@ export function mountSkyQuery(root: HTMLElement): void {
   paintSql();
 
   const place = () => {
+    if (!panel.classList.contains("is-live")) return;
     const lede = document.querySelector(".lede");
     const dock = document.querySelector(".work");
     if (!lede || !dock) return;
@@ -172,27 +176,6 @@ export function mountSkyQuery(root: HTMLElement): void {
     panel.style.maxHeight = `${Math.max(180, dockTop - top - gap)}px`;
   };
 
-  let live = false;
-  const sync = () => {
-    const approach = Number(root.dataset.approach ?? "0");
-    const next = root.dataset.selected === "skyquery" && approach >= 0.82;
-    if (next === live) return;
-    live = next;
-    panel.classList.toggle("is-live", next);
-    panel.inert = !next;
-    panel.setAttribute("aria-hidden", next ? "false" : "true");
-    if (next) place();
-  };
-
-  const frame = new ResizeObserver(place);
-  frame.observe(document.documentElement);
-  for (const node of [document.querySelector(".mast"), document.querySelector(".lede"), document.querySelector(".work")]) {
-    if (node) frame.observe(node);
-  }
-  place();
-  sync();
-  new MutationObserver(sync).observe(root, {
-    attributes: true,
-    attributeFilter: ["data-approach", "data-selected"],
-  });
+  watchStage(place);
+  bindExhibit(root, "skyquery", panel, place);
 }

@@ -7,6 +7,9 @@
  * This desk does not run the engine.
  */
 
+import { bindExhibit } from "./presence";
+import { watchStage } from "./stage";
+
 /** Measured demand, MW, 00:00 through 23:00 UTC. */
 const DEMAND_MW = [
   66.47677059666667, 57.778526209999995, 52.08988164, 48.914447548333335, 47.71463834666667,
@@ -109,6 +112,7 @@ export function mountGridFlex(root: HTMLElement): void {
   paintBench();
 
   const place = () => {
+    if (!panel.classList.contains("is-live")) return;
     const lede = document.querySelector(".lede");
     const dock = document.querySelector(".work");
     if (!lede || !dock) return;
@@ -119,27 +123,6 @@ export function mountGridFlex(root: HTMLElement): void {
     panel.style.maxHeight = `${Math.max(180, dockTop - top - gap)}px`;
   };
 
-  let live = false;
-  const sync = () => {
-    const approach = Number(root.dataset.approach ?? "0");
-    const next = root.dataset.selected === "gridflex" && approach >= 0.82;
-    if (next === live) return;
-    live = next;
-    panel.classList.toggle("is-live", next);
-    panel.inert = !next;
-    panel.setAttribute("aria-hidden", next ? "false" : "true");
-    if (next) place();
-  };
-
-  const frame = new ResizeObserver(place);
-  frame.observe(document.documentElement);
-  for (const node of [document.querySelector(".mast"), document.querySelector(".lede"), document.querySelector(".work")]) {
-    if (node) frame.observe(node);
-  }
-  place();
-  sync();
-  new MutationObserver(sync).observe(root, {
-    attributes: true,
-    attributeFilter: ["data-approach", "data-selected"],
-  });
+  watchStage(place);
+  bindExhibit(root, "gridflex", panel, place);
 }

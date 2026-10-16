@@ -1,5 +1,6 @@
 import {
   CanvasTexture,
+  MeshPhysicalMaterial,
   MeshStandardMaterial,
   NoColorSpace,
   RepeatWrapping,
@@ -12,6 +13,8 @@ import { canvasTexture, type SceneBin } from "./props";
  * Original procedural surfaces for the Night Floor laboratory.
  * No third-party textures or HDRIs. Three.js (MIT) provides MeshStandardMaterial
  * and PMREMGenerator; the night environment is drawn in this project.
+ * Desktop panes use transmission so the night reflects in the glass. Phones
+ * keep a tinted transparent pane and skip that extra render.
  */
 
 export interface StudioPalette {
@@ -34,7 +37,6 @@ export interface StudioPalette {
   warmBulb: MeshStandardMaterial;
   greenBulb: MeshStandardMaterial;
   screen: MeshStandardMaterial;
-  city(map: CanvasTextureType, glow: CanvasTextureType, strength?: number): MeshStandardMaterial;
   plaque(map: CanvasTextureType): MeshStandardMaterial;
 }
 
@@ -153,7 +155,7 @@ function standard(
   );
 }
 
-export function createStudioPalette(bin: SceneBin): StudioPalette {
+export function createStudioPalette(bin: SceneBin, reflections: boolean): StudioPalette {
   const woodMap = tile(bin, 256, SRGBColorSpace, grain);
   const stoneMap = tile(bin, 256, SRGBColorSpace, concrete);
   const brushMap = tile(bin, 128, NoColorSpace, brush);
@@ -176,17 +178,30 @@ export function createStudioPalette(bin: SceneBin): StudioPalette {
     wall: standard(bin, 0x6d737c, 0.96, 0, wallMap),
     pier: standard(bin, 0x5c626b, 0.9, 0.02),
     frame: standard(bin, 0x2a2e34, 0.55, 0.45),
-    windowGlass: bin.mat(
-      new MeshStandardMaterial({
-        color: 0x8e9aab,
-        roughness: 0.16,
-        metalness: 0.02,
-        transparent: true,
-        opacity: 0.1,
-        depthWrite: false,
-        envMapIntensity: 1.1,
-      }),
-    ),
+    windowGlass: reflections
+      ? bin.mat(
+          new MeshPhysicalMaterial({
+            color: 0xdce6f0,
+            metalness: 0,
+            roughness: 0.06,
+            transmission: 1,
+            thickness: 0.2,
+            ior: 1.5,
+            envMapIntensity: 1.15,
+            transparent: true,
+          }),
+        )
+      : bin.mat(
+          new MeshStandardMaterial({
+            color: 0xb7c6d4,
+            roughness: 0.2,
+            metalness: 0,
+            transparent: true,
+            opacity: 0.1,
+            depthWrite: false,
+            envMapIntensity: 0.85,
+          }),
+        ),
     wood: standard(bin, 0x4a3222, 0.72, 0, repeated(bin, woodMap, 2, 1)),
     brass: standard(bin, 0xd4b06a, 0.4, 0.78, undefined, brushMap),
     steel: standard(bin, 0x4e555c, 0.62, 0.64),
@@ -227,19 +242,6 @@ export function createStudioPalette(bin: SceneBin): StudioPalette {
         metalness: 0,
       }),
     ),
-    city(map, glow, strength = 0.32) {
-      return bin.mat(
-        new MeshStandardMaterial({
-          color: 0x24303c,
-          map,
-          emissive: 0xffffff,
-          emissiveMap: glow,
-          emissiveIntensity: strength,
-          roughness: 0.96,
-          metalness: 0,
-        }),
-      );
-    },
     plaque(map) {
       return bin.mat(
         new MeshStandardMaterial({

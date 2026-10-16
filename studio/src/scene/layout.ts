@@ -39,6 +39,6 @@ export const CLOSE_POSE = [
   { y: 1.14, z: 1.08, lookY: 0.9 },
   { y: 1.14, z: 1.08, lookY: 0.88 },
   { y: 1.02, z: 0.64, lookY: 0.86 },
-  { y: 1.12, z: 1.02, lookY: 0.9 },
+  { y: 1.14, z: 1.08, lookY: 0.9 },
   { y: 1.14, z: 1.06, lookY: 0.92 },
 ] as const;

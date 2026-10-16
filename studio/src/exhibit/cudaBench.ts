@@ -1,4 +1,6 @@
 import { compareGemm } from "../../../cuda-data.js";
+import { bindExhibit } from "./presence";
+import { watchStage } from "./stage";
 
 const SIZES = [128, 256, 512, 1024] as const;
 
@@ -47,36 +49,24 @@ export function mountCudaBench(root: HTMLElement): void {
   show(checked?.value ?? "1024");
 
   const place = () => {
+    if (!panel.classList.contains("is-live")) return;
     const lede = document.querySelector(".lede");
     const dock = document.querySelector(".work");
     if (!lede || !dock) return;
-    const ledeBottom = lede.getBoundingClientRect().bottom;
+    const top = lede.getBoundingClientRect().bottom + 8;
     const dockTop = dock.getBoundingClientRect().top;
-    const band = dockTop - ledeBottom;
-    panel.style.top = `${ledeBottom + band * 0.46}px`;
-    panel.style.maxHeight = `${Math.max(160, band - 20)}px`;
+    const gap = window.innerWidth < 900 ? 18 : 14;
+    const span = Math.max(180, dockTop - top - gap);
+    const nextTop = `${Math.round(top)}px`;
+    const nextMax = `${Math.round(span)}px`;
+    // Neobank and GridFlex fill about this much of the seated band. A shorter card leaves the bench back showing.
+    const nextMin = `${Math.round(Math.min(span, Math.max(panel.scrollHeight, 486)))}px`;
+    if (panel.style.top !== nextTop) panel.style.top = nextTop;
+    if (panel.style.maxHeight !== nextMax) panel.style.maxHeight = nextMax;
+    if (panel.style.minHeight !== nextMin) panel.style.minHeight = nextMin;
   };
 
-  let live = false;
-  const sync = () => {
-    const approach = Number(root.dataset.approach ?? "0");
-    const next = root.dataset.selected === "cuda" && approach >= 0.82;
-    if (next === live) return;
-    live = next;
-    panel.classList.toggle("is-live", next);
-    panel.inert = !next;
-    panel.setAttribute("aria-hidden", next ? "false" : "true");
-    if (next) place();
-  };
-
-  const frame = new ResizeObserver(place);
-  frame.observe(document.documentElement);
-  for (const node of [document.querySelector(".mast"), document.querySelector(".lede"), document.querySelector(".work")]) {
-    if (node) frame.observe(node);
-  }
-  place();
-  sync();
-
-  const watch = new MutationObserver(sync);
-  watch.observe(root, { attributes: true, attributeFilter: ["data-approach", "data-selected"] });
+  watchStage(place);
+  bindExhibit(root, "cuda", panel, place);
+  void document.fonts?.ready.then(place);
 }

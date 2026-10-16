@@ -5,6 +5,9 @@
  * and unknown does not satisfy a mandatory requirement.
  */
 
+import { bindExhibit } from "./presence";
+import { watchStage } from "./stage";
+
 type Passport = "unconfirmed" | "missing" | "confirmed";
 type Line = "listing" | "funding" | "apply" | "degree" | "python" | "english" | "work";
 type Status = "unknown" | "met";
@@ -172,6 +175,7 @@ export function mountSourcedDesk(root: HTMLElement): void {
   show();
 
   const place = () => {
+    if (!panel.classList.contains("is-live")) return;
     const lede = document.querySelector(".lede");
     const dock = document.querySelector(".work");
     if (!lede || !dock) return;
@@ -183,27 +187,6 @@ export function mountSourcedDesk(root: HTMLElement): void {
     panel.style.maxHeight = `${Math.max(180, dockTop - top - gap)}px`;
   };
 
-  let live = false;
-  const sync = () => {
-    const approach = Number(root.dataset.approach ?? "0");
-    const next = root.dataset.selected === "sourced" && approach >= 0.82;
-    if (next === live) return;
-    live = next;
-    panel.classList.toggle("is-live", next);
-    panel.inert = !next;
-    panel.setAttribute("aria-hidden", next ? "false" : "true");
-    if (next) place();
-  };
-
-  const frame = new ResizeObserver(place);
-  frame.observe(document.documentElement);
-  for (const node of [document.querySelector(".mast"), document.querySelector(".lede"), document.querySelector(".work")]) {
-    if (node) frame.observe(node);
-  }
-  place();
-  sync();
-  new MutationObserver(sync).observe(root, {
-    attributes: true,
-    attributeFilter: ["data-approach", "data-selected"],
-  });
+  watchStage(place);
+  bindExhibit(root, "sourced", panel, place);
 }

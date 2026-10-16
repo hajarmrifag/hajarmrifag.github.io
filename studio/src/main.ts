@@ -35,20 +35,17 @@ skipIntro?.addEventListener("click", () => {
   document.querySelector<HTMLElement>("[data-station].is-selected")?.focus({ preventScroll: true });
 });
 
-/** Compact the homepage identity while a station is in the close view. */
+/** Compact the homepage identity for the whole sit-down, not mid-blend samples. */
 function mountSeatedView(root: HTMLElement): void {
-  let seated = false;
   const sync = () => {
-    const approach = Number(root.dataset.approach ?? "0");
-    const next = seated ? approach >= 0.45 : approach >= 0.22;
-    if (next === seated) return;
-    seated = next;
-    root.classList.toggle("is-seated", next);
+    const camera = root.dataset.camera;
+    root.classList.toggle("is-seated", camera === "approach" || camera === "station");
   };
   new MutationObserver(sync).observe(root, {
     attributes: true,
-    attributeFilter: ["data-approach"],
+    attributeFilter: ["data-camera"],
   });
+  sync();
 }
 
 void import("./scene")

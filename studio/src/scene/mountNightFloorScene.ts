@@ -20,6 +20,7 @@ import {
   SETTLED_U,
   SKIP_SECONDS,
   STATION_SECONDS,
+  stationIndexAt,
   stationU,
 } from "./rail";
 import type { NightFloorScene } from "./types";
@@ -119,6 +120,7 @@ export function mountNightFloorScene(
   const disposeBlockout = addBlockout(scene, stations, renderer, {
     shadows: !lean,
     lamps: !lean,
+    reflections: !lean,
   });
   const camera = new PerspectiveCamera(35, 1, 0.06, 80);
   const rig = new CameraRig();
@@ -156,12 +158,24 @@ export function mountNightFloorScene(
     const dockTop = dock.getBoundingClientRect().top;
     const band = dockTop - ledeBottom;
     const aim = ledeBottom + band * 0.46;
-    const shift = height / 2 - aim;
+    const shift = Math.round(height / 2 - aim);
     if (dockTop - ledeBottom < 80 || Math.abs(shift) < 6) {
       camera.clearViewOffset();
       return;
     }
     camera.setViewOffset(width, height, 0, shift, width, height);
+  };
+
+  /**
+   * The open exhibit follows the camera, not the film-strip highlight.
+   * It is published only after the sit-down step has finished, and cleared
+   * on the same turn a departure or retarget begins.
+   */
+  const publishExhibit = () => {
+    const index = mode === "station" ? stationIndexAt(rig.u) : -1;
+    const next = index < 0 ? "" : (stations[index]?.id ?? "");
+    if ((root.dataset.exhibit ?? "") === next) return;
+    root.dataset.exhibit = next;
   };
 
   const paint = () => {
@@ -184,11 +198,13 @@ export function mountNightFloorScene(
       mode = Math.abs(rig.u - SETTLED_U) < 0.03 ? "settled" : "standing";
     }
     root.dataset.camera = mode;
+    publishExhibit();
   };
 
   const startStep = (step: Motion) => {
     mode = step.tag;
     root.dataset.camera = mode;
+    publishExhibit();
     const seconds = reduced ? 0 : step.seconds;
     if (step.u !== undefined) rig.animateTo(step.u, seconds, step.ease);
     if (step.approach !== undefined) rig.animateApproach(step.approach, seconds, step.ease);

@@ -4,7 +4,6 @@ import {
   Group,
   LatheGeometry,
   Mesh,
-  MeshBasicMaterial,
   MeshStandardMaterial,
   PlaneGeometry,
   SphereGeometry,
@@ -181,40 +180,13 @@ function addNeobank(bin: SceneBin, group: Group, body: MeshStandardMaterial, tok
   cast(addCylinder(bin, group, 0.045, 0.012, 0.05, 0.16, 0.02, token));
 }
 
-function drawCudaFace(context: CanvasRenderingContext2D): void {
-  const { width, height } = context.canvas;
-  context.fillStyle = "#12100e";
-  context.fillRect(0, 0, width, height);
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillStyle = "#e0c089";
-  context.font = "500 54px 'IBM Plex Mono', ui-monospace, monospace";
-  context.fillText("GEMM", width / 2, height / 2 - 36);
-  context.fillStyle = "#c9c1b4";
-  context.font = "400 26px 'IBM Plex Mono', ui-monospace, monospace";
-  context.fillText("NVIDIA T4   ·   FP32   ·   RECORDED", width / 2, height / 2 + 28);
-}
-
 function addCuda(bin: SceneBin, group: Group, foot: MeshStandardMaterial, brass: MeshStandardMaterial): void {
-  const face = bin.mat(
-    new MeshBasicMaterial({ map: canvasTexture(bin, 1024, 560, drawCudaFace), color: 0xffffff }),
-  );
-  const chassis = new Group();
-  chassis.position.set(0, 0.2, 0.02);
-  chassis.rotation.x = -0.42;
-  group.add(chassis);
-  cast(addBox(bin, chassis, 0.68, 0.4, 0.02, 0, 0, -0.006, foot));
-  cast(addBox(bin, chassis, 0.7, 0.012, 0.024, 0, 0.194, 0.006, brass));
-  cast(addBox(bin, chassis, 0.7, 0.012, 0.024, 0, -0.194, 0.006, brass));
-  cast(addBox(bin, chassis, 0.012, 0.4, 0.024, -0.344, 0, 0.006, brass));
-  cast(addBox(bin, chassis, 0.012, 0.4, 0.024, 0.344, 0, 0.006, brass));
-  const screen = new Mesh(bin.geo(new PlaneGeometry(0.62, 0.34)), face);
-  screen.position.set(0, 0, 0.012);
-  cast(screen);
-  chassis.add(screen);
-  cast(addBox(bin, group, 0.028, 0.1, 0.028, -0.24, 0.05, 0.02, foot));
-  cast(addBox(bin, group, 0.028, 0.1, 0.028, 0.24, 0.05, 0.02, foot));
-  cast(addBox(bin, group, 0.5, 0.012, 0.04, 0, 0.1, 0.01, brass));
+  cast(addBox(bin, group, 0.32, 0.018, 0.2, 0, 0.02, 0.02, foot));
+  cast(addBox(bin, group, 0.14, 0.01, 0.14, 0, 0.034, 0.02, foot));
+  cast(addBox(bin, group, 0.15, 0.006, 0.006, 0, 0.042, 0.088, brass));
+  cast(addBox(bin, group, 0.15, 0.006, 0.006, 0, 0.042, -0.048, brass));
+  cast(addBox(bin, group, 0.006, 0.006, 0.14, -0.072, 0.042, 0.02, brass));
+  cast(addBox(bin, group, 0.006, 0.006, 0.14, 0.072, 0.042, 0.02, brass));
 }
 
 function addSkyQuery(bin: SceneBin, group: Group, left: MeshStandardMaterial, right: MeshStandardMaterial): void {
