@@ -172,7 +172,7 @@ h1 {
   margin: 0.35rem 0 0;
   font-size: clamp(3.4rem, 8vw, 6.5rem);
   font-weight: 600;
-  line-height: 0.9;
+  line-height: 1.1;
 }
 
 .mark {
@@ -198,7 +198,9 @@ h1 {
 
 html.intro-settled .skip-intro,
 .skip-intro[hidden] {
-  display: none;
+  /* Keep the header geometry (and camera framing) stable when the intro ends. */
+  display: inline-block;
+  visibility: hidden;
 }
 
 h2 {
@@ -2658,6 +2660,6 @@ a:focus-visible,
   }
 
   .skip-intro {
-    display: none;
+    visibility: hidden;
   }
 }

@@ -1,22 +1,24 @@
 import { CatmullRomCurve3, Vector3 } from "three";
 import { CLOSE, CLOSE_POSE, NAMEPLATE, STANDING, STATION_X } from "./layout";
 
-/** Control points: approach, threshold, nameplate, then one stop per project. */
+/** Threshold, lamp, nameplate, rest, then one standing stop per project. */
 const POSITIONS = [
-  new Vector3(-2.2, 2.2, 6.5),
-  new Vector3(-1.35, 1.72, 4.35),
-  new Vector3(-0.2, 1.64, 3.15),
+  new Vector3(-2.15, 1.62, 3.25),
+  new Vector3(-1.35, 1.6, 3.05),
+  new Vector3(-0.7, 1.59, 2.92),
+  new Vector3(-0.35, 1.58, 2.85),
   ...STATION_X.map((x) => new Vector3(x, STANDING.y, STANDING.z)),
 ];
 
 const TARGETS = [
-  new Vector3(4.2, 1.45, -2.4),
-  new Vector3(1.4, 1.05, -0.8),
+  new Vector3(0.8, 1.55, -3.8),
+  new Vector3(-1.5, 1.12, -0.5),
+  new Vector3(NAMEPLATE.x, NAMEPLATE.y, NAMEPLATE.z),
   new Vector3(NAMEPLATE.x, NAMEPLATE.y, NAMEPLATE.z),
   ...STATION_X.map((x) => new Vector3(x, STANDING.lookY, STANDING.lookZ)),
 ];
 
-const INTRO_POINTS = 3;
+const INTRO_POINTS = 4;
 const POINT_COUNT = POSITIONS.length;
 
 export const INTRO_SECONDS = 6.5;

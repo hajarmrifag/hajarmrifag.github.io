@@ -27,6 +27,13 @@ import type { NightFloorScene } from "./types";
 
 const INTRO_SEEN = "night-floor-intro";
 
+// World-space envelope of lamp.glb and nameplate.glb (including its feet),
+// rounded outwards from their geometry in the existing mounts.
+// Frame these together on portrait screens; neither object nor the rail moves.
+const ARRIVAL_FRAME = [-1.73, -0.94].flatMap((x) =>
+  [0.75, 1.29].flatMap((y) => [-0.86, -0.10].map((z) => new Vector3(x, y, z))),
+);
+
 type Ease = (t: number) => number;
 type CameraMode = "intro" | "skip" | "leave" | "travel" | "approach" | "settled" | "standing" | "station";
 
@@ -146,7 +153,6 @@ export function mountNightFloorScene(
     camera.updateProjectionMatrix();
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, lean ? 1.25 : 2));
     renderer.setSize(width, height, false);
-    placeSubject();
   };
 
   /** Put the look target in the open band between the lede and the film strip. */
@@ -159,11 +165,31 @@ export function mountNightFloorScene(
     const band = dockTop - ledeBottom;
     const aim = ledeBottom + band * 0.46;
     const shift = Math.round(height / 2 - aim);
-    if (dockTop - ledeBottom < 80 || Math.abs(shift) < 6) {
-      camera.clearViewOffset();
-      return;
+    camera.zoom = 1;
+    camera.clearViewOffset();
+    if (band < 80) return;
+
+    // Ease the portrait composition in from the lamp beat, then release it
+    // before the first station. Desktop and all six station poses stay intact.
+    const enter = Math.min(1, Math.max(0, (rig.u - SETTLED_U / 3) / (SETTLED_U / 3)));
+    const leave = Math.min(1, Math.max(0, (rig.u - SETTLED_U) / (stationU(0) - SETTLED_U)));
+    const portrait = Math.min(1, Math.max(0, (height / width - 1) / 0.5));
+    const blend = portrait * easeInOutCubic(enter) * (1 - easeInOutCubic(leave));
+    if (blend > 0) {
+      const points = ARRIVAL_FRAME.map((point) => point.clone().project(camera));
+      const left = Math.min(...points.map((point) => point.x)) * width / 2;
+      const right = Math.max(...points.map((point) => point.x)) * width / 2;
+      const top = -Math.max(...points.map((point) => point.y)) * height / 2;
+      const bottom = -Math.min(...points.map((point) => point.y)) * height / 2;
+      const gutter = 12;
+      const zoom = Math.min(1, (width - gutter * 2) / (right - left), (band - gutter * 2) / (bottom - top));
+      const offsetX = (left + right) / 2 * zoom;
+      const offsetY = height / 2 + (top + bottom) / 2 * zoom - (ledeBottom + band / 2);
+      camera.zoom = 1 + (zoom - 1) * blend;
+      camera.setViewOffset(width, height, offsetX * blend, shift + (offsetY - shift) * blend, width, height);
+    } else if (Math.abs(shift) >= 6) {
+      camera.setViewOffset(width, height, 0, shift, width, height);
     }
-    camera.setViewOffset(width, height, 0, shift, width, height);
   };
 
   /**
@@ -179,9 +205,10 @@ export function mountNightFloorScene(
   };
 
   const paint = () => {
-    placeSubject();
     rig.apply(camera.position, look);
     camera.lookAt(look);
+    camera.updateMatrixWorld();
+    placeSubject();
     renderer.render(scene, camera);
     root.dataset.railU = rig.u.toFixed(3);
     root.dataset.approach = rig.approach.toFixed(2);
