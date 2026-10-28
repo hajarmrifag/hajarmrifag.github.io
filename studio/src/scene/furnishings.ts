@@ -3,6 +3,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   PlaneGeometry,
+  PointLight,
   Texture,
   TorusGeometry,
   Scene,
@@ -80,6 +81,11 @@ function addNameplate(bin: SceneBin, scene: Scene): void {
   mount.position.set(NAMEPLATE.x, NAMEPLATE.y, NAMEPLATE.z);
   mount.rotation.x = -0.42;
   scene.add(mount);
+  // The task lamp grazes the plate's edge. A short-range warm fill brings out
+  // the brushed face and recessed cuts without lighting the window wall.
+  const fill = new PointLight(0xffdfb5, 1.4, 2, 2);
+  fill.position.set(NAMEPLATE.x - 0.35, NAMEPLATE.y + 0.7, NAMEPLATE.z + 0.9);
+  scene.add(fill);
   const seen = new Set<Texture>();
   new GLTFLoader().load(nameplateUrl, (gltf) => {
     const plate = gltf.scene;
@@ -97,9 +103,7 @@ function addNameplate(bin: SceneBin, scene: Scene): void {
         keepTexture(bin, seen, material.metalnessMap);
         keepTexture(bin, seen, material.normalMap);
         material.envMapIntensity = 0.35;
-        if (!material.roughnessMap) continue;
-        material.roughness = 0.58;
-        material.roughnessMap = null;
+        // Keep the exported brushed roughness and the rougher engraving wells.
       }
     });
     mount.add(plate);
