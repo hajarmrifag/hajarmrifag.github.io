@@ -80,7 +80,11 @@ function addNightGrade(scene: Scene, renderer: WebGLRenderer, quality: StudioQua
   }
 
   const warm = quality.lamps ? STATION_X : [STATION_X[0], STATION_X[3], STATION_X[5]];
-  for (const x of warm) addPool(scene, x, 0xffc49a, quality.lamps ? 16 : 22, 1.55);
+  for (const x of warm) {
+    // The upright Sourced folio faces this close pool directly; keep its paper below clipping.
+    const intensity = x === STATION_X[0] ? (quality.lamps ? 0.5 : 0.8) : quality.lamps ? 16 : 22;
+    addPool(scene, x, 0xffc49a, intensity, 1.55);
+  }
   // Just under the task-lamp mouth, clear of the reflector so the bulb does not blow out.
   addPool(scene, -1.6, 0xffc49a, 5, 1.45, -0.16, 0.98);
   const cool = quality.reflections ? [-0.8, 4.6, 10.2] : [4.6];
