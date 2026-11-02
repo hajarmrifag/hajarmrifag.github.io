@@ -37,14 +37,16 @@ export function addBlockout(
   stations: readonly Station[],
   renderer: WebGLRenderer,
   quality: StudioQuality,
+  invalidate: () => void,
 ): () => void {
   const bin = createSceneBin();
   const palette = createStudioPalette(bin, quality.reflections);
   addArchitecture(bin, scene, palette);
-  addFurnishings(bin, scene, stations, palette);
+  const disposeFurnishings = addFurnishings(bin, scene, stations, palette, invalidate);
   const environment = addNightGrade(scene, renderer, quality);
 
   return () => {
+    disposeFurnishings();
     environment.dispose();
     bin.dispose();
   };

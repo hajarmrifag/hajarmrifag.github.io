@@ -11,6 +11,7 @@ import type { StationSelectDetail } from "../nav/filmStrip";
 import type { Station } from "../content/stations";
 import { addBlockout } from "./blockout";
 import { CameraRig } from "./cameraRig";
+import { createRenderInvalidator } from "./renderInvalidation";
 import {
   APPROACH_SECONDS,
   easeInOutCubic,
@@ -124,11 +125,6 @@ export function mountNightFloorScene(
   }
 
   const scene = new Scene();
-  const disposeBlockout = addBlockout(scene, stations, renderer, {
-    shadows: !lean,
-    lamps: !lean,
-    reflections: !lean,
-  });
   const camera = new PerspectiveCamera(35, 1, 0.06, 80);
   const rig = new CameraRig();
   const look = new Vector3();
@@ -141,6 +137,7 @@ export function mountNightFloorScene(
   let width = 0;
   let height = 0;
   let queue: Motion[] = [];
+  let disposed = false;
 
   const resize = () => {
     const nextWidth = canvas.clientWidth;
@@ -335,6 +332,28 @@ export function mountNightFloorScene(
     }
   };
 
+  const renderInvalidator = createRenderInvalidator({
+    schedule: (callback) => requestAnimationFrame(callback),
+    cancel: (handle) => cancelAnimationFrame(handle),
+    render: () => {
+      resize();
+      paint();
+    },
+    isBusy: () => frame !== 0,
+    isDisposed: () => disposed,
+  });
+  const disposeBlockout = addBlockout(
+    scene,
+    stations,
+    renderer,
+    {
+      shadows: !lean,
+      lamps: !lean,
+      reflections: !lean,
+    },
+    renderInvalidator.request,
+  );
+
   skip?.addEventListener("click", onSkip);
   root.addEventListener("nightfloor:station", onStation);
   window.addEventListener("keydown", onKey);
@@ -379,7 +398,11 @@ export function mountNightFloorScene(
   return {
     stations,
     dispose() {
+      if (disposed) return;
+      disposed = true;
+      renderInvalidator.cancel();
       if (frame) cancelAnimationFrame(frame);
+      frame = 0;
       queue = [];
       observer.disconnect();
       skip?.removeEventListener("click", onSkip);

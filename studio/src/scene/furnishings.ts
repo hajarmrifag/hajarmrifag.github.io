@@ -1,7 +1,9 @@
 import {
   Group,
+  Material,
   Mesh,
   MeshStandardMaterial,
+  Object3D,
   PlaneGeometry,
   PointLight,
   Texture,
@@ -51,10 +53,80 @@ function keepTexture(bin: SceneBin, seen: Set<Texture>, texture: Texture | null)
   bin.raw(texture);
 }
 
-function addWorkbench(bin: SceneBin, scene: Scene): void {
+interface AssetLifecycle {
+  readonly disposed: boolean;
+  load(name: string, url: string, attach: (root: Object3D) => void): void;
+}
+
+function disposeDetached(root: Object3D): void {
+  const geometries = new Set<Mesh["geometry"]>();
+  const materials = new Set<Material>();
+  const textures = new Set<Texture>();
+  root.traverse((child) => {
+    if (!(child instanceof Mesh)) return;
+    geometries.add(child.geometry);
+    const childMaterials = Array.isArray(child.material) ? child.material : [child.material];
+    for (const material of childMaterials) materials.add(material);
+  });
+  for (const material of materials) {
+    for (const value of Object.values(material)) {
+      if (value instanceof Texture) textures.add(value);
+    }
+  }
+  for (const texture of textures) texture.dispose();
+  for (const material of materials) material.dispose();
+  for (const geometry of geometries) geometry.dispose();
+}
+
+function createAssetLifecycle(invalidate: () => void): AssetLifecycle & { dispose(): void } {
+  let disposed = false;
+  const attached = new Set<Object3D>();
+  return {
+    get disposed() {
+      return disposed;
+    },
+    load(name, url, attach) {
+      const failed = (error: unknown) => {
+        if (!disposed) console.error(`[Night Floor] Failed to load ${name}.`, error);
+      };
+      try {
+        new GLTFLoader().load(
+          url,
+          (gltf) => {
+            const root = gltf.scene;
+            if (disposed) {
+              disposeDetached(root);
+              return;
+            }
+            try {
+              attach(root);
+              attached.add(root);
+              invalidate();
+            } catch (error) {
+              root.removeFromParent();
+              disposeDetached(root);
+              failed(error);
+            }
+          },
+          undefined,
+          failed,
+        );
+      } catch (error) {
+        failed(error);
+      }
+    },
+    dispose() {
+      if (disposed) return;
+      disposed = true;
+      for (const root of attached) root.removeFromParent();
+      attached.clear();
+    },
+  };
+}
+
+function addWorkbench(bin: SceneBin, scene: Scene, assets: AssetLifecycle): void {
   const seen = new Set<Texture>();
-  new GLTFLoader().load(workbenchUrl, (gltf) => {
-    const bench = gltf.scene;
+  assets.load("workbench.glb", workbenchUrl, (bench) => {
     bench.traverse((child) => {
       if (!(child instanceof Mesh)) return;
       child.castShadow = true;
@@ -76,7 +148,7 @@ function addWorkbench(bin: SceneBin, scene: Scene): void {
   });
 }
 
-function addNameplate(bin: SceneBin, scene: Scene): void {
+function addNameplate(bin: SceneBin, scene: Scene, assets: AssetLifecycle): void {
   const mount = new Group();
   mount.position.set(NAMEPLATE.x, NAMEPLATE.y, NAMEPLATE.z);
   mount.rotation.x = -0.42;
@@ -87,8 +159,7 @@ function addNameplate(bin: SceneBin, scene: Scene): void {
   fill.position.set(NAMEPLATE.x - 0.35, NAMEPLATE.y + 0.7, NAMEPLATE.z + 0.9);
   scene.add(fill);
   const seen = new Set<Texture>();
-  new GLTFLoader().load(nameplateUrl, (gltf) => {
-    const plate = gltf.scene;
+  assets.load("nameplate.glb", nameplateUrl, (plate) => {
     plate.traverse((child) => {
       if (!(child instanceof Mesh)) return;
       child.castShadow = true;
@@ -113,12 +184,11 @@ function addNameplate(bin: SceneBin, scene: Scene): void {
 /** Base contact point. The shade mouth is the warm pool in blockout.ts. */
 const TASK_LAMP = { x: -1.64, z: -0.64 };
 
-function addTaskLamp(bin: SceneBin, scene: Scene): void {
+function addTaskLamp(bin: SceneBin, scene: Scene, assets: AssetLifecycle): void {
   const mount = new Group();
   mount.position.set(TASK_LAMP.x, BENCH.top, TASK_LAMP.z);
   scene.add(mount);
-  new GLTFLoader().load(lampUrl, (gltf) => {
-    const lamp = gltf.scene;
+  assets.load("lamp.glb", lampUrl, (lamp) => {
     lamp.traverse((child) => {
       if (!(child instanceof Mesh)) return;
       child.castShadow = true;
@@ -224,10 +294,17 @@ function addStation(
 }
 
 /** The walnut bench, task lamp, nameplate, and six station markers. */
-export function addFurnishings(bin: SceneBin, scene: Scene, stations: readonly Station[], palette: StudioPalette): void {
-  addWorkbench(bin, scene);
-  addTaskLamp(bin, scene);
-  addNameplate(bin, scene);
+export function addFurnishings(
+  bin: SceneBin,
+  scene: Scene,
+  stations: readonly Station[],
+  palette: StudioPalette,
+  invalidate: () => void,
+): () => void {
+  const assets = createAssetLifecycle(invalidate);
+  addWorkbench(bin, scene, assets);
+  addTaskLamp(bin, scene, assets);
+  addNameplate(bin, scene, assets);
   const notebook = cast(addBox(bin, scene, 0.16, 0.012, 0.22, -1.62, BENCH.top + 0.01, BENCH.centerZ + 0.16, palette.paper));
   notebook.rotation.y = -0.2;
   const pen = cast(addCylinder(bin, scene, 0.004, 0.13, -1.48, BENCH.top + 0.012, BENCH.centerZ + 0.22, palette.brass));
@@ -235,4 +312,5 @@ export function addFurnishings(bin: SceneBin, scene: Scene, stations: readonly S
   pen.rotation.y = 0.4;
 
   for (const [index, station] of stations.entries()) addStation(bin, scene, station, index, palette);
+  return () => assets.dispose();
 }
