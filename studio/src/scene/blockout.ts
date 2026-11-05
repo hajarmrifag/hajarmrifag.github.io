@@ -43,7 +43,7 @@ export function addBlockout(
   const palette = createStudioPalette(bin, quality.reflections);
   addArchitecture(bin, scene, palette);
   const disposeFurnishings = addFurnishings(bin, scene, stations, palette, invalidate);
-  const environment = addNightGrade(scene, renderer, quality);
+  const environment = addNightGrade(scene, stations, renderer, quality);
 
   return () => {
     disposeFurnishings();
@@ -52,7 +52,12 @@ export function addBlockout(
   };
 }
 
-function addNightGrade(scene: Scene, renderer: WebGLRenderer, quality: StudioQuality): WebGLRenderTarget {
+function addNightGrade(
+  scene: Scene,
+  stations: readonly Station[],
+  renderer: WebGLRenderer,
+  quality: StudioQuality,
+): WebGLRenderTarget {
   // Starts beyond the back wall, so the bench stays sharp and only the city hazes.
   scene.fog = new Fog(NIGHT_HORIZON, 20, 52);
   scene.environmentIntensity = 0.32;
@@ -81,10 +86,13 @@ function addNightGrade(scene: Scene, renderer: WebGLRenderer, quality: StudioQua
     camera.updateProjectionMatrix();
   }
 
-  const warm = quality.lamps ? STATION_X : [STATION_X[0], STATION_X[3], STATION_X[5]];
-  for (const x of warm) {
-    // The upright Sourced folio faces this close pool directly; keep its paper below clipping.
-    const intensity = x === STATION_X[0] ? (quality.lamps ? 0.5 : 0.8) : quality.lamps ? 16 : 22;
+  const warmStations = quality.lamps ? stations.map((_, index) => index) : [0, 3, 5];
+  for (const index of warmStations) {
+    const x = STATION_X[index];
+    if (x === undefined) continue;
+    // The upright Sourced folio faces its close pool directly; keep its paper below clipping.
+    const sourced = stations[index]?.id === "sourced";
+    const intensity = sourced ? (quality.lamps ? 0.5 : 0.8) : quality.lamps ? 16 : 22;
     addPool(scene, x, 0xffc49a, intensity, 1.55);
   }
   // Just under the task-lamp mouth, clear of the reflector so the bulb does not blow out.

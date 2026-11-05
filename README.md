@@ -6,7 +6,7 @@ A static software engineering portfolio: selected projects, engineering case stu
 
 ## Pages
 
-- Home: positioning, then an interactive index ordered by the latest GitHub update. Sourced leads, then Aegis Claims, GridFlex, Neobank, CUDA kernels, and SkyQuery.
+- Home: positioning, then a recruiter-first interactive index. SkyQuery leads, followed by GridFlex, Neobank, Aegis Claims, CUDA kernels, and Sourced.
 - Case studies under `work/` hold the longer engineering notes.
 - Sourced is the Hong Kong AI Summit: BUILD ACROSS hackathon project (Startup Track, 3–4 October 2026). Screenshots are captured from a local run of [opportunity-compass](https://github.com/hajarmrifag/opportunity-compass). Demo listings in those shots are fictional, as the product labels them.
 - CUDA includes a matrix-size selector for recorded GEMM results, on a common scale with a cuBLAS baseline.
