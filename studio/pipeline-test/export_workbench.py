@@ -62,12 +62,6 @@ BAY_DRAWER_W = 0.72
 BAY_DRAWER_H = 0.120
 BAY_GAP = 0.040
 
-ROD_X0 = -1.30
-ROD_X1 = 12.15
-ROD_Y = 0.45
-ROD_Z = 1.788
-ROD_R = 0.008
-
 # Photographic veneer, CC0, listed in walnut-sources.txt.
 # Three 1 m sheets sit side by side in one atlas. 4096 is the phone texture limit.
 TEXTURE_DIR = ROOT / "textures" / "walnut"
@@ -753,17 +747,6 @@ def build_frame(material: bpy.types.Material) -> list[bpy.types.Object]:
     parts.append(cube("RearApron", -1.75, 12.20, 0.88, 0.94, 0.595, 0.645, material, bevel=0.001, segments=1))
     for index, x in enumerate(FRAME_X):
         parts.append(cube(f"Strap.{index}", x - 0.008, x + 0.008, 0.900, 0.916, 0.640, 0.712, material))
-    parts.append(
-        cylinder(
-            "Rail",
-            ROD_R,
-            ROD_X1 - ROD_X0,
-            ((ROD_X0 + ROD_X1) / 2, ROD_Y, ROD_Z),
-            (0.0, math.pi / 2, 0.0),
-            material,
-            vertices=16,
-        )
-    )
     return parts
 
 
