@@ -276,6 +276,20 @@ h2 a:hover,
   padding: 0.2rem 1.5rem 0.2rem 0;
 }
 
+.lede-intro,
+.lede-evidence {
+  display: block;
+}
+
+.lede-evidence {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  letter-spacing: 0.025em;
+}
+
 .floor.is-seated {
   gap: 0.55rem;
 }
