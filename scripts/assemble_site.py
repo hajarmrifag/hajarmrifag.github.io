@@ -60,12 +60,15 @@ class ArtifactPage(HTMLParser):
         super().__init__()
         self.path = path
         self.refs: list[str] = []
+        self.ids: set[str] = set()
         self.h1s = 0
         self.errors: list[str] = []
         self.feed(path.read_text(encoding="utf-8"))
 
     def handle_starttag(self, tag, attrs):
         attributes = dict(attrs)
+        if attributes.get("id"):
+            self.ids.add(attributes["id"])
         if tag == "h1":
             self.h1s += 1
         for key in ("href", "src"):
@@ -195,6 +198,13 @@ def validate_artifact(expected: set[Path]) -> None:
                 errors.append(
                     f"{path.relative_to(artifact)}: missing local file: {reference}"
                 )
+            elif urlsplit(reference).fragment and target.suffix == ".html":
+                fragment = unquote(urlsplit(reference).fragment)
+                target_page = pages.get(target.resolve())
+                if target_page is None or fragment not in target_page.ids:
+                    errors.append(
+                        f"{path.relative_to(artifact)}: missing fragment: {reference}"
+                    )
 
     for stylesheet in artifact.rglob("*.css"):
         text = stylesheet.read_text(encoding="utf-8")
