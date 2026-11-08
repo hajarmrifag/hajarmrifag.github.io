@@ -14,6 +14,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install Night Floor build dependencies
+        run: npm ci --prefix studio
+      - name: Build and assemble the complete site artifact
+        run: npm run build:site
+      - name: Validate and smoke-test the assembled artifact
+        run: npm run test:artifact
       - name: Check pages, local links, assets and JavaScript
         run: npm run check
       - name: Verify benchmark comparisons

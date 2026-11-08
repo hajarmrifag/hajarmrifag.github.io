@@ -3,6 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:site": "npm --prefix studio run build && python3 scripts/assemble_site.py",
+    "check:artifact": "python3 scripts/assemble_site.py --check-only",
+    "smoke:artifact": "node scripts/smoke_site_artifact.mjs",
+    "test:artifact": "npm run check:artifact && npm run smoke:artifact",
+    "serve:artifact": "python3 -m http.server 8787 --bind 127.0.0.1 --directory dist",
     "test": "node --test tests/*.test.js",
     "check": "python3 scripts/check_site.py && node --check cuda.js && node --check cuda-data.js && node --check benchmark.js && node --check motion.js"
   }
