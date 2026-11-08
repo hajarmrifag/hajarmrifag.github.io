@@ -555,6 +555,153 @@ a:focus-visible,
   }
 }
 
+.exhibit-toolbar,
+.exhibit-brief {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.exhibit-toolbar {
+  position: sticky;
+  z-index: 6;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 2.75rem;
+  margin: -0.15rem -0.15rem 0;
+  padding: 0.3rem 0.15rem 0.38rem;
+  border-bottom: 1px solid rgba(224, 192, 137, 0.32);
+  background: #16130f;
+}
+
+.aegis-desk .exhibit-toolbar {
+  background: #1a1511;
+}
+
+[data-exhibit-panel].has-scroll-more .exhibit-toolbar {
+  box-shadow: 0 0.55rem 0.8rem rgba(8, 6, 5, 0.38);
+}
+
+.exhibit-identity {
+  min-width: 0;
+}
+
+.exhibit-context,
+.exhibit-title,
+.exhibit-brief p {
+  margin: 0;
+}
+
+.exhibit-context {
+  color: var(--brass);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.exhibit-title {
+  margin-top: 0.08rem;
+  color: var(--paper);
+  font-family: "Schibsted Grotesk", "Avenir Next", sans-serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+.exhibit-title:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.exhibit-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.35rem;
+}
+
+.exhibit-actions a,
+.exhibit-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.35rem;
+  padding: 0.38rem 0.52rem;
+  border: 1px solid rgba(224, 192, 137, 0.48);
+  background: transparent;
+  color: var(--brass);
+  font: inherit;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.exhibit-actions button {
+  background: rgba(224, 192, 137, 0.12);
+}
+
+.exhibit-actions a:hover,
+.exhibit-actions a:focus-visible,
+.exhibit-actions button:hover,
+.exhibit-actions button:focus-visible {
+  border-color: var(--focus);
+  background: var(--brass);
+  color: #1a140c;
+  outline: none;
+}
+
+.exhibit-brief {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.18rem 0.65rem;
+  margin-bottom: 0.55rem;
+  padding: 0.42rem 0.2rem 0.48rem;
+  border-bottom: 1px solid rgba(244, 240, 230, 0.1);
+  color: var(--paper);
+  font-size: 0.69rem;
+  line-height: 1.4;
+}
+
+.exhibit-brief p {
+  grid-column: 1 / -1;
+}
+
+.exhibit-cue {
+  display: block;
+  margin-top: 0.12rem;
+  color: var(--muted);
+}
+
+.exhibit-cue strong {
+  color: var(--brass);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.exhibit-more {
+  grid-column: 2;
+  color: var(--brass);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.exhibit-more[hidden] {
+  display: none;
+}
+
+[data-exhibit-panel] :is(a, button, input, summary) {
+  scroll-margin-top: 3.4rem;
+}
+
 .cuda-bench {
   position: fixed;
   z-index: 2;
@@ -2580,7 +2727,53 @@ a:focus-visible,
   }
 }
 
+@media (min-width: 801px) {
+  .exhibit-toolbar {
+    min-height: 2.25rem;
+    padding-block: 0.18rem 0.24rem;
+  }
+
+  .exhibit-actions a,
+  .exhibit-actions button {
+    min-height: 2.1rem;
+  }
+
+  .exhibit-brief {
+    margin-bottom: 0.45rem;
+    padding-block: 0.28rem 0.32rem;
+    font-size: 0.66rem;
+    line-height: 1.3;
+  }
+
+  .exhibit-cue {
+    display: inline;
+    margin: 0 0 0 0.5rem;
+  }
+
+  .exhibit-more {
+    display: none;
+  }
+}
+
 @media (max-width: 800px) {
+  .exhibit-toolbar {
+    gap: 0.4rem;
+  }
+
+  .exhibit-actions {
+    gap: 0.25rem;
+  }
+
+  .exhibit-actions a,
+  .exhibit-actions button {
+    min-height: 2.5rem;
+    padding-inline: 0.42rem;
+  }
+
+  .exhibit-brief {
+    padding-top: 0.38rem;
+  }
+
   .cuda-bench,
   .aegis-desk,
   .gridflex-table,

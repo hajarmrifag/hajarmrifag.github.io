@@ -67,10 +67,23 @@
         </span>
       </p>
 
-      <section class="sourced-desk" data-sourced-desk aria-labelledby="sourced-desk-title" aria-hidden="true" inert>
-        <div class="desk-top">
-          <p class="hackathon" id="sourced-desk-title">HACKATHON PROJECT</p>
-          <p class="desk-name">Reading desk</p>
+      <section class="sourced-desk" data-sourced-desk data-exhibit-panel="sourced" aria-labelledby="sourced-desk-title" aria-describedby="sourced-exhibit-brief" aria-hidden="true" inert>
+        <header class="exhibit-toolbar">
+          <div class="exhibit-identity">
+            <p class="exhibit-context">Hackathon project</p>
+            <h2 class="exhibit-title" id="sourced-desk-title" data-exhibit-heading tabindex="-1">Sourced</h2>
+          </div>
+          <div class="exhibit-actions" role="group" aria-label="Sourced exhibit actions">
+            <a href="/work/sourced.html">Case study</a>
+            <button type="button" data-exhibit-back>Back to projects</button>
+          </div>
+        </header>
+        <div class="exhibit-brief" id="sourced-exhibit-brief">
+          <p>
+            Source-linked opportunity research keeps uncertainty explicit; this desk uses fictional data.
+            <span class="exhibit-cue"><strong>Try</strong> · Inspect a listing line, then change the eligibility check.</span>
+          </p>
+          <span class="exhibit-more" data-exhibit-scroll-cue>More below ↓</span>
         </div>
         <div class="sourced-body">
           <article class="folio">
@@ -165,15 +178,27 @@
           <li>My Journey stays in this browser. The Tracker uses an account. Signing in does not migrate Journey items.</li>
         </ul>
         <p class="sourced-links">
-          <a class="sourced-study" href="/work/sourced.html">Technical case study</a>
           <a class="sourced-code" href="https://github.com/hajarmrifag/opportunity-compass">Source code</a>
         </p>
       </section>
 
-      <section class="aegis-desk" data-aegis-desk aria-labelledby="aegis-desk-title" aria-hidden="true" inert>
-        <div class="aegis-top">
-          <p class="aegis-kicker" id="aegis-desk-title">Claims folder</p>
-          <p class="aegis-sim">Simulated API rules</p>
+      <section class="aegis-desk" data-aegis-desk data-exhibit-panel="aegis" aria-labelledby="aegis-desk-title" aria-describedby="aegis-exhibit-brief" aria-hidden="true" inert>
+        <header class="exhibit-toolbar">
+          <div class="exhibit-identity">
+            <p class="exhibit-context">ASP.NET Core API</p>
+            <h2 class="exhibit-title" id="aegis-desk-title" data-exhibit-heading tabindex="-1">Aegis Claims</h2>
+          </div>
+          <div class="exhibit-actions" role="group" aria-label="Aegis Claims exhibit actions">
+            <a href="/work/aegis.html">Case study</a>
+            <button type="button" data-exhibit-back>Back to projects</button>
+          </div>
+        </header>
+        <div class="exhibit-brief" id="aegis-exhibit-brief">
+          <p>
+            This simulated desk reflects API-enforced role authorization, signature-aware document checks and claim-status history.
+            <span class="exhibit-cue"><strong>Try</strong> · Choose a role and requested status, then stamp the claim.</span>
+          </p>
+          <span class="exhibit-more" data-exhibit-scroll-cue>More below ↓</span>
         </div>
         <div class="aegis-body">
           <article class="claim-sheet">
@@ -236,15 +261,27 @@
           </div>
         </div>
         <p class="aegis-links">
-          <a class="aegis-study" href="/work/aegis.html">Technical case study</a>
           <a class="aegis-code" href="https://github.com/hajarmrifag/claims-management-api">Source code</a>
         </p>
       </section>
 
-      <section class="gridflex-table" data-gridflex-desk aria-labelledby="gridflex-desk-title" aria-hidden="true" inert>
-        <div class="gf-top">
-          <p class="gf-kicker" id="gridflex-desk-title">Energy light table</p>
-          <p class="gf-sim">Recorded · not a live run</p>
+      <section class="gridflex-table" data-gridflex-desk data-exhibit-panel="gridflex" aria-labelledby="gridflex-desk-title" aria-describedby="gridflex-exhibit-brief" aria-hidden="true" inert>
+        <header class="exhibit-toolbar">
+          <div class="exhibit-identity">
+            <p class="exhibit-context">Energy optimisation</p>
+            <h2 class="exhibit-title" id="gridflex-desk-title" data-exhibit-heading tabindex="-1">GridFlex</h2>
+          </div>
+          <div class="exhibit-actions" role="group" aria-label="GridFlex exhibit actions">
+            <a href="/work/gridflex.html">Case study</a>
+            <button type="button" data-exhibit-back>Back to projects</button>
+          </div>
+        </header>
+        <div class="exhibit-brief" id="gridflex-exhibit-brief">
+          <p>
+            Recorded, not live: 31.9× on one bounded 60-day engine computation—not end-to-end speed.
+            <span class="exhibit-cue"><strong>Try</strong> · Scrub measured demand or compare recorded benchmark horizons.</span>
+          </p>
+          <span class="exhibit-more" data-exhibit-scroll-cue>More below ↓</span>
         </div>
         <div class="gf-body">
           <div class="gf-film">
@@ -300,16 +337,28 @@
           </p>
         </details>
         <p class="gf-links">
-          <a class="gf-study" href="/work/gridflex.html">Technical case study</a>
           <a class="gf-code" href="https://github.com/hajarmrifag/gridflex-ai">Source code</a>
           <a class="gf-live" href="https://gridflex.onrender.com/">Live application</a>
         </p>
       </section>
 
-      <section class="neobank-ledger" data-neobank-desk aria-labelledby="neobank-desk-title" aria-hidden="true" inert>
-        <div class="nb-top">
-          <p class="nb-kicker" id="neobank-desk-title">Passbook</p>
-          <p class="nb-sim">Simulated ledger · not a live bank</p>
+      <section class="neobank-ledger" data-neobank-desk data-exhibit-panel="neobank" aria-labelledby="neobank-desk-title" aria-describedby="neobank-exhibit-brief" aria-hidden="true" inert>
+        <header class="exhibit-toolbar">
+          <div class="exhibit-identity">
+            <p class="exhibit-context">Transaction safety</p>
+            <h2 class="exhibit-title" id="neobank-desk-title" data-exhibit-heading tabindex="-1">Neobank</h2>
+          </div>
+          <div class="exhibit-actions" role="group" aria-label="Neobank exhibit actions">
+            <a href="/work/neobank.html">Case study</a>
+            <button type="button" data-exhibit-back>Back to projects</button>
+          </div>
+        </header>
+        <div class="exhibit-brief" id="neobank-exhibit-brief">
+          <p>
+            This simulated ledger demonstrates PostgreSQL transactions, idempotency and ordered row locks, backed by concurrent-spending tests.
+            <span class="exhibit-cue"><strong>Try</strong> · Post £25, retry the key, or use a fresh key for an overdraw.</span>
+          </p>
+          <span class="exhibit-more" data-exhibit-scroll-cue>More below ↓</span>
         </div>
         <div class="nb-book">
           <article class="nb-page">
@@ -357,15 +406,27 @@
           </p>
         </details>
         <p class="nb-links">
-          <a class="nb-study" href="/work/neobank.html">Technical case study</a>
           <a class="nb-code" href="https://github.com/hajarmrifag/neobank-growth-analytics">Source code</a>
         </p>
       </section>
 
-      <section class="sky-desk" data-skyquery-desk aria-labelledby="sky-desk-title" aria-hidden="true" inert>
-        <div class="sq-top">
-          <p class="sq-kicker" id="sky-desk-title">Internship project</p>
-          <p class="sq-sim">Two separate systems · revision d1892fa · not a live service</p>
+      <section class="sky-desk" data-skyquery-desk data-exhibit-panel="skyquery" aria-labelledby="sky-desk-title" aria-describedby="skyquery-exhibit-brief" aria-hidden="true" inert>
+        <header class="exhibit-toolbar">
+          <div class="exhibit-identity">
+            <p class="exhibit-context">Professional internship</p>
+            <h2 class="exhibit-title" id="sky-desk-title" data-exhibit-heading tabindex="-1">SkyQuery</h2>
+          </div>
+          <div class="exhibit-actions" role="group" aria-label="SkyQuery exhibit actions">
+            <a href="/work/skyquery.html">Case study</a>
+            <button type="button" data-exhibit-back>Back to projects</button>
+          </div>
+        </header>
+        <div class="exhibit-brief" id="skyquery-exhibit-brief">
+          <p>
+            My HDFS, Hive and PySpark work supported a two-person team project analysing 15 million flight records; this desk is not a live service.
+            <span class="exhibit-cue"><strong>Try</strong> · Trace the data pipeline or inspect the separate query prototype.</span>
+          </p>
+          <span class="exhibit-more" data-exhibit-scroll-cue>More below ↓</span>
         </div>
         <div class="sq-split">
           <section class="sq-leaf sq-data" aria-labelledby="sq-data-title">
@@ -420,21 +481,34 @@
           </p>
         </details>
         <p class="sq-links">
-          <a class="sq-study" href="/work/skyquery.html">Technical case study</a>
           <a class="sq-code" href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/tree/d1892faddb51e3e4b70acef6baa000212a109169/hajar">My source directory</a>
           <a class="sq-team" href="https://github.com/maryamibaaichou/Flight-Ticket-Meta-Search-and-Analysis/tree/d1892faddb51e3e4b70acef6baa000212a109169">Team repository</a>
         </p>
       </section>
 
-      <section class="cuda-bench" data-cuda-bench aria-labelledby="cuda-bench-title" aria-hidden="true" inert>
+      <section class="cuda-bench" data-cuda-bench data-exhibit-panel="cuda" aria-labelledby="cuda-bench-title" aria-describedby="cuda-exhibit-brief" aria-hidden="true" inert>
         <div class="cuda-bezel">
-          <header class="cuda-head">
-            <div>
-              <p class="cuda-kicker" id="cuda-bench-title">GEMM instrument</p>
-              <p class="cuda-scale">Throughput in GFLOPS. Higher is better.</p>
+          <header class="exhibit-toolbar">
+            <div class="exhibit-identity">
+              <p class="exhibit-context">GPU kernels</p>
+              <h2 class="exhibit-title" id="cuda-bench-title" data-exhibit-heading tabindex="-1">CUDA Kernels</h2>
             </div>
-            <p class="cuda-size" data-matrix-label>1024 × 1024</p>
+            <div class="exhibit-actions" role="group" aria-label="CUDA Kernels exhibit actions">
+              <a href="/work/cuda.html">Case study</a>
+              <button type="button" data-exhibit-back>Back to projects</button>
+            </div>
           </header>
+          <div class="exhibit-brief" id="cuda-exhibit-brief">
+            <p>
+              Recorded NVIDIA T4 GEMM measurements compare custom kernels with cuBLAS; cuBLAS remains faster.
+              <span class="exhibit-cue"><strong>Try</strong> · Switch matrix size to inspect stored throughput measurements.</span>
+            </p>
+            <span class="exhibit-more" data-exhibit-scroll-cue>More below ↓</span>
+          </div>
+          <div class="cuda-head">
+            <p class="cuda-scale">Throughput in GFLOPS. Higher is better.</p>
+            <p class="cuda-size" data-matrix-label>1024 × 1024</p>
+          </div>
           <div class="cuda-switch" role="radiogroup" aria-label="Matrix dimensions">
             <span class="cuda-index" aria-hidden="true"></span>
             <label class="detent">
@@ -485,7 +559,6 @@
           <p class="cuda-limit">
             Warp-shuffle Softmax was slower on this workload. It stays in the case study and is not plotted here.
           </p>
-          <a class="cuda-study" href="/work/cuda.html">Technical case study</a>
         </div>
       </section>
 

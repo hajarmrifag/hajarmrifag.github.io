@@ -288,6 +288,13 @@ export function mountNightFloorScene(
     play(steps);
   };
 
+  const leaveStation = (): boolean => {
+    if (rig.approach <= 0.02) return false;
+    play([{ approach: 0, seconds: LEAVE_SECONDS, ease: easeInOutCubic, tag: "leave" }]);
+    focusSelectedFrame();
+    return true;
+  };
+
   const onSkip = () => {
     root.dataset.skipIntro = "true";
     hideIntroControl();
@@ -311,6 +318,10 @@ export function mountNightFloorScene(
     goToStation(detail.index);
   };
 
+  const onLeaveStation = () => {
+    leaveStation();
+  };
+
   const onKey = (event: KeyboardEvent) => {
     if (event.metaKey || event.ctrlKey || event.altKey) return;
     const exhibit = isExhibitControl(event.target);
@@ -326,9 +337,8 @@ export function mountNightFloorScene(
       goToStation(index);
       return;
     }
-    if (event.key === "Escape" && rig.approach > 0.02) {
+    if (event.key === "Escape" && leaveStation()) {
       event.preventDefault();
-      play([{ approach: 0, seconds: LEAVE_SECONDS, ease: easeInOutCubic, tag: "leave" }]);
     }
   };
 
@@ -356,6 +366,7 @@ export function mountNightFloorScene(
 
   skip?.addEventListener("click", onSkip);
   root.addEventListener("nightfloor:station", onStation);
+  root.addEventListener("nightfloor:leave-station", onLeaveStation);
   window.addEventListener("keydown", onKey);
 
   const chosen = stations.findIndex((station) => station.id === root.dataset.selected);
@@ -407,6 +418,7 @@ export function mountNightFloorScene(
       observer.disconnect();
       skip?.removeEventListener("click", onSkip);
       root.removeEventListener("nightfloor:station", onStation);
+      root.removeEventListener("nightfloor:leave-station", onLeaveStation);
       window.removeEventListener("keydown", onKey);
       disposeBlockout();
       renderer.dispose();
