@@ -6,6 +6,7 @@ import { mountSkyQuery } from "./exhibit/skyqueryDesk";
 import { mountCudaBench } from "./exhibit/cudaBench";
 import { mountSourcedDesk } from "./exhibit/sourcedDesk";
 import { mountFilmStrip } from "./nav/filmStrip";
+import type { ExhibitOpenDetail } from "./nav/filmStrip";
 
 const root = document.querySelector<HTMLElement>("[data-night-floor]");
 const canvas = document.querySelector<HTMLCanvasElement>("#night-floor-canvas");
@@ -18,6 +19,36 @@ const stations = readStations(root);
 if (stations.length !== 6) {
   throw new Error(`Night Floor expected 6 stations, found ${stations.length}.`);
 }
+
+type SceneStatus = "loading" | "ready" | "unavailable";
+
+let sceneStatus: SceneStatus = "loading";
+let pendingOpen: ExhibitOpenDetail | null = null;
+root.dataset.scene = sceneStatus;
+
+const openCaseStudy = (detail: ExhibitOpenDetail) => {
+  window.location.assign(detail.caseStudy);
+};
+
+const markSceneUnavailable = (error?: unknown) => {
+  sceneStatus = "unavailable";
+  root.dataset.scene = sceneStatus;
+  canvas.hidden = true;
+  document.documentElement.classList.add("intro-settled");
+  if (error) console.error("Night Floor scene failed to initialize.", error);
+  if (pendingOpen) openCaseStudy(pendingOpen);
+  pendingOpen = null;
+};
+
+root.addEventListener("nightfloor:open-exhibit", (event) => {
+  const detail = (event as CustomEvent<ExhibitOpenDetail>).detail;
+  if (!detail?.id || !detail.caseStudy) return;
+  if (sceneStatus === "unavailable") {
+    openCaseStudy(detail);
+    return;
+  }
+  if (sceneStatus === "loading") pendingOpen = detail;
+});
 
 mountFilmStrip(root);
 mountCudaBench(root);
@@ -52,13 +83,12 @@ void import("./scene")
   .then(({ mountNightFloorScene }) => {
     const scene = mountNightFloorScene(canvas, stations, root);
     if (!scene) {
-      canvas.hidden = true;
-      document.documentElement.classList.add("intro-settled");
+      markSceneUnavailable();
       return;
     }
+    sceneStatus = "ready";
+    root.dataset.scene = sceneStatus;
+    pendingOpen = null;
     window.addEventListener("pagehide", () => scene.dispose());
   })
-  .catch(() => {
-    canvas.hidden = true;
-    document.documentElement.classList.add("intro-settled");
-  });
+  .catch(markSceneUnavailable);

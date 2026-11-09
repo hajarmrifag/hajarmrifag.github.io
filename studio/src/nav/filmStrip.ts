@@ -6,6 +6,12 @@ export interface StationSelectDetail {
   user: boolean;
 }
 
+export interface ExhibitOpenDetail {
+  index: number;
+  id: string;
+  caseStudy: string;
+}
+
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -65,7 +71,21 @@ export function mountFilmStrip(root: HTMLElement): void {
     const frame = event.target.closest<HTMLElement>("[data-station]");
     if (!frame || !root.contains(frame)) return;
     const next = frames.indexOf(frame);
-    if (next >= 0) apply(next, { scroll: false, user: true });
+    if (next < 0) return;
+    apply(next, { scroll: false, user: true });
+
+    const opener = event.target.closest<HTMLAnchorElement>("[data-open-exhibit]");
+    if (!opener || !frame.contains(opener)) return;
+    event.preventDefault();
+    root.dispatchEvent(
+      new CustomEvent<ExhibitOpenDetail>("nightfloor:open-exhibit", {
+        detail: {
+          index: next,
+          id: frame.dataset.station ?? "",
+          caseStudy: opener.href,
+        },
+      }),
+    );
   });
 
   window.addEventListener("keydown", (event) => {
